@@ -1,0 +1,28 @@
+#!/bin/bash
+####################################################################
+#
+#
+#
+####################################################################
+
+KCONFIG_BUILD=$(pwd)/scripts/kconfiglib/Config.build
+
+cat >  $KCONFIG_BUILD << EOF
+
+
+menu "TEST BUILD"
+
+endmenu
+
+
+EOF
+
+
+
+
+
+
+
+
+
+
