@@ -24,7 +24,7 @@
 -->
 <xsl:template match="/">
 
-	<xsl:apply-templates select="//sect1" />
+	<xsl:apply-templates select="//sect1[@id]" />
 
 </xsl:template>
 
@@ -33,7 +33,7 @@
 #
 ####################################################################
 -->
-<xsl:template match="sect1[@id]">
+<xsl:template match="sect1">
 
 
 	<xsl:variable name="dirpath" select="'./test-files'" />

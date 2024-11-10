@@ -29,6 +29,7 @@
 
 </xsl:template>
 
+
 <!--
 ####################################################################
 #
@@ -36,9 +37,21 @@
 -->
 <xsl:template match="sect1">
 
+        <xsl:apply-templates select="sect2[@id]" />
+
+</xsl:template>
+
+
+<!--
+####################################################################
+#
+####################################################################
+-->
+<xsl:template match="sect2">
+
         <xsl:text>&#xA;</xsl:text>
 	<xsl:text>Dependencies for </xsl:text>
-	<xsl:value-of select="title" />
+	<xsl:value-of select="@id" />
 	<xsl:text>&#xA;</xsl:text>
         <xsl:text>====================================================================</xsl:text>
         <xsl:text>&#xA;</xsl:text>
@@ -48,21 +61,22 @@
 	<xsl:text>Required</xsl:text>
 	<xsl:text>&#xA;</xsl:text>
         <xsl:text>--------------------------------------------------------------------</xsl:text>
-	<xsl:apply-templates select="sect2/para[@role = 'required']" />
+	<xsl:apply-templates select="sect3/para[@role = 'required']" />
 	<!-- RECOMMENDED -->
 	<xsl:text>&#xA;</xsl:text>
 	<xsl:text>&#xA;</xsl:text>
 	<xsl:text>Recommeded</xsl:text>
 	<xsl:text>&#xA;</xsl:text>
         <xsl:text>--------------------------------------------------------------------</xsl:text>
-	<xsl:apply-templates select="sect2/para[@role = 'recommended']" />
+	<xsl:apply-templates select="sect3/para[@role = 'recommended']" />
 	<!-- OPTIONAL -->
 	<xsl:text>&#xA;</xsl:text>
 	<xsl:text>&#xA;</xsl:text>
 	<xsl:text>Optional</xsl:text>
 	<xsl:text>&#xA;</xsl:text>
         <xsl:text>--------------------------------------------------------------------</xsl:text>
-	<xsl:apply-templates select="sect2/para[@role = 'optional']" />
+	<xsl:apply-templates select="sect3/para[@role = 'optional']" />
+	<xsl:text>&#xA;</xsl:text>
 
 
 </xsl:template>
