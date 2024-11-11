@@ -11,100 +11,106 @@
 
 TOPDIR = $(shell pwd)
 
-XMLDIR=$(TOPDIR)/xml
-SCRIPTDIR=$(TOPDIR)/scripts
+CONFIG_DIR = $(TOPDIR)/config
+BUILD_DIR = $(TOPDIR)/build
+CONFIGBLD_DIR = $(BUILD_DIR)/config
 
-KCONFIG_MENU = $(TOPDIR)/scripts/kconfiglib/menuconfig.py
-KCONFIG_BUILD = $(TOPDIR)/scripts/kconfiglib/Config.build
-KCONFIG_SETUP = $(TOPDIR)/scripts/kconfiglib/Config.setup
+CONFIG_SCRIPT = $(CONFIG_DIR)/config.sh
 
-BLFS_BOOK = $(SCRIPTDIR)/blfs-book
-INIT_SETUP = $(SCRIPTDIR)/init-setup
-INIT_BUILD = $(SCRIPTDIR)/init-build
-	
+ROOT_TREE = $(BUILD_DIR)/config/root.tree
+BUILD_SCRIPTS = $(BUILD_DIR)/config/build.scripts
 
+BLFS_BOOK = $(BUILD_DIR)/config/blfs-xml
+
+MENU_CONFIG = $(TOPDIR)/kconfiglib/menuconfig.py
+CONFIG_IN = $(CONFIGBLD_DIR)/config.in
+CONFIG_OUT = $(CONFIGBLD_DIR)/config.out
+FULL_XML = $(CONFIGBLD_DIR)/blfs-full.xml
 
 ####################################################################
 #
 # DEFAULT BUILD TARGET
 #
-# BUILD
+# readme
 #
-# Launch package selection menu and generate build scripts
+# Dislay README file
 #
 ####################################################################
 
-
-build : $(KCONFIG_BUILD)
-	KCONFIG_CONFIG=configuration.build $(KCONFIG_MENU) $(KCONFIG_BUILD) 
-
+readme : 
+	cat README
 
 
 ####################################################################
 #
-# SETUP
+# CONFIG
 #
-# Run setup configuration
-#
-####################################################################
-
-
-
-setup : $(INIT_SETUP)
-	$(INIT_SETUP)
-	KCONFIG_CONFIG=configuration.setup $(KCONFIG_MENU) $(KCONFIG_SETUP) 
-
-
-
-####################################################################
-#
-# KCONFIG_BUILD
-#
-# Build configuration file for selecting blfs packages
+# Generate setup config
 #
 ####################################################################
 
+config : $(ROOT_TREE) $(BUILD_SCRIPTS)
 
-$(KCONFIG_BUILD) : $(BLFSBOOK_XMLDIR)
-	$(INIT_BUILD)
+
+$(ROOT_TREE) : $(FULL_XML) $(CONFIG_SCRIPT)
+	@echo
+	@echo "===================================================================="
+	@echo "Building dependency tree..."
+	@echo
+	$(CONFIG_SCRIPT) ROOT_TREE
+
+
+$(BUILD_SCRIPTS) : $(FULL_XML) $(CONFIG_SCRIPT)
+	@echo
+	@echo "===================================================================="
+	@echo "Generating build scripts..."
+	@echo
+	$(CONFIG_SCRIPT) BUILD_SCRIPTS
+
+
+$(FULL_XML) : $(CONFIG_OUT) $(CONFIG_SCRIPT)
+	@echo
+	@echo "===================================================================="
+	@echo "Preparing book sources..."
+	@echo
+	$(CONFIG_SCRIPT) FULL_XML
+
+
+$(CONFIG_OUT) : $(CONFIG_IN) $(CONFIG_SCRIPT)
+	@echo
+	@echo "===================================================================="
+	@echo "Running menu config..."
+	@echo
+	$(CONFIG_SCRIPT) MENUCONFIG
+
+
+$(CONFIG_IN) : $(BLFS_BOOK)
+	$(CONFIG_SCRIPT) IN
+
+
+$(BLFS_BOOK) : 
+	@echo
+	@echo "===================================================================="
+	@echo "Retriving BLFS book..."
+	@echo
+	git clone https://git.linuxfromscratch.org/blfs $(BLFS_BOOK)
 
 
 
 ####################################################################
 #
-# BLFSBOOK_XMLDIR
+# CLEAN
 #
-# Clone blfs book and configure based on setup config
-#
-####################################################################
-
-
-$(BLFSBOOK_XMLDIR) : $(KCONFIG_SETUP)
-	$(BLFS_BOOK)
-
-
-
-####################################################################
-#
-# KCONFIG_SETUP
-#
-# Initialize setup config and run setup menu
+# Remove Config.in files
 #
 ####################################################################
 
+clean : 
+	rm $(CONFIG_IN)
 
-$(KCONFIG_SETUP) : $(INIT_SETUP)
-	$(INIT_SETUP)
-	KCONFIG_CONFIG=configuration.setup $(KCONFIG_MENU) $(KCONFIG_SETUP) 
-
-
-
+nuke :
+	rm -rf $(BUILD_DIR)
 
 
 
-
-
-build-scripts:
-	xsltproc ./xsl/blfs-commands.xsl \
-		./xml/blfs-systemd-full.xml #\
-	#	--output ./build/blfs-commands/
+.PHONY: config clean nuke

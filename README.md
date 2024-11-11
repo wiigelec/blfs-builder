@@ -1,2 +1,0 @@
-# blfs-builder
-blfs-builder
