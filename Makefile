@@ -91,7 +91,7 @@ $(CONFIG_IN) : $(BLFS_BOOK)
 $(BLFS_BOOK) : 
 	@echo
 	@echo "===================================================================="
-	@echo "Retriving BLFS book..."
+	@echo "Retrieving BLFS book..."
 	@echo
 	git clone https://git.linuxfromscratch.org/blfs $(BLFS_BOOK)
 

@@ -17,6 +17,8 @@ BLFSFULL_XML=$CONFIG_DIR/blfs-full.xml
 GENDEPS_XSL=config/dependencies/gen-deps.xsl
 GENDEPS_SCRIPT=config/dependencies/build-tree.sh
 DEPTREE_DIR=$CONFIG_DIR/deptree
+BUILDSCRIPTS_XSL=config/build-scripts/build-scripts.xsl
+BUILDSCRIPTS_DIR=$CONFIG_DIR/build-scripts
 
 ####################################################################
 # BUILD CONFIG.IN
@@ -48,9 +50,9 @@ EOF
 	echo "prompt \"Book Branch\"" >> $CONFIG_IN
 
 	# iterate branches
-	pushd $BLFS_BOOK
+	pushd $BLFS_BOOK > /dev/null
 	branches=$(git for-each-ref --format='%(refname:short)' refs/remotes/origin)
-	popd
+	popd > /dev/null
 	for branch in $branches; do
 
 		branch=${branch#origin/}
@@ -92,9 +94,9 @@ function full_xml
 	# BRANCH
 	branch=$(grep BRANCH_.*=y $CONFIG_OUT | sed 's/CONFIG_BRANCH_\(.*\)=y/\1/')
 	if [[ -z $branch ]]; then echo "ERROR: Branch not configured in $CONFIG_OUT!"; exit 1; fi
-	pushd $BLFS_BOOK
+	pushd $BLFS_BOOK  > /dev/null
 	git checkout $branch
-	popd
+	popd > /dev/null
 
 	# GENERATE FULL XML
 	make -C $BLFS_BOOK RENDERTMP=../ REV=$rev validate
@@ -129,8 +131,41 @@ function root_tree
 ###################################################################
 
 function build_scripts
-{
-	touch $BUILD_SCRIPTS
+{	
+	### GENERATE BUILD SCRIPTS ###
+	xsltproc $BUILDSCRIPTS_XSL $BLFSFULL_XML
+
+	### ORDERED LIST ###
+	echo
+	echo
+	echo "Creating ordered list..."
+	echo
+	cnt=1
+	while IFS= read -r line;
+	do
+		# Order
+		if [ "$cnt" -lt 10 ]; then
+			order="000$cnt"
+		elif [ "$cnt" -lt 100 ]; then
+			order="00$cnt"
+		elif [ "$cnt" -lt 1000 ]; then
+			order="0$cnt"
+		else
+			order="$cnt"
+		fi
+
+		# Rename file
+		build=$line.build
+		renamefile=$BUILDSCRIPTS_DIR/$order-$build
+		orgfile=$BUILDSCRIPTS_DIR/$build
+		[ ! -e $orgfile ] && echo "$orgfile does not exist." && continue
+		#echo "mv $orgfile $renamefile"
+		mv $orgfile $renamefile
+
+		((cnt++))
+
+	done < $ROOT_TREE
+
 }
 
 

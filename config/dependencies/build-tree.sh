@@ -20,14 +20,13 @@ function recurse
 	### MARK AS PROCESSED TO PREVENT CIRCULAR DEP LOOP ###
 	echo $1 >> $PROCD_FILE
 
-	echo
 	echo "Reading $1..."
 
 	### READ FILE ###
 	while IFS= read -r line;
 	do
 		[ -z "${line// }" ] && continue
-		echo "Processing $line dependencies..."
+		#echo "Processing $line dependencies..."
 
 		### RECURES ###
 		DEP=$DEPTREE_DIR/$line.deps
@@ -40,7 +39,7 @@ function recurse
 	add_file=${1##*/}
 	add_file=${add_file%.deps}
 	[ $add_file = "root" ] && return
-	echo "Adding $add_file to tree..."
+	#echo "Adding $add_file to tree..."
 	echo $add_file >> $TREE_FILE
 
 }
@@ -55,6 +54,9 @@ rm $PROCD_FILE
 touch $PROCD_FILE
 
 ### BEGIN RECURSION ###
+echo
+echo "Recursing package dependencies..."
+echo
 set -e
 recurse $ROOT_FILE
 
