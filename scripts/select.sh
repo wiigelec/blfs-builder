@@ -28,7 +28,7 @@ function select_in
 
 	### CHECK BUILD SCRIPTS ###
 	echo
-	echo "Verifying build scripts..."
+	echo "Verifying build scripts, just a minute..."
 	echo
 	while IFS= read -r line;
         do

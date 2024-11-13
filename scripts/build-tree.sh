@@ -51,54 +51,33 @@ function recurse
 touch $PROCD_FILE
 [ ! -d $TREE_DIR ] && mkdir -p $TREE_DIR
 
-### BEGIN RECURSION ###
-#echo
-#echo "Calculating package dependencies..."
-#echo
-#echo "" > $ROOT_TREE
-#set -e
-#recurse $ROOT_DEPS
-
-
 
 ### PROCESS ROOT FILE ###
-echo
-echo "Calculating package dependencies..."
-echo
-echo "" > $ROOT_TREE
+[ -f $ROOT_TREE ] && rm $ROOT_TREE
 set -e
 while IFS= read -r line;
 do
 	deps_file=$DEPS_DIR/${line}.deps
 	tree_file=$TREE_DIR/${line}.tree
-	echo "Calculating $deps_file..."
+	echo "Checking $deps_file"
 	echo "" > $PROCD_FILE
 	
 	# create file if it doesn't exist
-	[ ! -f $tree_file ] && recurse $deps_file
+	if [[ ! -f $tree_file ]]; then
+		echo "Creating tree..."
+		recurse $deps_file
+	fi
 
-	# update root.tree
+	# update root tree
 	while IFS= read -r treeline;
 	do
 		#echo "grep $treeline $ROOT_TREE"
-		[ -z "$(grep $treeline $ROOT_TREE)" ] && echo $treeline >> $ROOT_TREE
+		[ -z "$(grep $treeline $ROOT_TREE.tmp)" ] && echo $treeline >> $ROOT_TREE.tmp
 	done < $tree_file	
 
 done < $ROOT_DEPS
 
-
-
-### REMOVE DUPLICATES ###
-#echo
-#echo "Reordering root.tree..."
-#echo
-#mv $ROOT_TREE $ROOT_TREE.tmp
-#while IFS= read -r line;
-#do
-#	[ -z $(grep $line $ROOT_TREE) ] && echo $line >> $ROOT_TREE
-#done < $ROOT_TREE.tmp
-#cp $ROOT_TREE.tmp $ROOT_TREE
-#rm $TREE_FILE.tmp
+mv $ROOT_TREE.tmp $ROOT_TREE
 
 ### FINAL CLEANUP ###
 rm $PROCD_FILE

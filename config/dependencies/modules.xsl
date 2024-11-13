@@ -16,27 +16,6 @@
 <xsl:strip-space elements="*" />
 
 
-<!--
-####################################################################
-#
-####################################################################
--->
-<xsl:template match="sect1[@id]" mode="modules">
-
-	<xsl:variable name="modules">
-                %perl-modules%
-                %python-modules%
-	</xsl:variable>
-	<xsl:variable name="id" select="concat('%',@id,'%')" />
-
-	<xsl:if test="contains($modules,$id)">
-		
-		<xsl:apply-templates match="sect2[@id]" mode="modules" />
-
-	</xsl:if>
-
-</xsl:template>
-
 
 <!--
 ####################################################################

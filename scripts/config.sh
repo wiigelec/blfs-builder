@@ -96,18 +96,20 @@ function full_xml
 
 
 ####################################################################
-# ROOT TREE
+# DEP TREE
 ###################################################################
 
-function root_tree
+function dep_tree
 {
 	### GEN DEPS ###
 	xsltproc $GENDEPS_XSL $BLFSFULL_XML
 
-	### BUILD TREE ###
+	### BUILD TREES ###
 	# root.deps
 	ls $DEPS_DIR | sed 's/\.deps//' > $ROOT_DEPS
-	set -e
+	echo
+	echo "Building full dependency tree, this could take a while..."
+	echo
 	$GENDEPS_SCRIPT
 
 }
@@ -123,35 +125,35 @@ function build_scripts
 	xsltproc $BUILDSCRIPTS_XSL $BLFSFULL_XML
 
 	### ORDERED LIST ###
-	echo
-	echo
-	echo "Creating ordered list..."
-	echo
-	cnt=1
-	while IFS= read -r line;
-	do
-		# Order
-		if [ "$cnt" -lt 10 ]; then
-			order="000$cnt"
-		elif [ "$cnt" -lt 100 ]; then
-			order="00$cnt"
-		elif [ "$cnt" -lt 1000 ]; then
-			order="0$cnt"
-		else
-			order="$cnt"
-		fi
-
-		# Rename file
-		build=$line.build
-		renamefile=$BUILDSCRIPTS_DIR/$order-$build
-		orgfile=$BUILDSCRIPTS_DIR/$build
-		[ ! -f $orgfile ] && echo "$orgfile does not exist." && continue
-		#echo "mv $orgfile $renamefile"
-		mv $orgfile $renamefile
-
-		((cnt++))
-
-	done < $ROOT_TREE
+	#echo
+	#echo
+	#echo "Creating ordered list..."
+	#echo
+	#cnt=1
+	#while IFS= read -r line;
+	#do
+	#	# Order
+	#	if [ "$cnt" -lt 10 ]; then
+	#		order="000$cnt"
+	#	elif [ "$cnt" -lt 100 ]; then
+	#		order="00$cnt"
+	#	elif [ "$cnt" -lt 1000 ]; then
+	#		order="0$cnt"
+	#	else
+	#		order="$cnt"
+	#	fi
+	#
+	#	# Rename file
+	#	build=$line.build
+	#	renamefile=$BUILDSCRIPTS_DIR/$order-$build
+	#	orgfile=$BUILDSCRIPTS_DIR/$build
+	#	[ ! -f $orgfile ] && echo "$orgfile does not exist." && continue
+	#	#echo "mv $orgfile $renamefile"
+	#	mv $orgfile $renamefile
+	#
+	#	((cnt++))
+	#
+	#done < $ROOT_TREE
 
 }
 
@@ -160,6 +162,8 @@ function build_scripts
 # MAIN
 ###################################################################
 
+[ ! -d $BUILD_CONFIG ] && mkdir -p $BUILD_CONFIG
+
 ### PARSE PARAMS ###
 
 case $1 in
@@ -167,6 +171,6 @@ case $1 in
 	MENUCONFIG ) menu_config ;;
 	FULL_XML) full_xml ;;
 	BUILD_SCRIPTS) build_scripts ;;
-	ROOT_TREE) root_tree ;;
+	DEP_TREE) dep_tree ;;
 
 esac
