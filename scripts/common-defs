@@ -1,0 +1,40 @@
+#!/bin/bash
+####################################################################
+# 
+# common-defs
+#
+####################################################################
+
+# dirs
+SCRIPTS_DIR=scripts
+BUILD_DIR=build
+XSL_DIR=xsl
+BUILDSCRIPTS_DIR=$BUILD_DIR/build-scripts
+BLFS_BOOK=$BUILD_DIR/blfs-xml
+DEPS_DIR=$BUILD_DIR/deptree/deps
+TREE_DIR=$BUILD_DIR/deptree/trees
+WORK_DIR=$BUILD_DIR/work
+
+# files
+CONFIG_IN=$BUILD_DIR/config.in
+CONFIG_OUT=$BUILD_DIR/config.out
+ROOT_DEPS=$BUILD_DIR/root.deps
+ROOT_TREE=$BUILD_DIR/root.tree
+SYSTEMDFULL_XML=$BUILD_DIR/blfs-systemd-full.xml
+BLFSFULL_XML=$BUILD_DIR/blfs-full.xml
+SELECT_IN=$BUILD_DIR/select.in
+SELECT_OUT=$BUILD_DIR/select.out
+SELECTIN_TMP=$BUILD_DIR/select.in.tmp
+PROCD_FILE=$BUILD_DIR/processed.tmp
+
+# xsl
+GENDEPS_XSL=config/dependencies/gen-deps.xsl
+BUILDSCRIPTS_XSL=config/build-scripts/build-scripts.xsl
+SELECTIN_XSL=$XSL_DIR/select-menu.xsl
+
+# scripts
+MENU_CONFIG=kconfiglib/menuconfig.py
+GENDEPS_SCRIPT=$SCRIPTS_DIR/build-tree.sh
+
+
+

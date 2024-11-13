@@ -28,8 +28,7 @@
 
 
 <!-- OUTPUT FILE PARAMETERS -->
-<xsl:variable name="dirpath" select="'./build/config'" />
-<xsl:variable name="directory" select="concat($dirpath,'/deptree')" />
+<xsl:variable name="directory" select="'build/deptree/deps'" />
 
 <!--
 ####################################################################

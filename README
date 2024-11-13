@@ -10,7 +10,7 @@ https://www.linuxfromscratch.org/blfs/
 blfs-builder utilizes three stages to accomplish this:
 
 1) config
-2) setup
+2) select
 3) build
 
 Each will be covered in some detail below
@@ -30,14 +30,15 @@ book version and revision. It performs the following steps:
 5) generate full build script set
 
 
-make setup
+make select
 --------------------------------------------------------------------
 
-This stage identifies the packages to be built. It performs the 
+This stage selects the packages to be built. It performs the 
 following steps:
 
 1) generate dependency tree for selected packages
 2) create ordered build script repository
+3) build Makefile for selected builds scripts
 
 
 make build

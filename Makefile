@@ -11,21 +11,27 @@
 
 TOPDIR = $(shell pwd)
 
-CONFIG_DIR = $(TOPDIR)/config
 BUILD_DIR = $(TOPDIR)/build
-CONFIGBLD_DIR = $(BUILD_DIR)/config
+SCRIPT_DIR = $(TOPDIR)/scripts
 
-CONFIG_SCRIPT = $(CONFIG_DIR)/config.sh
+CONFIG_SCRIPT = $(SCRIPT_DIR)/config.sh
+SELECT_SCRIPT = $(SCRIPT_DIR)/select.sh
 
-ROOT_TREE = $(BUILD_DIR)/config/root.tree
-BUILD_SCRIPTS = $(BUILD_DIR)/config/build.scripts
+ROOT_TREE = $(BUILD_DIR)/root.tree
+DEPS_DIR = $(BUILD_DIR)/deptree
+BUILD_SCRIPTS = $(BUILD_DIR)/build_scripts
 
-BLFS_BOOK = $(BUILD_DIR)/config/blfs-xml
+BLFS_BOOK = $(BUILD_DIR)/blfs-xml
 
 MENU_CONFIG = $(TOPDIR)/kconfiglib/menuconfig.py
-CONFIG_IN = $(CONFIGBLD_DIR)/config.in
-CONFIG_OUT = $(CONFIGBLD_DIR)/config.out
-FULL_XML = $(CONFIGBLD_DIR)/blfs-full.xml
+CONFIG_IN = $(BUILD_DIR)/config.in
+CONFIG_OUT = $(BUILD_DIR)/config.out
+FULL_XML = $(BUILD_DIR)/blfs-full.xml
+
+SELECT_IN = $(BUILD_DIR)/select.in
+SELECT_OUT = $(BUILD_DIR)/select.out
+WORK_DIR=$(BUILD_DIR)/work
+SELECT_MAKEFILE = $(WORK_DIR)/Makefile
 
 ####################################################################
 #
@@ -50,6 +56,7 @@ readme :
 ####################################################################
 
 config : $(ROOT_TREE) $(BUILD_SCRIPTS)
+config-min : $(FULL_XML)
 
 
 $(ROOT_TREE) : $(FULL_XML) $(CONFIG_SCRIPT)
@@ -84,7 +91,7 @@ $(CONFIG_OUT) : $(CONFIG_IN) $(CONFIG_SCRIPT)
 	$(CONFIG_SCRIPT) MENUCONFIG
 
 
-$(CONFIG_IN) : $(BLFS_BOOK)
+$(CONFIG_IN) : $(BLFS_BOOK) $(CONFIG_SCRIPT)
 	$(CONFIG_SCRIPT) IN
 
 
@@ -99,6 +106,41 @@ $(BLFS_BOOK) :
 
 ####################################################################
 #
+# SELECT
+#
+# Select packages to build
+#
+####################################################################
+
+select : $(SELECT_MAKEFILE) 
+
+
+$(SELECT_MAKEFILE) : $(SELECT_OUT) $(SELECT_SCRIPT)
+	@echo
+	@echo "===================================================================="
+	@echo "Setting up the build..."
+	@echo
+	$(SELECT_SCRIPT) MAKEFILE
+
+
+$(SELECT_OUT) : $(SELECT_IN) $(SELECT_SCRIPT)
+	@echo
+	@echo "===================================================================="
+	@echo "Running menu config..."
+	@echo
+	$(SELECT_SCRIPT) MENUCONFIG
+
+
+$(SELECT_IN) : $(SELECT_SCRIPT) 
+	$(SELECT_SCRIPT) IN
+
+
+
+
+
+
+####################################################################
+#
 # CLEAN
 #
 # Remove Config.in files
@@ -106,11 +148,7 @@ $(BLFS_BOOK) :
 ####################################################################
 
 clean : 
-	rm $(CONFIG_IN)
-
-nuke :
-	rm -rf $(BUILD_DIR)
+	-rm -rf $(BUILD_DIR)
 
 
-
-.PHONY: config clean nuke
+.PHONY: config config-min select clean $(SELECT_OUT)

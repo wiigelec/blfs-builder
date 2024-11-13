@@ -1,24 +1,11 @@
 #!/bin/bash
 ####################################################################
 # 
-# GENERATE Config.in and run menuconfig.py
+# config.sh
 #
 ####################################################################
 
-MENU_CONFIG=kconfiglib/menuconfig.py
-CONFIG_DIR=build/config
-CONFIG_IN=$CONFIG_DIR/config.in
-CONFIG_OUT=$CONFIG_DIR/config.out
-BLFS_BOOK=$CONFIG_DIR/blfs-xml
-ROOT_TREE=$CONFIG_DIR/root.tree
-BUILD_SCRIPTS=$CONFIG_DIR/build.scrip
-SYSTEMDFULL_XML=$CONFIG_DIR/blfs-systemd-full.xml
-BLFSFULL_XML=$CONFIG_DIR/blfs-full.xml
-GENDEPS_XSL=config/dependencies/gen-deps.xsl
-GENDEPS_SCRIPT=config/dependencies/build-tree.sh
-DEPTREE_DIR=$CONFIG_DIR/deptree
-BUILDSCRIPTS_XSL=config/build-scripts/build-scripts.xsl
-BUILDSCRIPTS_DIR=$CONFIG_DIR/build-scripts
+source ./scripts/common-defs
 
 ####################################################################
 # BUILD CONFIG.IN
@@ -95,12 +82,16 @@ function full_xml
 	branch=$(grep BRANCH_.*=y $CONFIG_OUT | sed 's/CONFIG_BRANCH_\(.*\)=y/\1/')
 	if [[ -z $branch ]]; then echo "ERROR: Branch not configured in $CONFIG_OUT!"; exit 1; fi
 	pushd $BLFS_BOOK  > /dev/null
+	git pull
 	git checkout $branch
 	popd > /dev/null
 
 	# GENERATE FULL XML
 	make -C $BLFS_BOOK RENDERTMP=../ REV=$rev validate
-	[ $rev == 'systemd' ] && mv $SYSTEMDFULL_XML $BLFSFULL_XML
+	if [ "$rev" = "systemd" ];then
+		echo "Renaming systemd book..."
+		mv $SYSTEMDFULL_XML $BLFSFULL_XML
+	fi
 }
 
 
@@ -115,13 +106,9 @@ function root_tree
 
 	### BUILD TREE ###
 	# root.deps
-	ls $DEPTREE_DIR | sed 's/\.deps//' > $DEPTREE_DIR/root.deps
-	cp $DEPTREE_DIR/root.deps $ROOT_TREE
+	ls $DEPS_DIR | sed 's/\.deps//' > $ROOT_DEPS
 	set -e
 	$GENDEPS_SCRIPT
-
-	### CLEANUP ###
-	rm $DEPTREE_DIR/root.*
 
 }
 
@@ -158,7 +145,7 @@ function build_scripts
 		build=$line.build
 		renamefile=$BUILDSCRIPTS_DIR/$order-$build
 		orgfile=$BUILDSCRIPTS_DIR/$build
-		[ ! -e $orgfile ] && echo "$orgfile does not exist." && continue
+		[ ! -f $orgfile ] && echo "$orgfile does not exist." && continue
 		#echo "mv $orgfile $renamefile"
 		mv $orgfile $renamefile
 

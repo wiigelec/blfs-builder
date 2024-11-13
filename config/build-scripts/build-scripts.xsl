@@ -17,7 +17,7 @@
 
 
 <!-- OUTPUT FILE PARAMETERS -->
-<xsl:variable name="dirpath" select="'./build/config'" />
+<xsl:variable name="dirpath" select="'./build'" />
 <xsl:variable name="directory" select="concat($dirpath,'/build-scripts')" />
 
 <xsl:variable name="main_header">
@@ -84,7 +84,7 @@ pushd $JH_UNPACKDIR
 -->
 <xsl:template match="/">
 
-	<xsl:apply-templates select="//sect1[@id]" mode="package" />
+	<xsl:apply-templates select="//sect1[@id and .//screen]" mode="package" />
 
 </xsl:template>
 
@@ -99,7 +99,7 @@ pushd $JH_UNPACKDIR
         <xsl:variable name="create_file" select="concat($directory,'/',$filename,'.build')" />
 
 	<xsl:text>&#xA;</xsl:text>
-        <xsl:value-of select="$create_file" />
+	<xsl:value-of select="$create_file" />
 
         <exsl:document href="{$create_file}" method="text">
 		<xsl:value-of select="$main_header" />
@@ -165,7 +165,7 @@ pushd $JH_UNPACKDIR
 		<xsl:apply-templates select="descendant::screen" />
                 <xsl:text>&#xA;</xsl:text>
 
-        </exsl:document>
+	</exsl:document>
 
 </xsl:template>
 
