@@ -35,7 +35,7 @@
         <!-- ROOT COMMANDS -->
         <xsl:if test="@role = 'root'">
                 <xsl:text>&#xA;</xsl:text>
-                <xsl:text>SUDO BEGIN</xsl:text>
+		<xsl:text>sudo -E sh -e &lt;&lt; ROOT_EOF</xsl:text>
                 <xsl:text>&#xA;</xsl:text>
         </xsl:if>
 
@@ -44,7 +44,7 @@
         <!-- ROOT COMMANDS -->
         <xsl:if test="@role = 'root'">
                 <xsl:text>&#xA;</xsl:text>
-                <xsl:text>SUDO END</xsl:text>
+                <xsl:text>ROOT_EOF</xsl:text>
                 <xsl:text>&#xA;</xsl:text>
         </xsl:if>
 

@@ -204,14 +204,14 @@
                 <xsl:text>&#xA;</xsl:text>
 		<xsl:text># MAIN DOWNLOAD</xsl:text>
 		<xsl:text>&#xA;</xsl:text>
-		<xsl:apply-templates select="descendant::itemizedlist[1]/listitem/*/ulink[not(@url = ' ')]" mode="build-script" />
+		<xsl:apply-templates select="descendant::itemizedlist[1]/listitem/*/ulink[not(@url = ' ')]" mode="build-scripts" />
                 <xsl:text>&#xA;</xsl:text>
 
 		<!-- additional downloads -->
                 <xsl:text>&#xA;</xsl:text>
 		<xsl:text># ADDITIONAL DOWNLOADS</xsl:text>
                 <xsl:text>&#xA;</xsl:text>
-		<xsl:apply-templates select="descendant::itemizedlist[position() &gt; 1]/listitem/*/ulink[not(@url = ' ')]" mode="build-script" />
+		<xsl:apply-templates select="descendant::itemizedlist[position() &gt; 1]/listitem/*/ulink[not(@url = ' ')]" mode="build-scripts" />
 
 		<!-- extract -->
                 <xsl:text>&#xA;</xsl:text>
@@ -229,6 +229,8 @@
 
 		<xsl:apply-templates select="descendant::screen" mode="build-scripts" />
                 <xsl:text>&#xA;</xsl:text>
+
+                <xsl:text>exit</xsl:text>
 
 	</exsl:document>
 

@@ -33,13 +33,14 @@
 -->
 
 <!-- main header -->
-<xsl:variable name="bs-mainheader">
-#!/bin/bash
+<xsl:variable name="bs-mainheader">#!/bin/bash
 ####################################################################
 #
 #
 #
 ####################################################################
+
+set -e
 
 # CONFIG VARS
 SRC_DIR=/sources

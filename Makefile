@@ -73,6 +73,9 @@ $(VALIDATED) : $(ROOT_TREE) $(BUILD_SCRIPTS)
 	@echo "Validating dependency trees and build scripts..."
 	@echo
 	$(INIT_SCRIPT) VALIDATE
+	@echo
+	@echo "Initialization complete."
+	@echo
 
 
 $(ROOT_TREE) :  $(FULL_XML)
