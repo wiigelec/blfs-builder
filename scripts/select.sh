@@ -28,13 +28,14 @@ function select_in
 
 	### CHECK BUILD SCRIPTS ###
 	echo
-	echo "Verifying build scripts, just a minute..."
+	echo "Verifying build scripts, will only take a minute..."
 	echo
 	while IFS= read -r line;
         do
 		if [[ $line == *"comment"* ]]; then
 			id=$(echo $line | sed 's/.*id:\(.*\)) .*/\1/')
-			exists=$(ls $BUILDSCRIPTS_DIR | grep "[0-9]*-${id}.build")
+			if [[ -z $id ]]; then continue; fi
+			exists=$(ls $BUILDSCRIPTS_DIR | grep "${id}.build")
 			if [[ ! -z $exists ]]; then
 
 				title=$(echo $line | sed 's/comment \"\(.*\) (id:.*/\1/')
@@ -65,7 +66,7 @@ function gen_makefile
 	echo
 	echo "Processing dependencies..."
 	echo
-	echo "" > $ROOT_DEPS
+	> $ROOT_DEPS
 	packages=$(grep =y $SELECT_OUT | sed 's/CONFIG_\(.*\)=y/\1/')
 	for p in $packages
 	do
@@ -74,20 +75,60 @@ function gen_makefile
 	$GENDEPS_SCRIPT
 
 	### COPY BUILD SCRIPTS ###
+	echo
+	echo "Ordering build scripts..."
+	echo
 	# work dir
 	[ -d $WORK_DIR ] && rm -rf $WORK_DIR
-	mkdir -pv $WORK_DIR
+	mkdir -pv $WORK_DIR/scripts
 	# read tree file
+	cnt=1
 	while IFS= read -r line;
         do
 		file=""
-		file=$(find $BUILDSCRIPTS_DIR -name "[0-9][0-9][0-9][0-9]-$line.build")
+		file=$(find $BUILDSCRIPTS_DIR -name "$line.build")
 		[ -z $file ] && echo "File $line not found in $BUILDSCRIPTS_DIR." && continue
 
-		# copy file
-		cp $file $WORK_DIR
+		# create ordered list
+		if [ "$cnt" -lt 10 ]; then
+                       order="00$cnt"
+               	elif [ "$cnt" -lt 100 ]; then
+                       order="0$cnt"
+               	else
+                       order="$cnt"
+               	fi
+		
+		name=${file##*/}
+		cp -v $file $WORK_DIR/scripts/$order-z-$name
 
-	done < $TREE_FILE
+		((cnt++))
+
+	done < $ROOT_TREE
+
+	### CREATE MAKEFILE ###
+	echo
+	echo "Generating makefile..."
+	echo
+	makefile=$WORK_DIR/Makefile
+	scripts=$(ls -r $WORK_DIR/scripts)
+	prev=""
+	for s in $scripts
+	do
+		[ -z $prev ] && prev=$s && continue
+
+		target1=${prev%.build}
+		target2=${s%.build}
+		echo "$target1 : $target2 " >> $makefile
+		echo "	./scripts/$prev" >> $makefile
+		echo "	touch $target1" >> $makefile
+		echo "" >> $makefile
+		prev=$s
+
+	done	
+	target1=${prev%.build}
+	echo "$target1 :" >> $makefile
+	echo "	./scripts/$prev" >> $makefile
+	echo "	touch $target1" >> $makefile
 
 }
 

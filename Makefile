@@ -34,8 +34,8 @@ INIT_IN = $(BUILD_CONFIG)/init.in
 INIT_OUT = $(BUILD_CONFIG)/init.out
 FULL_XML = $(BUILD_XML)/blfs-full.xml
 
-SELECT_IN = $(BUILD_DIR)/select.in
-SELECT_OUT = $(BUILD_DIR)/select.out
+SELECT_IN = $(BUILD_CONFIG)/select.in
+SELECT_OUT = $(BUILD_CONFIG)/select.out
 WORK_DIR = $(BUILD_DIR)/work
 SELECT_MAKEFILE = $(WORK_DIR)/Makefile
 
@@ -125,7 +125,7 @@ $(BLFS_BOOK) :
 select : $(SELECT_MAKEFILE) 
 
 
-$(SELECT_MAKEFILE) : $(SELECT_OUT) $(SELECT_SCRIPT)
+$(SELECT_MAKEFILE) : $(SELECT_OUT)
 	@echo
 	@echo "===================================================================="
 	@echo "Setting up the build..."
@@ -133,7 +133,7 @@ $(SELECT_MAKEFILE) : $(SELECT_OUT) $(SELECT_SCRIPT)
 	$(SELECT_SCRIPT) MAKEFILE
 
 
-$(SELECT_OUT) : $(SELECT_IN) $(SELECT_SCRIPT)
+$(SELECT_OUT) : $(SELECT_IN)
 	@echo
 	@echo "===================================================================="
 	@echo "Running menu config..."
@@ -141,7 +141,7 @@ $(SELECT_OUT) : $(SELECT_IN) $(SELECT_SCRIPT)
 	$(SELECT_SCRIPT) MENUCONFIG
 
 
-$(SELECT_IN) : $(SELECT_SCRIPT) 
+$(SELECT_IN) :
 	$(SELECT_SCRIPT) IN
 
 
@@ -193,4 +193,4 @@ nuke :
 	-rm -rf $(BUILD_DIR)
 	-rm -rf $(KCONFIG_DIR)/__pycache__
 
-.PHONY: config config-min select clean clean-deps $(SELECT_OUT)
+.PHONY: config config-min select clean clean-deps $(SELECT_MAKEFILE)

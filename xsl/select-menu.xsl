@@ -15,7 +15,7 @@
 <xsl:strip-space elements="*" />
 
 
-<xsl:include href="sect1.xsl" />
+<xsl:include href="util/sect1.xsl" />
 
 
 <!--
