@@ -29,7 +29,7 @@
 -->
 
 <!-- main download -->
-<xsl:template match="itemizedlist[1]/listitem/*/ulink[not(@url = ' ')]" mode="bs-ulink" >
+<xsl:template match="itemizedlist[1]/listitem/*/ulink[not(@url = ' ')]" mode="build-scripts" >
 
         <!-- pkg url -->
         <xsl:text>PKG_URL=</xsl:text>
@@ -48,7 +48,7 @@
 </xsl:template>
 
 <!-- additional downloads -->
-<xsl:template match="itemizedlist[position() &gt; 1]/listitem/*/ulink[not(@url = ' ')]" mode="bs-ulink" >
+<xsl:template match="itemizedlist[position() &gt; 1]/listitem/*/ulink[not(@url = ' ')]" mode="build-scripts" >
 
         <xsl:text>wget </xsl:text>
         <xsl:value-of select="@url" />

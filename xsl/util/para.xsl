@@ -20,7 +20,7 @@
 # DEPENDENCIES
 ####################################################################
 -->
-<xsl:template match="para" mode="deps">
+<xsl:template match="para" mode="dependencies">
 
         <xsl:for-each select="xref[not(@role = 'nodep')]">
                 <xsl:value-of select="@linkend" />

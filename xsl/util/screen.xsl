@@ -27,7 +27,7 @@
 # COMMMANDS
 ####################################################################
 -->
-<xsl:template match="screen" mode="bs-screen">
+<xsl:template match="screen" mode="build-scripts">
 
         <xsl:text>&#xA;</xsl:text>
         <xsl:text>&#xA;</xsl:text>

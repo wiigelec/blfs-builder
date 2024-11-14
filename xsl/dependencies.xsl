@@ -33,47 +33,34 @@
 <xsl:template match="/">
 
 	<!-- sect1 standard -->
-        <xsl:apply-templates select="//sect1[@id]" mode="deps-sect1" />
+        <xsl:apply-templates select="//sect1[@id]" mode="dependencies" />
 
 	<!-- ### SPECIAL HANDLING PLUGINS ### -->
 
 	<!-- server-mail -->
-        <xsl:apply-templates select="//chapter[@id = 'server-mail']" mode="deps-servermail" />
+        <xsl:apply-templates select="//chapter[@id = 'server-mail']" mode="dependencies" />
 
 	<!-- x-window-system -->
-        <xsl:apply-templates select="//chapter[@id = 'x-window-system']" mode="deps-xwindowsystem" />
+        <xsl:apply-templates select="//chapter[@id = 'x-window-system']" mode="dependencies" />
 
 	<!-- sect2 dependencies -->
-        <xsl:apply-templates select="//sect1[@id]" mode="deps-sect2" />
+        <xsl:apply-templates select="//sect1[@id]" mode="dependencies" />
 
 	<!-- java-bin -->
-	<xsl:apply-templates select="//sect2[@id = 'java-bin']" mode="deps-javabin" />
+	<xsl:apply-templates select="//sect2[@id = 'java-bin']" mode="dependencies" />
 
 	<!-- xorg-env -->
-        <xsl:apply-templates select="//sect2[@id = 'xorg-env']" mode="deps-xorgenv" />
+        <xsl:apply-templates select="//sect2[@id = 'xorg-env']" mode="dependencies" />
 
 	<!-- dejavu fonts -->
-        <xsl:apply-templates select="//bridgehead[@id = 'dejavu-fonts']" mode="deps-bridgehead" />
+        <xsl:apply-templates select="//bridgehead[@id = 'dejavu-fonts']" mode="dependencies" />
 
 	<!-- polkit agent -->
-        <xsl:apply-templates select="//bridgehead[@id = 'polkit-agent']" mode="deps-bridgehead" />
+        <xsl:apply-templates select="//bridgehead[@id = 'polkit-agent']" mode="dependencies" />
 
 	<xsl:text>&#xA;</xsl:text>
 
 </xsl:template>
-
-
-<!--
-####################################################################
-# EMPTY MATCHES
-####################################################################
--->
-
-<xsl:template match="title" />
-<xsl:template match="//indexterm" />
-<xsl:template match="//para[not(@role)]" />
-<xsl:template match="//para[@role = 'usernotes']" />
-
 
 
 

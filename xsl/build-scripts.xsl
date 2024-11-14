@@ -99,10 +99,7 @@ pushd $JH_UNPACKDIR
 -->
 <xsl:template match="/">
 
-	<xsl:apply-templates select="//sect1[@id and .//screen]" mode="bs-sect1" />
-
-	<!-- sect2 buildscripts -->
-	<xsl:apply-templates select="//sect1[@id and .//screen]" mode="bs-sect2" />
+	<xsl:apply-templates select="//sect1[@id and .//screen]" mode="build-scripts" />
 
 </xsl:template>
 

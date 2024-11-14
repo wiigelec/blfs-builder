@@ -30,7 +30,7 @@
 # BRIDGEHEAD DEPENDENCIES
 ####################################################################
 -->
-<xsl:template match="//bridgehead" mode="deps-bridgehead">
+<xsl:template match="//bridgehead" mode="dependencies">
 
         <xsl:variable name="filename" select="@id" />
         <xsl:variable name="create_file" select="concat($directory,'/',$filename,'.deps')" />

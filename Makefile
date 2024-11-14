@@ -22,7 +22,8 @@ DEPS_DIR = $(BUILD_DIR)/deptree
 DEP_TREE = $(DEPS_DIR)/trees
 ROOT_TREE = $(DEPS_DIR)/root.tree
 BUILDSCRIPTS_DIR = $(BUILD_DIR)/build-scripts
-BUILD_SCRIPTS = $(BUILDSCRIPTS_DIR)/build.scripts
+BUILD_SCRIPTS = $(BUILD_DIR)/build.scripts
+VALIDATED = $(BUILD_DIR)/validated
 
 BLFS_BOOK = $(BUILD_XML)/blfs-xml
 
@@ -60,19 +61,29 @@ readme :
 #
 ####################################################################
 
-init : $(ROOT_TREE) $(BUILD_SCRIPTS)
+init : $(VALIDATED)
 init-min : $(FULL_XML)
+deps : $(ROOT_TREE)
+scripts : $(BUILD_SCRIPTS)
 
 
-$(ROOT_TREE) :  $(FULL_XML) $(INIT_SCRIPT)
+$(VALIDATED) : $(ROOT_TREE) $(BUILD_SCRIPTS)
+	@echo
+	@echo "===================================================================="
+	@echo "Validating dependency trees and build scripts..."
+	@echo
+	$(INIT_SCRIPT) VALIDATE
+
+
+$(ROOT_TREE) :  $(FULL_XML)
 	@echo
 	@echo "===================================================================="
 	@echo "Building dependency tree..."
 	@echo
-	$(INIT_SCRIPT) DEP_TREE
+	$(INIT_SCRIPT) ROOT_TREE
 
 
-$(BUILD_SCRIPTS) : $(FULL_XML) $(INIT_SCRIPT)
+$(BUILD_SCRIPTS) : $(FULL_XML)
 	@echo
 	@echo "===================================================================="
 	@echo "Generating build scripts..."
@@ -147,15 +158,13 @@ $(SELECT_IN) : $(SELECT_SCRIPT)
 ####################################################################
 
 clean : 
-	@echo "clean-config"
-	@echo "clean-allconfig"
-	@echo "clean-deps"
-	@echo "clean-scripts"
-	@echo "clean-book"
-	@echo "nuke"
-
-clean-config : 
-	-rm  $(FULL_XML)
+	@echo "clean-allconfig: remove full xml, deptree, build scripts, and config in/out"
+	@echo "clean-book: remove blfs-xml"
+	@echo "clean-config: remove full xml"
+	@echo "clean-deps: remove deptree directory"
+	@echo "clean-scripts: remove build-scripts directory"
+	@echo "clean-valid: remove validated file"
+	@echo "nuke: remove build directory"
 
 clean-allconfig : 
 	-rm  $(FULL_XML)
@@ -164,14 +173,22 @@ clean-allconfig :
 	-rm -rf $(DEPS_DIR)
 	-rm -rf $(BUILDSCRIPTS_DIR)
 
+clean-book : 
+	-rm -rf $(BLFS_BOOK)
+
+clean-config : 
+	-rm  $(FULL_XML)
+
 clean-deps : 
 	-rm -rf $(DEPS_DIR)
 
 clean-scripts : 
+	-rm $(BUILD_SCRIPTS)
 	-rm -rf $(BUILDSCRIPTS_DIR)
 
-clean-book : 
-	-rm -rf $(BLFS_BOOK)
+clean-valid : 
+	-rm $(VALIDATED)
+
 nuke : 
 	-rm -rf $(BUILD_DIR)
 	-rm -rf $(KCONFIG_DIR)/__pycache__

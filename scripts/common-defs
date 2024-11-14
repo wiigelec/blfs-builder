@@ -29,6 +29,7 @@ SELECT_IN=$BUILD_CONFIG/select.in
 SELECT_OUT=$BUILD_CONFIG/select.out
 SELECTIN_TMP=$BUILD_CONFIG/select.in.tmp
 PROCD_FILE=$DEPTREE_DIR/processed.tmp
+VALID_FILE=$BUILD_DIR/validated
 
 # xsl
 GENDEPS_XSL=$XSL_DIR/dependencies.xsl

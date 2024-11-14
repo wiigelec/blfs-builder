@@ -99,7 +99,7 @@ function full_xml
 # DEP TREE
 ###################################################################
 
-function dep_tree
+function root_tree
 {
 	### GEN DEPS ###
 	xsltproc $GENDEPS_XSL $BLFSFULL_XML
@@ -111,6 +111,27 @@ function dep_tree
 	echo "Building full dependency tree, this could take a while..."
 	echo
 	$GENDEPS_SCRIPT
+	echo
+	
+	# fix dejavu-fonts
+	fix_files=$(grep -rl dejavu-fonts $DEPS_DIR)
+	for a in $fix_files; do sed -i '/dejavu-fonts/d' $a; done
+	rm $DEPS_DIR/dejavu-fonts.deps
+
+	# fix polkit-agent
+	fix_files=$(grep -rl polkit-agent $DEPS_DIR)
+	for a in $fix_files; do sed -i '/polkit-agent/d' $a; done
+	rm $DEPS_DIR/polkit-agent.deps
+
+	# fix server-mail
+	fix_files=$(grep -rl server-mail $DEPS_DIR)
+	for a in $fix_files; do sed -i 's/server-mail/dovecot/' $a; done
+	rm $DEPS_DIR/server-mail.deps
+	
+	# fix x-window-system
+	fix_files=$(grep -rl x-window-system $DEPS_DIR)
+	for a in $fix_files; do sed -i 's/x-window-system/xinit/' $a; done
+	rm $DEPS_DIR/x-window-system.deps
 
 }
 
@@ -125,8 +146,7 @@ function build_scripts
 	xsltproc $BUILDSCRIPTS_XSL $BLFSFULL_XML
 
 	### BUILD.SCRIPTS ###
-	ls $BUILDSCRIPTS_DIR > build.scripts
-	mv build.scripts $BUILDSCRIPTS_DIR
+	ls $BUILDSCRIPTS_DIR > $BUILD_DIR/build.scripts
 
 	### ORDERED LIST ###
 	#echo
@@ -161,6 +181,79 @@ function build_scripts
 
 }
 
+####################################################################
+# VALIDATE
+###################################################################
+
+function validate
+{
+	### VALIDATE DEPS ###
+	deps_valid=1
+	echo
+	echo "Validating dependency trees..."
+	echo
+	for bs in $BUILDSCRIPTS_DIR/*.build
+	do
+		# locate corresponding tree file
+		df=${bs##*/}
+		df=${df/.build/.deps}
+		df=$DEPS_DIR/$df
+		[ ! -f $df ] && echo "MISSING: $df" && deps_valid=0
+	done
+	[ $deps_valid -eq 0 ] && echo "ERROR: Missing dependency trees."
+	[ $deps_valid -eq 1 ] && echo "SUCCESS: All dependency trees verified."
+
+
+	### VALIDATE BUILD SCRIPTS ###
+	bs_valid=1
+	echo
+	echo "Validating build scripts..."
+	echo
+	for dep in $DEPS_DIR/*.deps
+        do
+		# locate corresponding tree file
+		sf=${dep##*/}
+		sf=${sf/.deps/.build}
+		sf=$BUILDSCRIPTS_DIR/$sf
+		[ ! -f $sf ] && echo "MISSING: $sf" && bs_valid=0
+        done
+	[ $bs_valid -eq 0 ] && echo "ERROR: Missing build scripts."
+	[ $bs_valid -eq 1 ] && echo "SUCCESS: All build scripts verified."
+
+
+	### VALIDATE DEPENDENCY CONNECTIONS ###
+	dc_valid=1;
+	echo
+	echo "Validating dependency connections..."
+	echo
+	validdeps_tmp=valid_deps.tmp
+	touch $validdeps_tmp
+	for dep in $DEPS_DIR/*.deps
+        do	
+		#echo "Checking $dep..."
+                # read file
+		while IFS= read -r line;
+		do
+			[ -z $line ] && continue
+			check=$DEPS_DIR/${line}.deps
+			if [[ ! -f $check ]]; then
+				# if not already add to queue
+				[ -z "$(grep $check $validdeps_tmp)" ] && echo $check >> $validdeps_tmp
+				dc_valid=0
+			fi
+
+		done < $dep
+        done
+	[ $dc_valid -eq 0 ] && echo "ERROR: Missing dependency connections:" && echo && cat $validdeps_tmp
+	[ $dc_valid -eq 1 ] && echo "SUCCESS: All dependency connections verified."
+	rm $validdeps_tmp
+
+
+	[ $deps_valid -eq 1 ] && [ $bs_valid -eq 1 ] && [ $dc_valid -eq 1 ] && touch $VALID_FILE
+
+}
+
+
 
 ####################################################################
 # MAIN
@@ -175,6 +268,7 @@ case $1 in
 	MENUCONFIG ) menu_config ;;
 	FULL_XML) full_xml ;;
 	BUILD_SCRIPTS) build_scripts ;;
-	DEP_TREE) dep_tree ;;
+	ROOT_TREE) root_tree ;;
+	VALIDATE) validate ;;
 
 esac

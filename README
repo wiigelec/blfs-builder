@@ -3,7 +3,7 @@
 Welcome to blfs-builder!
 
 The purpose of blfs-builder is to generate and execute build scripts 
-for the Beyond Linux from Scratch book.
+from the Beyond Linux from Scratch book.
 
 https://www.linuxfromscratch.org/blfs/
 
@@ -12,8 +12,6 @@ blfs-builder utilizes three stages to accomplish this:
 1) init
 2) select
 3) build
-
-Each will be covered in some detail below
 
 ====================================================================
 
@@ -38,7 +36,7 @@ following steps:
 
 1) generate dependency tree for selected packages
 2) create ordered build script repository
-3) build Makefile for selected builds scripts
+3) build Makefile for selected build scripts
 
 
 make build

@@ -21,8 +21,38 @@
 ####################################################################
 -->
 
-<!-- SECT2 DEPENDENCIES -->
+<!-- INGNORE DEPENDENCIES -->
 <!-- % for exact match -->
+<xsl:variable name="deps-ignore">
+	%alsa%
+	%askhelp%
+	%basicnet-mailnews-other%
+	%beyond%
+	%changelog%
+	%contactinfo%
+	%credits%
+	%foreword%
+	%fw-firewall%
+	%kde-intro%
+	%libraries%
+	%lxqt-pre-install%
+	%maillists%
+	%mirrors%
+	%organization%
+	%packages%
+	%patches%
+	%position%
+	%postlfs-config-bootdisk%
+	%postlfs-users-groups%
+	%systemd-units%
+	%version%
+	%vulnerabilities%
+	%whichsections%
+	%whoread%
+	%wiki%
+</xsl:variable>
+
+<!-- SECT2 DEPENDENCIES -->
 <xsl:variable name="deps-sect2">
 	%perl-modules%
 	%python-modules%
@@ -31,6 +61,7 @@
 	%xorg7-input-driver%
 </xsl:variable>
 
+
 <!-- SECT2 BUILD SCRIPTS -->
 <xsl:variable name="bs-sect2">
         %perl-modules%
@@ -38,6 +69,8 @@
         %perl-deps%
         %python-dependencies%
         %xorg7-input-driver%
+	%java%
+	%xorg7%
 </xsl:variable>
 
 
@@ -86,36 +119,30 @@
 ####################################################################
 -->
 
-<xsl:template match="sect1" mode="deps-sect1">
+<xsl:template match="sect1" mode="dependencies">
 
-        <xsl:variable name="filename" select="@id" />
-        <xsl:variable name="create_file" select="concat($directory,'/',$filename,'.deps')" />
+	<!-- skip ignore list -->
+	<xsl:variable name="id-ignore" select="concat('%',@id,'%')" />
+	<xsl:if test="not(contains($deps-ignore,$id-ignore))">
+        	<xsl:variable name="filename" select="@id" />
+        	<xsl:variable name="create_file" select="concat($directory,'/',$filename,'.deps')" />
 
-        <xsl:text>&#xA;</xsl:text>
-        <xsl:value-of select="$create_file" />
+        	<xsl:text>&#xA;</xsl:text>
+        	<xsl:value-of select="$create_file" />
 
-        <exsl:document href="{$create_file}" method="text">
-                <xsl:apply-templates select="sect2/para[@role = 'required']"  mode="deps" />
-                <xsl:apply-templates select="sect2/para[@role = 'recommended']" mode="deps" />
-                <xsl:text>&#xA;</xsl:text>
-        </exsl:document>
+        	<exsl:document href="{$create_file}" method="text">
+                	<xsl:apply-templates select="sect2/para[@role = 'required']"  mode="dependencies" />
+                	<xsl:apply-templates select="sect2/para[@role = 'recommended']" mode="dependencies" />
+                	<xsl:text>&#xA;</xsl:text>
+		</exsl:document>
+        </xsl:if>
 
-</xsl:template>
+	<!-- sect2 dependencies -->
+	<xsl:variable name="id-sect2" select="concat('%',@id,'%')" />
+        <xsl:if test="contains($deps-sect2,$id-sect2)">
 
+                <xsl:apply-templates match="sect2[@id]" mode="dependencies" />
 
-<!--
-####################################################################
-# SECT2 DEPENDENCIES
-####################################################################
--->
-<xsl:template match="sect1[@id]" mode="deps-sect2">
-
-        <xsl:variable name="id" select="concat('%',@id,'%')" />
-
-        <xsl:if test="contains($deps-sect2,$id)">
-
-                <xsl:apply-templates match="sect2[@id]" mode="deps-sect2" />
-		
         </xsl:if>
 
 </xsl:template>
@@ -134,7 +161,7 @@
 # SECT1 BUILD SCRIPTS
 ####################################################################
 -->
-<xsl:template match="sect1" mode="bs-sect1" >
+<xsl:template match="sect1[@id]|sect2[@id]" mode="build-scripts" >
 
 	<xsl:variable name="filename" select="@id" />
         <xsl:variable name="create_file" select="concat($directory,'/',$filename,'.build')" />
@@ -177,14 +204,14 @@
                 <xsl:text>&#xA;</xsl:text>
 		<xsl:text># MAIN DOWNLOAD</xsl:text>
 		<xsl:text>&#xA;</xsl:text>
-		<xsl:apply-templates select="descendant::itemizedlist[1]/listitem/*/ulink[not(@url = ' ')]" mode="bs-ulink" />
+		<xsl:apply-templates select="descendant::itemizedlist[1]/listitem/*/ulink[not(@url = ' ')]" mode="build-script" />
                 <xsl:text>&#xA;</xsl:text>
 
 		<!-- additional downloads -->
                 <xsl:text>&#xA;</xsl:text>
 		<xsl:text># ADDITIONAL DOWNLOADS</xsl:text>
                 <xsl:text>&#xA;</xsl:text>
-		<xsl:apply-templates select="descendant::itemizedlist[position() &gt; 1]/listitem/*/ulink[not(@url = ' ')]" mode="bs-ulink" />
+		<xsl:apply-templates select="descendant::itemizedlist[position() &gt; 1]/listitem/*/ulink[not(@url = ' ')]" mode="build-script" />
 
 		<!-- extract -->
                 <xsl:text>&#xA;</xsl:text>
@@ -200,26 +227,16 @@
 		<xsl:text># EXECUTE BUILD COMMANDS</xsl:text>
 		<xsl:value-of select="$bs-commentline" />
 
-		<xsl:apply-templates select="descendant::screen" mode="bs-screen" />
+		<xsl:apply-templates select="descendant::screen" mode="build-scripts" />
                 <xsl:text>&#xA;</xsl:text>
 
 	</exsl:document>
 
-</xsl:template>
-
-
-<!--
-####################################################################
-# SECT2 BUILD SCRIPTS
-####################################################################
--->
-<xsl:template match="sect1[@id]" mode="bs-sect2">
-
-        <xsl:variable name="id" select="concat('%',@id,'%')" />
-
+	<!-- sect 2 build scripts -->
+	<xsl:variable name="id" select="concat('%',@id,'%')" />
         <xsl:if test="contains($bs-sect2,$id)">
 
-                <xsl:apply-templates match="sect2[@id]" mode="bs-sect2" />
+                <xsl:apply-templates match="sect2[@id]" mode="build-scripts" />
 
         </xsl:if>
 

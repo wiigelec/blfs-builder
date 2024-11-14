@@ -29,7 +29,8 @@
 # X WINDOW SYSTEM
 ####################################################################
 -->
-<xsl:template match="chapter[@id = 'x-window-system']" mode="deps-xwindowsystem">
+
+<xsl:template match="chapter[@id = 'x-window-system']" mode="dependencies">
 
         <xsl:variable name="filename" select="'x-window-system'" />
         <xsl:variable name="create_file" select="concat($directory,'/',$filename,'.deps')" />
@@ -48,7 +49,7 @@
 # SERVER MAIL
 ####################################################################
 -->
-<xsl:template match="chapter[@id = 'server-mail']" mode="deps-servermail">
+<xsl:template match="chapter[@id = 'server-mail']" mode="dependencies">
 
         <xsl:variable name="filename" select="'server-mail'" />
         <xsl:variable name="create_file" select="concat($directory,'/',$filename,'.deps')" />
