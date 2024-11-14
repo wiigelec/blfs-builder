@@ -15,12 +15,25 @@
 <xsl:output method="text" />
 <xsl:strip-space elements="*" />
 
+<!-- INCLUDES -->
+<xsl:include href="util/sect1.xsl" />
+<xsl:include href="util/sect2.xsl" />
+<xsl:include href="util/screen.xsl" />
+<xsl:include href="util/ulink.xsl" />
+
 
 <!-- OUTPUT FILE PARAMETERS -->
 <xsl:variable name="dirpath" select="'./build'" />
 <xsl:variable name="directory" select="concat($dirpath,'/build-scripts')" />
 
-<xsl:variable name="main_header">
+<!--
+####################################################################
+# VARIABLES
+####################################################################
+-->
+
+<!-- main header -->
+<xsl:variable name="bs-mainheader">
 #!/bin/bash
 ####################################################################
 #
@@ -33,11 +46,13 @@ SRC_DIR=/sources
 
 </xsl:variable>
 
-<xsl:variable name="comment_line">
+<!-- comment line -->
+<xsl:variable name="bs-commentline">
 ####################################################################
 </xsl:variable>
 
-<xsl:variable name="extract_download">
+<!-- extract download -->
+<xsl:variable name="bs-extractdownload">
 
 JH_UNPACKDIR=""
 
@@ -84,154 +99,15 @@ pushd $JH_UNPACKDIR
 -->
 <xsl:template match="/">
 
-	<xsl:apply-templates select="//sect1[@id and .//screen]" mode="package" />
+	<xsl:apply-templates select="//sect1[@id and .//screen]" mode="bs-sect1" />
 
-</xsl:template>
-
-<!--
-####################################################################
-#
-####################################################################
--->
-<xsl:template match="sect1" mode="package" >
-
-	<xsl:variable name="filename" select="@id" />
-        <xsl:variable name="create_file" select="concat($directory,'/',$filename,'.build')" />
-
-	<xsl:text>&#xA;</xsl:text>
-	<xsl:value-of select="$create_file" />
-
-        <exsl:document href="{$create_file}" method="text">
-		<xsl:value-of select="$main_header" />
-		<xsl:text>&#xA;</xsl:text>
-
-		<!-- ### PACKAGE INFO ### -->
-		<xsl:text># PACKAGE INFO</xsl:text>
-		<xsl:text>&#xA;</xsl:text>
-		<!-- pkg full -->
-		<xsl:text>PKG_FULL=</xsl:text>
-		<xsl:value-of select="@xreflabel" />
-                <xsl:text>&#xA;</xsl:text>
-		<!-- pkg name -->
-		<xsl:text>PKG_NAME=</xsl:text>
-		<xsl:value-of select="@id" />
-                <xsl:text>&#xA;</xsl:text>
-		<!-- pkg ver -->
-		<xsl:text>PKG_VERS=${PKG_FULL#$PKG_NAME-}</xsl:text>
-
-                <xsl:text>&#xA;</xsl:text>
-                <xsl:text>&#xA;</xsl:text>
-
-		<!-- pushd sources dir -->
-                <xsl:text>&#xA;</xsl:text>
-                <xsl:text>pushd $SRC_DIR</xsl:text>
-                <xsl:text>&#xA;</xsl:text>
-
-		<!-- ### FILE DOWNLOADS ### -->
-		<xsl:value-of select="$comment_line" />
-		<xsl:text># DOWNLOAD AND EXTRACT FILES</xsl:text>
-		<xsl:value-of select="$comment_line" />
-
-		<!-- main download -->
-                <xsl:text>&#xA;</xsl:text>
-		<xsl:text># MAIN DOWNLOAD</xsl:text>
-		<xsl:text>&#xA;</xsl:text>
-		<xsl:apply-templates select="descendant::itemizedlist[1]/listitem/*/ulink[not(@url = ' ')]" />
-                <xsl:text>&#xA;</xsl:text>
-
-		<!-- additional downloads -->
-                <xsl:text>&#xA;</xsl:text>
-		<xsl:text># ADDITIONAL DOWNLOADS</xsl:text>
-                <xsl:text>&#xA;</xsl:text>
-		<xsl:apply-templates select="descendant::itemizedlist[position() &gt; 1]/listitem/*/ulink[not(@url = ' ')]" />
-
-		<!-- extract -->
-                <xsl:text>&#xA;</xsl:text>
-		<xsl:text># EXTRACT DOWNLOAD</xsl:text>
-		<xsl:value-of select="$extract_download" />
-                <xsl:text>&#xA;</xsl:text>
-
-		<!-- TESTING -->
-		<xsl:text>exit</xsl:text>
-
-		<!-- ### BUILD COMMANDS ### -->
-                <xsl:text>&#xA;</xsl:text>
-                <xsl:text>&#xA;</xsl:text>
-                <xsl:text>&#xA;</xsl:text>
-		<xsl:value-of select="$comment_line" />
-		<xsl:text># EXECUTE BUILD COMMANDS</xsl:text>
-		<xsl:value-of select="$comment_line" />
-
-		<xsl:apply-templates select="descendant::screen" />
-                <xsl:text>&#xA;</xsl:text>
-
-	</exsl:document>
+	<!-- sect2 buildscripts -->
+	<xsl:apply-templates select="//sect1[@id and .//screen]" mode="bs-sect2" />
 
 </xsl:template>
 
 
-<!--
-####################################################################
-# COMMMANDS
-####################################################################
--->
-<xsl:template match="screen">
 
-        <xsl:text>&#xA;</xsl:text>
-        <xsl:text>&#xA;</xsl:text>
-
-	<!-- ROOT COMMANDS -->
-	<xsl:if test="@role = 'root'">
-		<xsl:text>&#xA;</xsl:text>
-		<xsl:text>SUDO BEGIN</xsl:text>
-		<xsl:text>&#xA;</xsl:text>
-	</xsl:if>
-
-        <xsl:value-of select="." />
-
-	<!-- ROOT COMMANDS -->
-	<xsl:if test="@role = 'root'">
-		<xsl:text>&#xA;</xsl:text>
-		<xsl:text>SUDO END</xsl:text>
-		<xsl:text>&#xA;</xsl:text>
-	</xsl:if>
-
-</xsl:template>
-
-
-<!--
-####################################################################
-# FILE DOWNLOADS
-####################################################################
--->
-
-<!-- main download -->
-<xsl:template match="itemizedlist[1]/listitem/*/ulink[not(@url = ' ')]">
-
-	<!-- pkg url -->
-	<xsl:text>PKG_URL=</xsl:text>
-        <xsl:value-of select="@url" />
-	<xsl:text>&#xA;</xsl:text>
-
-	<!-- package -->
-	<xsl:text>PACKAGE=${PKG_URL##*/}</xsl:text>
-	<xsl:text>&#xA;</xsl:text>
-
-	<!-- wget -->
-	<xsl:text>&#xA;</xsl:text>
-	<xsl:text>wget $PKG_URL</xsl:text>
-	<xsl:text>&#xA;</xsl:text>
-
-</xsl:template>
-
-<!-- additional downloads -->
-<xsl:template match="itemizedlist[position() &gt; 1]/listitem/*/ulink[not(@url = ' ')]">
-
-	<xsl:text>wget </xsl:text>
-        <xsl:value-of select="@url" />
-	<xsl:text>&#xA;</xsl:text>
-
-</xsl:template>
 
 
 

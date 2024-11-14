@@ -54,6 +54,7 @@ touch $PROCD_FILE
 
 ### PROCESS ROOT FILE ###
 [ -f $ROOT_TREE ] && rm $ROOT_TREE
+touch $ROOT_TREE.tmp
 set -e
 while IFS= read -r line;
 do

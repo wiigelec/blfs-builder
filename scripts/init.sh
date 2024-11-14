@@ -1,21 +1,21 @@
 #!/bin/bash
 ####################################################################
 # 
-# config.sh
+# init.sh
 #
 ####################################################################
 
 source ./scripts/common-defs
 
 ####################################################################
-# BUILD CONFIG.IN
+# BUILD INIT.IN
 ###################################################################
 
 function config_in
 {
 
 	### REV ###
-cat << EOF > $CONFIG_IN
+cat << EOF > $INIT_IN
 choice
 	prompt "Book Revision"
         config    SYSV
@@ -33,8 +33,8 @@ endchoice
 EOF
 
 	### BRANCHES ###
-	echo "choice" >> $CONFIG_IN
-	echo "prompt \"Book Branch\"" >> $CONFIG_IN
+	echo "choice" >> $INIT_IN
+	echo "prompt \"Book Branch\"" >> $INIT_IN
 
 	# iterate branches
 	pushd $BLFS_BOOK > /dev/null
@@ -43,12 +43,12 @@ EOF
 	for branch in $branches; do
 
 		branch=${branch#origin/}
-		echo "	config BRANCH_$branch" >> $CONFIG_IN
-		echo "		bool \"$branch\"" >> $CONFIG_IN
+		echo "	config BRANCH_$branch" >> $INIT_IN
+		echo "		bool \"$branch\"" >> $INIT_IN
 
 	done
 
-	echo "endchoice" >> $CONFIG_IN
+	echo "endchoice" >> $INIT_IN
 }
 
 
@@ -58,7 +58,7 @@ EOF
 
 function menu_config
 {
-	KCONFIG_CONFIG=$CONFIG_OUT python3 $MENU_CONFIG $CONFIG_IN
+	KCONFIG_CONFIG=$INIT_OUT python3 $MENU_CONFIG $INIT_IN
 }
 
 ####################################################################
@@ -71,7 +71,7 @@ function full_xml
 	### GET CONFIG VALUES ###
 
 	# REV
-	rev=$(grep CONFIG_SYSD=y $CONFIG_OUT)
+	rev=$(grep CONFIG_SYSD=y $INIT_OUT)
 	if [[ ! -z $rev ]]; then
 		rev=systemd
 	else
@@ -79,8 +79,8 @@ function full_xml
 	fi
 
 	# BRANCH
-	branch=$(grep BRANCH_.*=y $CONFIG_OUT | sed 's/CONFIG_BRANCH_\(.*\)=y/\1/')
-	if [[ -z $branch ]]; then echo "ERROR: Branch not configured in $CONFIG_OUT!"; exit 1; fi
+	branch=$(grep BRANCH_.*=y $INIT_OUT | sed 's/CONFIG_BRANCH_\(.*\)=y/\1/')
+	if [[ -z $branch ]]; then echo "ERROR: Branch not configured in $INIT_OUT!"; exit 1; fi
 	pushd $BLFS_BOOK  > /dev/null
 	git pull
 	git checkout $branch
@@ -123,6 +123,10 @@ function build_scripts
 {	
 	### GENERATE BUILD SCRIPTS ###
 	xsltproc $BUILDSCRIPTS_XSL $BLFSFULL_XML
+
+	### BUILD.SCRIPTS ###
+	ls $BUILDSCRIPTS_DIR > build.scripts
+	mv build.scripts $BUILDSCRIPTS_DIR
 
 	### ORDERED LIST ###
 	#echo

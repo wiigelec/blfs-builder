@@ -15,25 +15,27 @@ BUILD_DIR = $(TOPDIR)/build
 BUILD_XML = $(BUILD_DIR)/xml
 SCRIPT_DIR = $(TOPDIR)/scripts
 
-CONFIG_SCRIPT = $(SCRIPT_DIR)/config.sh
+INIT_SCRIPT = $(SCRIPT_DIR)/init.sh
 SELECT_SCRIPT = $(SCRIPT_DIR)/select.sh
 
 DEPS_DIR = $(BUILD_DIR)/deptree
 DEP_TREE = $(DEPS_DIR)/trees
 ROOT_TREE = $(DEPS_DIR)/root.tree
-BUILD_SCRIPTS = $(BUILD_DIR)/build_scripts
+BUILDSCRIPTS_DIR = $(BUILD_DIR)/build-scripts
+BUILD_SCRIPTS = $(BUILDSCRIPTS_DIR)/build.scripts
 
 BLFS_BOOK = $(BUILD_XML)/blfs-xml
 
 KCONFIG_DIR = $(TOPDIR)/kconfiglib
 MENU_CONFIG = $(KCONFIG_DIR)/menuconfig.py
-CONFIG_IN = $(BUILD_DIR)/config.in
-CONFIG_OUT = $(BUILD_DIR)/config.out
+BUILD_CONFIG = $(BUILD_DIR)/config
+INIT_IN = $(BUILD_CONFIG)/init.in
+INIT_OUT = $(BUILD_CONFIG)/init.out
 FULL_XML = $(BUILD_XML)/blfs-full.xml
 
 SELECT_IN = $(BUILD_DIR)/select.in
 SELECT_OUT = $(BUILD_DIR)/select.out
-WORK_DIR=$(BUILD_DIR)/work
+WORK_DIR = $(BUILD_DIR)/work
 SELECT_MAKEFILE = $(WORK_DIR)/Makefile
 
 ####################################################################
@@ -51,30 +53,31 @@ readme :
 
 
 ####################################################################
-# CONFIG
 #
-# Generate setup config
+# INIT
+#
+# Initialize build
 #
 ####################################################################
 
-config : $(ROOT_TREE) $(BUILD_SCRIPTS)
-config-min : $(FULL_XML)
+init : $(ROOT_TREE) $(BUILD_SCRIPTS)
+init-min : $(FULL_XML)
 
 
-$(ROOT_TREE) :  $(FULL_XML) $(CONFIG_SCRIPT)
+$(ROOT_TREE) :  $(FULL_XML) $(INIT_SCRIPT)
 	@echo
 	@echo "===================================================================="
 	@echo "Building dependency tree..."
 	@echo
-	$(CONFIG_SCRIPT) DEP_TREE
+	$(INIT_SCRIPT) DEP_TREE
 
 
-$(BUILD_SCRIPTS) : $(FULL_XML) $(CONFIG_SCRIPT)
+$(BUILD_SCRIPTS) : $(FULL_XML) $(INIT_SCRIPT)
 	@echo
 	@echo "===================================================================="
 	@echo "Generating build scripts..."
 	@echo
-	$(CONFIG_SCRIPT) BUILD_SCRIPTS
+	$(INIT_SCRIPT) BUILD_SCRIPTS
 
 
 $(FULL_XML) : $(BLFS_BOOK)
@@ -82,13 +85,13 @@ $(FULL_XML) : $(BLFS_BOOK)
 	@echo "===================================================================="
 	@echo "Running menu config..."
 	@echo
-	$(CONFIG_SCRIPT) IN
-	$(CONFIG_SCRIPT) MENUCONFIG
+	$(INIT_SCRIPT) IN
+	$(INIT_SCRIPT) MENUCONFIG
 	@echo
 	@echo "===================================================================="
 	@echo "Preparing book sources..."
 	@echo
-	$(CONFIG_SCRIPT) FULL_XML
+	$(INIT_SCRIPT) FULL_XML
 
 
 $(BLFS_BOOK) : 
@@ -144,22 +147,31 @@ $(SELECT_IN) : $(SELECT_SCRIPT)
 ####################################################################
 
 clean : 
-	@echo "CLEAN README"
+	@echo "clean-config"
+	@echo "clean-allconfig"
+	@echo "clean-deps"
+	@echo "clean-scripts"
+	@echo "clean-book"
+	@echo "nuke"
 
 clean-config : 
 	-rm  $(FULL_XML)
 
 clean-allconfig : 
 	-rm  $(FULL_XML)
+	-rm  $(CONFIG_IN)
+	-rm  $(CONFIG_OUT)
 	-rm -rf $(DEPS_DIR)
-	-rm -rf $(SCRIPTS_DIR)
+	-rm -rf $(BUILDSCRIPTS_DIR)
 
 clean-deps : 
 	-rm -rf $(DEPS_DIR)
 
 clean-scripts : 
-	-rm -rf $(SCRIPTS_DIR)
+	-rm -rf $(BUILDSCRIPTS_DIR)
 
+clean-book : 
+	-rm -rf $(BLFS_BOOK)
 nuke : 
 	-rm -rf $(BUILD_DIR)
 	-rm -rf $(KCONFIG_DIR)/__pycache__

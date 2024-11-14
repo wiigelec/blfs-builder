@@ -9,7 +9,7 @@ https://www.linuxfromscratch.org/blfs/
 
 blfs-builder utilizes three stages to accomplish this:
 
-1) config
+1) init
 2) select
 3) build
 
@@ -17,7 +17,7 @@ Each will be covered in some detail below
 
 ====================================================================
 
-make config
+make init
 --------------------------------------------------------------------
 
 This stage initializes the base parameters of the build including

@@ -15,11 +15,11 @@
 <xsl:strip-space elements="*" />
 
 <!-- INCLUDES -->
-<xsl:include href="chapter.xsl" />
-<xsl:include href="sect1.xsl" />
-<xsl:include href="sect2.xsl" />
-<xsl:include href="para.xsl" />
-<xsl:include href="bridgehead.xsl" />
+<xsl:include href="util/chapter.xsl" />
+<xsl:include href="util/sect1.xsl" />
+<xsl:include href="util/sect2.xsl" />
+<xsl:include href="util/para.xsl" />
+<xsl:include href="util/bridgehead.xsl" />
 
 
 <!-- OUTPUT FILE PARAMETERS -->
