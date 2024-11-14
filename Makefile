@@ -149,6 +149,18 @@ $(SELECT_IN) :
 
 
 
+####################################################################
+#
+# BUILD
+#
+# Build selected packages
+#
+####################################################################
+
+build : 
+	$(MAKE) -C $(WORK_DIR)
+
+
 
 
 
@@ -196,4 +208,4 @@ nuke :
 	-rm -rf $(BUILD_DIR)
 	-rm -rf $(KCONFIG_DIR)/__pycache__
 
-.PHONY: config config-min select clean clean-deps $(SELECT_MAKEFILE)
+.PHONY: config config-min select clean clean-deps $(SELECT_OUT)
