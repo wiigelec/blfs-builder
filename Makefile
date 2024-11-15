@@ -63,6 +63,8 @@ readme :
 
 init : $(VALIDATED)
 init-min : $(FULL_XML)
+book : $(BLFS_BOOK)
+full-xml : $(FULL_XML)
 deps : $(ROOT_TREE)
 scripts : $(BUILD_SCRIPTS)
 
@@ -208,4 +210,4 @@ nuke :
 	-rm -rf $(BUILD_DIR)
 	-rm -rf $(KCONFIG_DIR)/__pycache__
 
-.PHONY: config config-min select clean clean-deps $(SELECT_OUT)
+.PHONY: build config config-min select clean clean-deps $(SELECT_OUT)
