@@ -42,17 +42,17 @@
 
 	<xsl:if test="$required = 'true'">
 	<!-- REQUIRED -->
-	<xsl:apply-templates select=".//para[@role = 'required']" />
+	<xsl:apply-templates select=".//para[@role='required']" />
 	</xsl:if>
 
 	<!-- RECOMMENDED -->
 	<xsl:if test="$recommended = 'true'">
-	<xsl:apply-templates select=".//para[@role = 'recommended']" />
+	<xsl:apply-templates select=".//para[@role='recommended']" />
 	</xsl:if>
 
 	<!-- OPTIONAL -->
 	<xsl:if test="$optional = 'true'">
-	<xsl:apply-templates select=".//para[@role = 'optional']" />
+	<xsl:apply-templates select=".//para[@role='optional']" />
 	</xsl:if>
 
 
@@ -66,7 +66,7 @@
 -->
 <xsl:template match="para">
 
-	<xsl:for-each select="xref">
+	<xsl:for-each select="xref[not(@role='nodep')]">
 		<xsl:value-of select="@linkend" />
 		<xsl:text>&#xA;</xsl:text>
 	</xsl:for-each>
