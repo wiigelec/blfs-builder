@@ -135,6 +135,10 @@ function make_file
 		echo "	touch $target1" >> $makefile
 		echo "" >> $makefile
 		prev=$s
+
+		### SOURCE ENV PACKAGES ###
+		# xorg-env
+		if [[ $s = *"xorg-env.build" ]]; then sourceme="source /etc/profile.d/xorg.sh"; fi
 	done	
 	target1=${prev%.build}
 	echo "$target1 :" >> $makefile
