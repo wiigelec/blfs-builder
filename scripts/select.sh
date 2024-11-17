@@ -114,10 +114,6 @@ function make_file
 	sourceme=""
 	for s in $scripts
 	do
-		### SOURCE ENV PACKAGES ###
-		# xorg-env
-		if [[ $s = *"xorg-env.build" ]]; then sourceme="source /etc/profile.d/xorg.sh"; fi
-
 		[ -z $prev ] && prev=$s && continue
 
 		target1=${prev%.build}
@@ -140,6 +136,11 @@ function make_file
 		# xorg-env
 		if [[ $s = *"xorg-env.build" ]]; then sourceme="source /etc/profile.d/xorg.sh"; fi
 	done	
+
+	### SOURCE ENV PACKAGES ###d2
+	# xorg-env
+	if [[ $prev = *"xorg-env.build" ]]; then sourceme="source /etc/profile.d/xorg.sh"; fi
+
 	target1=${prev%.build}
 	echo "$target1 :" >> $makefile
 	echo "	@echo" >> $makefile
