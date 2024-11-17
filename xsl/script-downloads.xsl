@@ -51,7 +51,7 @@ case $PACKAGE in
      ;;
 esac
 
-if [[ !-z $JH_UNPACKDIR ]]; then pushd $JH_UNPACKDIR;
+if [[ ! -z $JH_UNPACKDIR ]]; then pushd $JH_UNPACKDIR; fi
 
 </xsl:variable>
 
@@ -119,6 +119,10 @@ if [[ !-z $JH_UNPACKDIR ]]; then pushd $JH_UNPACKDIR;
 
         <!-- package -->
         <xsl:text>PACKAGE=${PKG_URL##*/}</xsl:text>
+        <xsl:text>&#xA;</xsl:text>
+
+        <xsl:text>&#xA;</xsl:text>
+	<xsl:text>pushd $SRC_DIR</xsl:text>
         <xsl:text>&#xA;</xsl:text>
 
         <!-- wget -->

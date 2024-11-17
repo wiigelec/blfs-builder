@@ -26,33 +26,6 @@ function select_in
 	### PROCESS XML ###
 	xsltproc -o $SELECT_IN $SELECTIN_XSL $PKGLIST_XML
 
-	### CHECK BUILD SCRIPTS ###
-	#echo
-	#echo "Verifying build scripts, will only take a minute..."
-	#echo
-	#while IFS= read -r line;
-        #do
-	#	if [[ $line == *"comment"* ]]; then
-	#		id=$(echo $line | sed 's/.*id:\(.*\)) .*/\1/')
-	#		if [[ -z $id ]]; then continue; fi
-	#		exists=$(ls $BUILDSCRIPTS_DIR | grep "${id}.build")
-	#		if [[ ! -z $exists ]]; then
-	#
-	#			title=$(echo $line | sed 's/comment \"\(.*\) (id:.*/\1/')
-	#
-	#			echo "config $id" >> $SELECTIN_TMP
-	#			echo "bool \"$title\"" >> $SELECTIN_TMP
-	#		else
-	#			echo $line >> $SELECTIN_TMP
-	#		fi
-	#
-	#	else
-	#		echo $line >> $SELECTIN_TMP
-	#	fi
-	#
-	#done < $SELECT_IN
-	#
-	#mv $SELECTIN_TMP $SELECT_IN
 }
 
 
@@ -60,7 +33,7 @@ function select_in
 # GEN MAKEFILE
 ###################################################################
 
-function gen_makefile
+function work_scripts
 {
 	### PROCESS DEPENDENCIES ###
 	echo
@@ -119,7 +92,15 @@ function gen_makefile
 		((cnt++))
 
 	done < $ROOT_TREE
+}
 
+
+####################################################################
+# GEN MAKEFILE
+###################################################################
+
+function make_file
+{
 	### CREATE MAKEFILE ###
 	echo
 	echo "Generating makefile..."
@@ -171,6 +152,7 @@ fi
 case $1 in
         IN) select_in ;;
 	MENUCONFIG ) menu_config ;;
-	MAKEFILE ) gen_makefile ;;
+	WORKSCRIPTS ) work_scripts ;;
+	MAKEFILE ) make_file ;;
 esac
 

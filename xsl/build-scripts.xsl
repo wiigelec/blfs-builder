@@ -42,6 +42,9 @@
         <xsl:apply-templates select="//sect2[@id = $package]" mode="script-commands"  />
         <xsl:apply-templates select="//sect3[@id = $package]" mode="script-commands"  />
 
+	<xsl:text>&#xA;</xsl:text>
+	<xsl:text>exit</xsl:text>
+
 </xsl:template>
 
 

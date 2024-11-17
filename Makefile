@@ -166,6 +166,8 @@ clean-valid :
 
 select : $(SELECT_MAKEFILE) 
 selectmenu : $(SELECT_OUT) 
+makefile : 
+	$(SELECT_SCRIPT) MAKEFILE
 
 
 $(SELECT_MAKEFILE) : $(SELECT_OUT)
@@ -173,6 +175,7 @@ $(SELECT_MAKEFILE) : $(SELECT_OUT)
 	@echo "===================================================================="
 	@echo "Setting up the build..."
 	@echo
+	$(SELECT_SCRIPT) WORKSCRIPTS
 	$(SELECT_SCRIPT) MAKEFILE
 
 
