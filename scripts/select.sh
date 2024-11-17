@@ -121,7 +121,7 @@ function make_file
 		echo "	@echo" >> $makefile
 		echo "	@echo" >> $makefile
 		echo "	@echo \"====================================================================\"" >> $makefile
-		echo "	@echo \"$@\"" >> $makefile
+		echo "	@echo \"\$@\"" >> $makefile
 		echo "	@echo \"====================================================================\"" >> $makefile	
 		echo "	@echo" >> $makefile
 		echo "	@echo" >> $makefile
