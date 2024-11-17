@@ -13,7 +13,7 @@
 <xsl:output method="text" />
 <xsl:strip-space elements="*" />
 
-<xsl:variable name="package" select="'tigervnc'" />
+<xsl:param name="package" />
 
 
 <!--
@@ -40,8 +40,19 @@
 	<xsl:text>&#xA;</xsl:text>
         <xsl:text>====================================================================</xsl:text>
         <xsl:text>&#xA;</xsl:text>
+        <xsl:text>&#xA;</xsl:text>
 
-	<xsl:apply-templates select="descendant::listitem/*/ulink[not(@url = ' ')]" />
+	<xsl:text>--------------------------------------------------------------------</xsl:text>
+        <xsl:text>&#xA;</xsl:text>
+        <xsl:text>Main download</xsl:text>
+	<xsl:apply-templates select="descendant::listitem[1]/*/ulink[not(@url = ' ')]" />
+        <xsl:text>&#xA;</xsl:text>
+        <xsl:text>&#xA;</xsl:text>
+
+	<xsl:text>--------------------------------------------------------------------</xsl:text>
+        <xsl:text>&#xA;</xsl:text>
+        <xsl:text>Additional downloads</xsl:text>
+	<xsl:apply-templates select="descendant::listitem[position() &gt; 1]/*/ulink[not(@url = ' ')]" />
 
 
 </xsl:template>

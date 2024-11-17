@@ -13,6 +13,8 @@ tree_file=""
 #------------------------------------------------------------------#
 function recurse
 {
+	#echo "Recursing $1"
+
 	### CHECK IF ALREADY PROCESSED ###
 	[ ! -z $(grep $1 $PROCD_FILE) ] && return
 
@@ -28,8 +30,9 @@ function recurse
 
 		### RECURSE ###
 		dep=$DEPS_DIR/$line.deps
+		#echo $dep
 		recurse $dep
-	
+
 	done < $1
 		
 	### WRITE POSTORDER ###
@@ -53,32 +56,31 @@ touch $PROCD_FILE
 
 
 ### PROCESS ROOT FILE ###
-[ -f $ROOT_TREE ] && rm $ROOT_TREE
-touch $ROOT_TREE.tmp
+#[ -f $ROOT_TREE ] && rm $ROOT_TREE
+#touch $ROOT_TREE.tmp
 set -e
 while IFS= read -r line;
 do
 	deps_file=$DEPS_DIR/${line}.deps
 	tree_file=$TREE_DIR/${line}.tree
-	echo "Checking $deps_file"
 	echo "" > $PROCD_FILE
 	
-	# create file if it doesn't exist
-	if [[ ! -f $tree_file ]]; then
-		echo "Creating tree..."
-		recurse $deps_file
-	fi
+	# create tree file
+	[ -f $tree_file ] && rm $tree_file
+	echo "Creating $tree_file..."
+	recurse $deps_file
 
 	# update root tree
-	while IFS= read -r treeline;
-	do
-		#echo "grep $treeline $ROOT_TREE"
-		[ -z "$(grep $treeline $ROOT_TREE.tmp)" ] && echo $treeline >> $ROOT_TREE.tmp
-	done < $tree_file	
+	#while IFS= read -r treeline;
+	#do
+	#	#echo "grep $treeline $ROOT_TREE"
+	#	[ -z "$(grep $treeline $ROOT_TREE.tmp)" ] && echo $treeline >> $ROOT_TREE.tmp
+	#done < $tree_file	
 
 done < $ROOT_DEPS
 
-mv $ROOT_TREE.tmp $ROOT_TREE
+#mv $ROOT_TREE.tmp $ROOT_TREE
+touch $ROOT_TREE
 
 ### FINAL CLEANUP ###
 rm $PROCD_FILE

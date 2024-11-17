@@ -33,6 +33,7 @@ BUILD_CONFIG = $(BUILD_DIR)/config
 INIT_IN = $(BUILD_CONFIG)/init.in
 INIT_OUT = $(BUILD_CONFIG)/init.out
 FULL_XML = $(BUILD_XML)/blfs-full.xml
+PKG_LIST = $(BUILD_XML)/pkg-list.xml
 
 SELECT_IN = $(BUILD_CONFIG)/select.in
 SELECT_OUT = $(BUILD_CONFIG)/select.out
@@ -62,11 +63,14 @@ readme :
 ####################################################################
 
 init : $(VALIDATED)
-init-min : $(FULL_XML)
+initmin : $(FULL_XML)
 book : $(BLFS_BOOK)
-full-xml : $(FULL_XML)
-deps : $(ROOT_TREE)
-scripts : $(BUILD_SCRIPTS)
+fullxml : $(FULL_XML)
+pkglist : $(PKG_LIST)
+deptree : $(ROOT_TREE)
+buildscripts : $(BUILD_SCRIPTS)
+validate :
+	$(INIT_SCRIPT) VALIDATE
 
 
 $(VALIDATED) : $(ROOT_TREE) $(BUILD_SCRIPTS)
@@ -80,7 +84,7 @@ $(VALIDATED) : $(ROOT_TREE) $(BUILD_SCRIPTS)
 	@echo
 
 
-$(ROOT_TREE) :  $(FULL_XML)
+$(ROOT_TREE) :  $(FULL_XML) $(PKG_LIST)
 	@echo
 	@echo "===================================================================="
 	@echo "Building dependency tree..."
@@ -88,12 +92,20 @@ $(ROOT_TREE) :  $(FULL_XML)
 	$(INIT_SCRIPT) ROOT_TREE
 
 
-$(BUILD_SCRIPTS) : $(FULL_XML)
+$(BUILD_SCRIPTS) : $(FULL_XML) $(PKG_LIST)
 	@echo
 	@echo "===================================================================="
 	@echo "Generating build scripts..."
 	@echo
 	$(INIT_SCRIPT) BUILD_SCRIPTS
+
+
+$(PKG_LIST) : $(FULL_XML)
+	@echo
+	@echo "===================================================================="
+	@echo "Generating package list..."
+	@echo
+	$(INIT_SCRIPT) PKG_LIST
 
 
 $(FULL_XML) : $(BLFS_BOOK)
@@ -118,6 +130,31 @@ $(BLFS_BOOK) :
 	git clone https://git.linuxfromscratch.org/blfs $(BLFS_BOOK)
 
 
+clean-init: clean-book clean-full clean-pkglist clean-buildscripts clean-deptree clean-validated 
+
+clean-book : 
+	-rm -rf $(BLFS_BOOK)
+
+clean-full : 
+	-rm $(FULL_XML)
+
+clean-pkglist : 
+	-rm $(PKG_LIST)
+
+clean-buildscripts : 
+	-rm $(BUILD_SCRIPTS)
+	-rm -rf $(BUILDSCRIPTS_DIR)
+
+clean-deptree : 
+	-rm -rf $(DEPS_DIR)
+
+clean-valid : 
+	-rm $(VALIDATED)
+
+
+.PHONY: config initmin book fullxml pkglist deptree buildscripts clean-config clean-book clean-full \
+	clean-pkglist clean-buildscripts clean-deptree clean-validated
+
 
 ####################################################################
 #
@@ -128,6 +165,7 @@ $(BLFS_BOOK) :
 ####################################################################
 
 select : $(SELECT_MAKEFILE) 
+selectmenu : $(SELECT_OUT) 
 
 
 $(SELECT_MAKEFILE) : $(SELECT_OUT)
@@ -143,12 +181,21 @@ $(SELECT_OUT) : $(SELECT_IN)
 	@echo "===================================================================="
 	@echo "Running menu config..."
 	@echo
+	$(INIT_SCRIPT) PKG_LIST
 	$(SELECT_SCRIPT) MENUCONFIG
 
 
-$(SELECT_IN) :
+$(SELECT_IN) : $(PKG_LIST)
 	$(SELECT_SCRIPT) IN
 
+
+clean-select : 
+	-rm $(SELECT_IN)
+	-rm $(SELECT_OUT)
+	-rm -rf $(WORK_DIR)
+
+
+.PHONY: select clean-select $(SELECT_IN) $(SELEC_OUT) $(SELECT_MAKEFILE)
 
 
 ####################################################################
@@ -190,24 +237,8 @@ clean-allconfig :
 	-rm -rf $(DEPS_DIR)
 	-rm -rf $(BUILDSCRIPTS_DIR)
 
-clean-book : 
-	-rm -rf $(BLFS_BOOK)
-
-clean-config : 
-	-rm  $(FULL_XML)
-
-clean-deps : 
-	-rm -rf $(DEPS_DIR)
-
-clean-scripts : 
-	-rm $(BUILD_SCRIPTS)
-	-rm -rf $(BUILDSCRIPTS_DIR)
-
-clean-valid : 
-	-rm $(VALIDATED)
-
 nuke : 
 	-rm -rf $(BUILD_DIR)
 	-rm -rf $(KCONFIG_DIR)/__pycache__
 
-.PHONY: build config config-min select clean clean-deps $(SELECT_OUT)
+.PHONY: build config config-min select clean clean-deps

@@ -15,7 +15,10 @@
 <xsl:output method="text" />
 <xsl:strip-space elements="*" />
 
-<xsl:variable name="package" select="'python-modules'" />
+<xsl:param name="package" />
+<xsl:param name="required" />
+<xsl:param name="recommended" />
+<xsl:param name="optional" />
 
 
 <!--
@@ -26,6 +29,7 @@
 <xsl:template match="/">
 
 	<xsl:apply-templates select="//sect1[@id = $package]" />
+	<xsl:apply-templates select="//sect2[@id = $package]" />
 
 </xsl:template>
 
@@ -34,7 +38,7 @@
 #
 ####################################################################
 -->
-<xsl:template match="sect1">
+<xsl:template match="sect1|sect2">
 
         <xsl:text>&#xA;</xsl:text>
 	<xsl:text>Dependencies for </xsl:text>
@@ -43,26 +47,34 @@
         <xsl:text>====================================================================</xsl:text>
         <xsl:text>&#xA;</xsl:text>
 
+	<xsl:if test="$required = 'true'">
 	<!-- REQUIRED -->
 	<xsl:text>&#xA;</xsl:text>
 	<xsl:text>Required</xsl:text>
 	<xsl:text>&#xA;</xsl:text>
         <xsl:text>--------------------------------------------------------------------</xsl:text>
-	<xsl:apply-templates select="sect2/para[@role = 'required']" />
+	<xsl:apply-templates select=".//para[@role = 'required']" />
+	</xsl:if>
+
 	<!-- RECOMMENDED -->
+	<xsl:if test="$recommended = 'true'">
 	<xsl:text>&#xA;</xsl:text>
 	<xsl:text>&#xA;</xsl:text>
 	<xsl:text>Recommeded</xsl:text>
 	<xsl:text>&#xA;</xsl:text>
         <xsl:text>--------------------------------------------------------------------</xsl:text>
-	<xsl:apply-templates select="sect2/para[@role = 'recommended']" />
+	<xsl:apply-templates select=".//para[@role = 'recommended']" />
+	</xsl:if>
+
 	<!-- OPTIONAL -->
+	<xsl:if test="$optional = 'true'">
 	<xsl:text>&#xA;</xsl:text>
 	<xsl:text>&#xA;</xsl:text>
 	<xsl:text>Optional</xsl:text>
 	<xsl:text>&#xA;</xsl:text>
         <xsl:text>--------------------------------------------------------------------</xsl:text>
-	<xsl:apply-templates select="sect2/para[@role = 'optional']" />
+	<xsl:apply-templates select=".//para[@role = 'optional']" />
+	</xsl:if>
 
 
 </xsl:template>

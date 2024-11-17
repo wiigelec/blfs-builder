@@ -96,13 +96,88 @@ function full_xml
 
 
 ####################################################################
+# PKG LIST
+###################################################################
+
+function pkg_list
+{
+	xsltproc -o $PKGLIST_XML $PKGLIST_XSL $BLFSFULL_XML
+
+	# fix versions
+	sed -i 's/\$\$.*-\(.*\)\$\$/\1/' $PKGLIST_XML
+
+	### WARN UNVERSIONED ##
+        unversioned=$(grep -F "$" $PKGLIST_XML | sed 's/.*<id>\(.*\)<\/id>.*/\1/')
+	if [[ ! -z $unversioned ]];then echo; echo "WARNING: the following packages are unversioned:"; fi
+	for each in $unversioned
+	do
+		echo $each
+	done
+
+	### ADD INSTALLED ###
+	echo
+	echo "Adding installed packages..."
+	echo
+	installed=$(xmllint --xpath "//package/name/text()" $BLFSINST_FILE | sort)
+	for ip in $installed 
+	do
+		#echo $ip && continue
+		
+		# get version
+		#echo "xmllint --xpath \"//package[name='$ip']/version/text()\" $BLFSINST_FILE"
+		iv=$(xmllint --xpath "//package[name='$ip']/version/text()" $BLFSINST_FILE)
+
+		# add to pkglist
+		[ -z $iv ] && continue
+		#echo "$ip-$iv"
+		xsltproc --stringparam package $ip --stringparam version $iv -o $PKGLIST_XML $ADDINSTALLED_XSL $PKGLIST_XML
+
+	done
+
+}
+
+
+####################################################################
 # DEP TREE
 ###################################################################
 
 function root_tree
 {
 	### GEN DEPS ###
-	xsltproc $GENDEPS_XSL $BLFSFULL_XML
+	echo
+	echo "Reading book dependencies..."
+	echo
+	[ ! -d $DEPS_DIR ] && mkdir -p $DEPS_DIR
+	packages=$(xmllint --xpath '//package/id/text()' $PKGLIST_XML | sort)
+        for p in $packages
+        do
+		file=$DEPS_DIR/${p}.deps
+		echo "Creating $file..."
+		xsltproc --stringparam package $p \
+			--stringparam required true --stringparam recommended true \
+			$DEPENDENCIES_XSL $BLFSFULL_XML > $file
+        done
+
+	### FIX FILES ###
+	# fix dejavu-fonts
+	fix_files=$(grep -rl dejavu-fonts $DEPS_DIR)
+	for a in $fix_files; do sed -i '/dejavu-fonts/d' $a; done
+
+	# fix polkit-agent
+	fix_files=$(grep -rl polkit-agent $DEPS_DIR)
+	for a in $fix_files; do sed -i '/polkit-agent/d' $a; done
+
+	# fix server-mail
+	fix_files=$(grep -rl server-mail $DEPS_DIR)
+	for a in $fix_files; do sed -i 's/server-mail/dovecot/' $a; done
+	
+	# fix x-window-system
+	fix_files=$(grep -rl x-window-system $DEPS_DIR)
+	for a in $fix_files; do sed -i 's/x-window-system/xinit/' $a; done
+	
+	# fix java-bin
+	fix_files=$(grep -rl java-bin $DEPS_DIR)
+	for a in $fix_files; do sed -i 's/java-bin/java/' $a; done
 
 	### BUILD TREES ###
 	# root.deps
@@ -112,26 +187,6 @@ function root_tree
 	echo
 	$GENDEPS_SCRIPT
 	echo
-	
-	# fix dejavu-fonts
-	fix_files=$(grep -rl dejavu-fonts $DEPS_DIR)
-	for a in $fix_files; do sed -i '/dejavu-fonts/d' $a; done
-	rm $DEPS_DIR/dejavu-fonts.deps
-
-	# fix polkit-agent
-	fix_files=$(grep -rl polkit-agent $DEPS_DIR)
-	for a in $fix_files; do sed -i '/polkit-agent/d' $a; done
-	rm $DEPS_DIR/polkit-agent.deps
-
-	# fix server-mail
-	fix_files=$(grep -rl server-mail $DEPS_DIR)
-	for a in $fix_files; do sed -i 's/server-mail/dovecot/' $a; done
-	rm $DEPS_DIR/server-mail.deps
-	
-	# fix x-window-system
-	fix_files=$(grep -rl x-window-system $DEPS_DIR)
-	for a in $fix_files; do sed -i 's/x-window-system/xinit/' $a; done
-	rm $DEPS_DIR/x-window-system.deps
 
 }
 
@@ -143,42 +198,26 @@ function root_tree
 function build_scripts
 {	
 	### GENERATE BUILD SCRIPTS ###
-	xsltproc $BUILDSCRIPTS_XSL $BLFSFULL_XML
+	echo
+	echo "Generating all build scripts, this could take a while..."
+	echo
+	[ ! -d $BUILDSCRIPTS_DIR ] && mkdir -p $BUILDSCRIPTS_DIR
+	packages=$(xmllint --xpath '//package/id/text()' $PKGLIST_XML | sort)
+	for p in $packages
+	do
+		file=$BUILDSCRIPTS_DIR/${p}.build
+		echo "Creating $file..."
+
+		xsltproc --stringparam package $p $BUILDSCRIPTS_XSL $BLFSFULL_XML > $file
+
+		#xsltproc --stringparam package $p $SCRIPTHEADER_XSL $BLFSFULL_XML > $file
+		#xsltproc --stringparam package $p $SCRIPTDOWNLOADS_XSL $BLFSFULL_XML >> $file
+		#xsltproc --stringparam package $p $SCRIPTCOMMANDS_XSL $BLFSFULL_XML >> $file
+
+	done
 
 	### BUILD.SCRIPTS ###
-	ls $BUILDSCRIPTS_DIR > $BUILD_DIR/build.scripts
-
-	### ORDERED LIST ###
-	#echo
-	#echo
-	#echo "Creating ordered list..."
-	#echo
-	#cnt=1
-	#while IFS= read -r line;
-	#do
-	#	# Order
-	#	if [ "$cnt" -lt 10 ]; then
-	#		order="000$cnt"
-	#	elif [ "$cnt" -lt 100 ]; then
-	#		order="00$cnt"
-	#	elif [ "$cnt" -lt 1000 ]; then
-	#		order="0$cnt"
-	#	else
-	#		order="$cnt"
-	#	fi
-	#
-	#	# Rename file
-	#	build=$line.build
-	#	renamefile=$BUILDSCRIPTS_DIR/$order-$build
-	#	orgfile=$BUILDSCRIPTS_DIR/$build
-	#	[ ! -f $orgfile ] && echo "$orgfile does not exist." && continue
-	#	#echo "mv $orgfile $renamefile"
-	#	mv $orgfile $renamefile
-	#
-	#	((cnt++))
-	#
-	#done < $ROOT_TREE
-
+	touch $BUILD_SCRIPTS
 }
 
 ####################################################################
@@ -267,6 +306,7 @@ case $1 in
 	IN) config_in ;;
 	MENUCONFIG ) menu_config ;;
 	FULL_XML) full_xml ;;
+	PKG_LIST) pkg_list ;;
 	BUILD_SCRIPTS) build_scripts ;;
 	ROOT_TREE) root_tree ;;
 	VALIDATE) validate ;;

@@ -24,35 +24,35 @@ function menu_config
 function select_in
 {
 	### PROCESS XML ###
-	xsltproc -o $SELECT_IN $SELECTIN_XSL $BLFSFULL_XML
+	xsltproc -o $SELECT_IN $SELECTIN_XSL $PKGLIST_XML
 
 	### CHECK BUILD SCRIPTS ###
-	echo
-	echo "Verifying build scripts, will only take a minute..."
-	echo
-	while IFS= read -r line;
-        do
-		if [[ $line == *"comment"* ]]; then
-			id=$(echo $line | sed 's/.*id:\(.*\)) .*/\1/')
-			if [[ -z $id ]]; then continue; fi
-			exists=$(ls $BUILDSCRIPTS_DIR | grep "${id}.build")
-			if [[ ! -z $exists ]]; then
-
-				title=$(echo $line | sed 's/comment \"\(.*\) (id:.*/\1/')
-
-				echo "config $id" >> $SELECTIN_TMP
-				echo "bool \"$title\"" >> $SELECTIN_TMP
-			else
-				echo $line >> $SELECTIN_TMP
-			fi
-
-		else
-			echo $line >> $SELECTIN_TMP
-		fi
-
-	done < $SELECT_IN
-	
-	mv $SELECTIN_TMP $SELECT_IN
+	#echo
+	#echo "Verifying build scripts, will only take a minute..."
+	#echo
+	#while IFS= read -r line;
+        #do
+	#	if [[ $line == *"comment"* ]]; then
+	#		id=$(echo $line | sed 's/.*id:\(.*\)) .*/\1/')
+	#		if [[ -z $id ]]; then continue; fi
+	#		exists=$(ls $BUILDSCRIPTS_DIR | grep "${id}.build")
+	#		if [[ ! -z $exists ]]; then
+	#
+	#			title=$(echo $line | sed 's/comment \"\(.*\) (id:.*/\1/')
+	#
+	#			echo "config $id" >> $SELECTIN_TMP
+	#			echo "bool \"$title\"" >> $SELECTIN_TMP
+	#		else
+	#			echo $line >> $SELECTIN_TMP
+	#		fi
+	#
+	#	else
+	#		echo $line >> $SELECTIN_TMP
+	#	fi
+	#
+	#done < $SELECT_IN
+	#
+	#mv $SELECTIN_TMP $SELECT_IN
 }
 
 
@@ -66,13 +66,28 @@ function gen_makefile
 	echo
 	echo "Processing dependencies..."
 	echo
-	> $ROOT_DEPS
-	packages=$(grep =y $SELECT_OUT | sed 's/CONFIG_\(.*\)=y/\1/')
+	> $ROOT_TREE
+	packages=$(grep =y build/config/select.out | sed '/MENU/d' | sed 's/CONFIG_CONFIG_\(.*\)=y/\1/')
 	for p in $packages
 	do
-		echo $p >> $ROOT_DEPS
+		tree_file=$TREE_DIR/${p}.tree
+		while IFS= read -r treeline;
+        	do
+			# check version
+			#echo "xmllint --xpath \"//package[id='$treeline']/installed/text()\" $PKGLIST_XML"
+			iv=$(xmllint --xpath "//package[id='$treeline']/installed/text()" $PKGLIST_XML 2>/dev/null)
+			#echo "xmllint --xpath \"//package[id='$treeline']/version/text()\" $PKGLIST_XML"
+			bv=$(xmllint --xpath "//package[id='$treeline']/version/text()" $PKGLIST_XML 2>/dev/null)
+			
+			if [[ "$iv" = "$bv" ]]; then continue; fi
+
+			#echo "grep $treeline $ROOT_TREE"
+			[ -z "$(grep $treeline $ROOT_TREE)" ] && echo $treeline >> $ROOT_TREE
+        	done < $tree_file
+
+	#	echo $p >> $ROOT_DEPS
 	done
-	$GENDEPS_SCRIPT
+	#$GENDEPS_SCRIPT
 
 	### COPY BUILD SCRIPTS ###
 	echo
@@ -137,9 +152,16 @@ function gen_makefile
 # MAIN
 ###################################################################
 
-if [[ ! -e $BLFSFULL_XML ]]; then
+### PRECHECK ###
+if [[ ! -e $BUILDSCRIPTS_DIR ]]; then
 	echo
-	echo "$BLFSFULL_XML does not exist, please run make config first."
+	echo "$BUILDSCRIPTS_DIR does not exist, please run make config first."
+	echo
+	exit 1
+fi
+if [[ ! -e $DEPTREE_DIR ]]; then
+	echo
+	echo "$DEPTREE_DIR does not exist, please run make config first."
 	echo
 	exit 1
 fi

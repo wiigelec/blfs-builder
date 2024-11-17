@@ -23,6 +23,8 @@ INIT_IN=$BUILD_CONFIG/init.in
 INIT_OUT=$BUILD_CONFIG/init.out
 ROOT_DEPS=$DEPTREE_DIR/root.deps
 ROOT_TREE=$DEPTREE_DIR/root.tree
+PKG_DEPS=$DEPTREE_DIR/pkg.deps
+PKG_TREE=$DEPTREE_DIR/pkg.tree
 SYSTEMDFULL_XML=$BUILD_XML/blfs-systemd-full.xml
 BLFSFULL_XML=$BUILD_XML/blfs-full.xml
 SELECT_IN=$BUILD_CONFIG/select.in
@@ -30,9 +32,18 @@ SELECT_OUT=$BUILD_CONFIG/select.out
 SELECTIN_TMP=$BUILD_CONFIG/select.in.tmp
 PROCD_FILE=$DEPTREE_DIR/processed.tmp
 VALID_FILE=$BUILD_DIR/validated
+PKGLIST_XSL=$XSL_DIR/pkg-list.xsl
+PKGLIST_XML=$BUILD_XML/pkg-list.xml
+BUILDSCRIPTS_XSL=$XSL_DIR/build-scripts.xsl
+SCRIPTHEADER_XSL=$XSL_DIR/script-header.xsl
+SCRIPTDOWNLOADS_XSL=$XSL_DIR/script-downloads.xsl
+SCRIPTCOMMANDS_XSL=$XSL_DIR/script-commands.xsl
+BLFSINST_FILE=/var/lib/jhalfs/BLFS/instpkg.xml
+ADDINSTALLED_XSL=xsl/add-installed.xsl
+BUILD_SCRIPTS=$BUILD_DIR/build.scripts
 
 # xsl
-GENDEPS_XSL=$XSL_DIR/dependencies.xsl
+DEPENDENCIES_XSL=$XSL_DIR/dependencies.xsl
 BUILDSCRIPTS_XSL=$XSL_DIR/build-scripts.xsl
 SELECTIN_XSL=$XSL_DIR/select-menu.xsl
 

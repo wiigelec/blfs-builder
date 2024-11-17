@@ -2,8 +2,7 @@
 ====================================================================
 BUILD SCRIPTS
 
+template match sect2[@role=installation]//screen
+
 screen nodump
 
-screen ancestor warning
-
-$(nproc)
