@@ -48,9 +48,22 @@
 	%lxqt-pre-install%
 </xsl:variable>
 
-<!-- SECT2 PACKAGE-->
+<!-- SECT2 PACKAGE -->
 <xsl:variable name="sect2-pkg">
 	%java-bin%
+</xsl:variable>
+
+<!-- ### VERSIONS ### -->
+<xsl:param name="book-version" />
+
+<!-- BASE VERSION -->
+<xsl:variable name="base-version" select="concat('0.',$book-version)" />
+<xsl:variable name="bv-pkg">
+	%ojdk-conf%
+	%postlfs-config-profile%
+	%postlfs-config-vimrc%
+	%initramfs%
+	%tex-path%
 </xsl:variable>
 
 
@@ -156,7 +169,15 @@ $$ VERSION $$ for later string correction in bash
 				<xsl:text>&#xA;</xsl:text>
 				<package>
 					<id><xsl:value-of select="@id" /></id>
-					<version>$$<xsl:value-of select="@xreflabel" />$$</version>
+					<!-- SPECIAL VERSIONS -->
+					<xsl:choose>
+						<xsl:when test="contains($bv-pkg,$id-test)">
+							<version>$$bv-<xsl:value-of select="$base-version" />$$</version>
+						</xsl:when>
+						<xsl:otherwise>
+							<version>$$<xsl:value-of select="@xreflabel" />$$</version>
+						</xsl:otherwise>
+					</xsl:choose>
 				</package>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -174,8 +195,8 @@ $$ VERSION $$ for later string correction in bash
 <xsl:template match="sect2" >
 
 	<!-- skip ignore list -->
-        <xsl:variable name="id-ignore" select="concat('%',@id,'%')" />
-        <xsl:if test="not(contains($package-ignore,$id-ignore))">
+        <xsl:variable name="id-test" select="concat('%',@id,'%')" />
+        <xsl:if test="not(contains($package-ignore,$id-test))">
 
 	<xsl:text>&#xA;</xsl:text>
         <package>

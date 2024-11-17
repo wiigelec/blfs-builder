@@ -111,8 +111,13 @@ function make_file
 	[ -f $makefile ] && rm $makefile
 	scripts=$(ls -r $WORK_DIR/scripts)
 	prev=""
+	sourceme=""
 	for s in $scripts
 	do
+		### SOURCE ENV PACKAGES ###
+		# xorg-env
+		if [[ $s = *"xorg-env.build" ]]; then sourceme="source /etc/profile.d/xorg.sh"; fi
+
 		[ -z $prev ] && prev=$s && continue
 
 		target1=${prev%.build}
@@ -126,10 +131,10 @@ function make_file
 		echo "	@echo" >> $makefile
 		echo "	@echo" >> $makefile
 		echo "	./scripts/$prev" >> $makefile
+		if [[ ! -z $sourceme ]]; then echo "	$sourceme" >> $makefile; sourceme=""; fi
 		echo "	touch $target1" >> $makefile
 		echo "" >> $makefile
 		prev=$s
-
 	done	
 	target1=${prev%.build}
 	echo "$target1 :" >> $makefile
@@ -141,6 +146,7 @@ function make_file
 	echo "	@echo" >> $makefile
 	echo "	@echo" >> $makefile
 	echo "	./scripts/$prev" >> $makefile
+	if [[ ! -z $sourceme ]]; then echo "	$sourceme" >> $makefile; fi
 	echo "	touch $target1" >> $makefile
 
 }
