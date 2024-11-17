@@ -133,6 +133,13 @@ function make_file
 	done	
 	target1=${prev%.build}
 	echo "$target1 :" >> $makefile
+	echo "	@echo" >> $makefile
+	echo "	@echo" >> $makefile
+	echo "	@echo \"====================================================================\"" >> $makefile
+	echo "	@echo \"\$@\"" >> $makefile
+	echo "	@echo \"====================================================================\"" >> $makefile	
+	echo "	@echo" >> $makefile
+	echo "	@echo" >> $makefile
 	echo "	./scripts/$prev" >> $makefile
 	echo "	touch $target1" >> $makefile
 
