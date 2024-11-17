@@ -92,6 +92,8 @@ function work_scripts
 		((cnt++))
 
 	done < $ROOT_TREE
+
+	chmod +x $WORK_DIR/scripts/*
 }
 
 
@@ -106,6 +108,7 @@ function make_file
 	echo "Generating makefile..."
 	echo
 	makefile=$WORK_DIR/Makefile
+	[ -f $makefile ] && rm $makefile
 	scripts=$(ls -r $WORK_DIR/scripts)
 	prev=""
 	for s in $scripts
@@ -115,6 +118,13 @@ function make_file
 		target1=${prev%.build}
 		target2=${s%.build}
 		echo "$target1 : $target2 " >> $makefile
+		echo "@echo"
+		echo "@echo"
+		echo "@echo \"====================================================================\""
+		echo "@echo \"$@\""
+		echo "@echo \"====================================================================\""	
+		echo "@echo"
+		echo "@echo"
 		echo "	./scripts/$prev" >> $makefile
 		echo "	touch $target1" >> $makefile
 		echo "" >> $makefile

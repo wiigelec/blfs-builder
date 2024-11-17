@@ -44,13 +44,13 @@
         <xsl:text>####################################################################</xsl:text>
         <xsl:text>&#xA;</xsl:text>
 
-	<xsl:apply-templates select="sect1[not(@role='package') and not(@role='kernel')]//screen[not(@role='nodump')][not(@remap='test')][not(ancestor::para)]" mode="script-commands"  />
-	<xsl:apply-templates select="sect2[not(@role='package') and not(@role='kernel')]//screen[not(@role='nodump')][not(@remap='test')][not(ancestor::para)]" mode="script-commands"  />
-	<xsl:apply-templates select="sect3[not(@role='package') and not(@role='kernel')]//screen[not(@role='nodump')][not(@remap='test')][not(ancestor::para)]" mode="script-commands" />
+	<xsl:apply-templates select="sect1[not(@role='package') and not(@role='kernel')]//screen[not(@role='nodump')][not(@remap)][not(ancestor::para)]" mode="script-commands"  />
+	<xsl:apply-templates select="sect2[not(@role='package') and not(@role='kernel')]//screen[not(@role='nodump')][not(@remap)][not(ancestor::para)]" mode="script-commands"  />
+	<xsl:apply-templates select="sect3[not(@role='package') and not(@role='kernel')]//screen[not(@role='nodump')][not(@remap)][not(ancestor::para)]" mode="script-commands" />
 
 	<!-- xorg-env -->
 	<xsl:if test="@id = 'xorg-env'">
-		<xsl:apply-templates select="//sect2[@id='xorg-env']//screen" mode="script-commands" />
+		<xsl:apply-templates select="//sect2[@id='xorg-env']//screen[not(@role='nodump')]" mode="script-commands" />
 	</xsl:if>
 
 </xsl:template>

@@ -216,6 +216,14 @@ function build_scripts
 
 	done
 
+	### FIX BASH -E ###
+	fix_files=$(grep -rl "bash -e" $DEPS_DIR)
+        for a in $fix_files; do sed -i 's/bash -e/set -e/' $a; done
+
+	### FIX XORG ENV PREFIX ###
+	sed -i 's/<PREFIX>/\/usr/' $BUILDSCRIPTS_DIR/xorg-env.build
+
+
 	### BUILD.SCRIPTS ###
 	touch $BUILD_SCRIPTS
 }
