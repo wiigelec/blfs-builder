@@ -118,13 +118,13 @@ function make_file
 		target1=${prev%.build}
 		target2=${s%.build}
 		echo "$target1 : $target2 " >> $makefile
-		echo "@echo"
-		echo "@echo"
-		echo "@echo \"====================================================================\""
-		echo "@echo \"$@\""
-		echo "@echo \"====================================================================\""	
-		echo "@echo"
-		echo "@echo"
+		echo "@echo" >> $makefile
+		echo "@echo" >> $makefile
+		echo "@echo \"====================================================================\"" >> $makefile
+		echo "@echo \"$@\"" >> $makefile
+		echo "@echo \"====================================================================\"" >> $makefile	
+		echo "@echo" >> $makefile
+		echo "@echo" >> $makefile
 		echo "	./scripts/$prev" >> $makefile
 		echo "	touch $target1" >> $makefile
 		echo "" >> $makefile
