@@ -51,6 +51,9 @@
 	<!-- xorg-env -->
 	<xsl:if test="@id = 'xorg-env'">
 		<xsl:apply-templates select="//sect2[@id='xorg-env']//screen[not(@role='nodump')]" mode="script-commands" />
+		<xsl:text>&#xA;</xsl:text>
+		<xsl:text>source /etc/profile.d/xorg.sh</xsl:text>
+		<xsl:text>&#xA;</xsl:text>
 	</xsl:if>
 
 </xsl:template>
