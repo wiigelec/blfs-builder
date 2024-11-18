@@ -221,12 +221,18 @@ function build_scripts
 
 	done
 
-	### FIX BASH -E ###
-	fix_files=$(grep -rl "bash -e" $DEPS_DIR)
+	#########################
+	### FIX BUILD SCRIPTS ###
+
+	# bash -e
+	fix_files=$(grep -rl "bash -e" $BUILDSCRIPTS_DIR)
         for a in $fix_files; do sed -i 's/bash -e/set -e/' $a; done
 
-	### FIX XORG ENV PREFIX ###
+	# xorg env	
 	sed -i 's/<PREFIX>/\/usr/' $BUILDSCRIPTS_DIR/xorg-env.build
+
+	# xorg libs
+	sed -i '/grep -A9 summary \*make_check\.log/d' $BUILDSCRIPTS_DIR/xorg7-lib.build	
 
 
 	### BUILD.SCRIPTS ###

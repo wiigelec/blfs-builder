@@ -134,12 +134,12 @@ function make_file
 
 		### SOURCE ENV PACKAGES ###
 		# xorg-env
-		if [[ $s = *"xorg-env.build" ]]; then sourceme="source /etc/profile.d/xorg.sh"; fi
+		if [[ $s = *"xorg-env.build" ]]; then sourceme="\$(shell source /etc/profile.d/xorg.sh)"; fi
 	done	
 
 	### SOURCE ENV PACKAGES ###d2
 	# xorg-env
-	if [[ $prev = *"xorg-env.build" ]]; then sourceme="source /etc/profile.d/xorg.sh"; fi
+	if [[ $prev = *"xorg-env.build" ]]; then sourceme="\$(shell source /etc/profile.d/xorg.sh)"; fi
 
 	target1=${prev%.build}
 	echo "$target1 :" >> $makefile
