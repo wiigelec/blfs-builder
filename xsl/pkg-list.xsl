@@ -55,15 +55,31 @@
 
 <!-- ### VERSIONS ### -->
 <xsl:param name="book-version" />
+<xsl:param name="kf6-version" />
 
 <!-- BASE VERSION -->
 <xsl:variable name="base-version" select="concat('0.',$book-version)" />
 <xsl:variable name="bv-pkg">
+	%xorg-env%
 	%ojdk-conf%
 	%postlfs-config-profile%
 	%postlfs-config-vimrc%
 	%initramfs%
 	%tex-path%
+</xsl:variable>
+
+<!-- XORG VERSION -->
+<xsl:variable name="xorg-version" select="concat('7.',$book-version)" />
+<xsl:variable name="xorg-pkg">
+	%xorg7-lib%
+	%xorg7-app%
+	%xorg7-font%
+	%xorg7-legacy%
+</xsl:variable>
+
+<!-- KF6 VERSION -->
+<xsl:variable name="kf6-pkg">
+	%kf6-intro%
 </xsl:variable>
 
 
@@ -172,7 +188,13 @@ $$ VERSION $$ for later string correction in bash
 					<!-- SPECIAL VERSIONS -->
 					<xsl:choose>
 						<xsl:when test="contains($bv-pkg,$id-test)">
-							<version>$$bv-<xsl:value-of select="$base-version" />$$</version>
+							<version>$$version-<xsl:value-of select="$base-version" />$$</version>
+						</xsl:when>
+						<xsl:when test="contains($xorg-pkg,$id-test)">
+							<version>$$version-<xsl:value-of select="$xorg-version" />$$</version>
+						</xsl:when>
+						<xsl:when test="contains($kf6-pkg,$id-test)">
+							<version>$$version-<xsl:value-of select="$kf6-version" />$$</version>
 						</xsl:when>
 						<xsl:otherwise>
 							<version>$$<xsl:value-of select="@xreflabel" />$$</version>
@@ -201,7 +223,21 @@ $$ VERSION $$ for later string correction in bash
 	<xsl:text>&#xA;</xsl:text>
         <package>
                 <id><xsl:value-of select="@id" /></id>
-                <version>$$<xsl:value-of select="@xreflabel" />$$</version>
+		<!-- SPECIAL VERSIONS -->
+                <xsl:choose>
+			<xsl:when test="contains($bv-pkg,$id-test)">
+				<version>$$version-<xsl:value-of select="$base-version" />$$</version>
+			</xsl:when>
+			<xsl:when test="contains($xorg-pkg,$id-test)">
+				<version>$$version-<xsl:value-of select="$xorg-version" />$$</version>
+			</xsl:when>
+			<xsl:when test="contains($kf6-pkg,$id-test)">
+				<version>$$version-<xsl:value-of select="$kf6-version" />$$</version>
+			</xsl:when>
+			<xsl:otherwise>
+				<version>$$<xsl:value-of select="@xreflabel" />$$</version>
+			</xsl:otherwise>
+		</xsl:choose>
 	</package>
 
 	</xsl:if>

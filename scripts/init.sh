@@ -103,9 +103,11 @@ function pkg_list
 {
 	### GET SOME VERSIONS ###
 	book_version=$(xmllint --xpath "/book/bookinfo/subtitle/text()" $BLFSFULL_XML | sed 's/Version //')
+	kf6_version=$(grep 'ln -sfv kf6' $BLFSFULL_XML | sed 's/.* kf6-\(.*\) .*/\1/')
 	
 	### PROCESS THE XMS ###
 	xsltproc -o $PKGLIST_XML --stringparam book-version $book_version \
+		--stringparam kf6-version $kf6_version \
 		$PKGLIST_XSL $BLFSFULL_XML
 
 	# fix versions
