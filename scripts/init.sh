@@ -215,11 +215,10 @@ function build_scripts
 		file=$BUILDSCRIPTS_DIR/${p}.build
 		echo "Creating $file..."
 
-		xsltproc --stringparam package $p $BUILDSCRIPTS_XSL $BLFSFULL_XML > $file
+		# get version
+		v=$(xmllint --xpath "//package[id='$p']/version/text()" $PKGLIST_XML)
 
-		#xsltproc --stringparam package $p $SCRIPTHEADER_XSL $BLFSFULL_XML > $file
-		#xsltproc --stringparam package $p $SCRIPTDOWNLOADS_XSL $BLFSFULL_XML >> $file
-		#xsltproc --stringparam package $p $SCRIPTCOMMANDS_XSL $BLFSFULL_XML >> $file
+		xsltproc --stringparam package $p --stringparam version $v $BUILDSCRIPTS_XSL $BLFSFULL_XML > $file
 
 	done
 

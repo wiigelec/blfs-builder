@@ -134,12 +134,13 @@ function make_file
 
 		### SOURCE ENV PACKAGES ###
 		# xorg-env
-		if [[ $s = *"xorg-env.build" ]]; then sourceme="\$(shell source /etc/profile.d/xorg.sh)"; fi
+		if [[ $s = *"xorg-env.build" ]]; then
+			echo >> $makefile
+			echo "IGNORE := \$(shell bash -c \"cat /etc/profile.d/xorg.sh | sed '/export/d' | sed 's/=/:=/' | sed 's/\"\(.*\)\"/\1' > xorgenv\")" >> $makefile
+			echo "include xorgenv" >> $makefile
+			echo >> $makefile
+		fi
 	done	
-
-	### SOURCE ENV PACKAGES ###d2
-	# xorg-env
-	if [[ $prev = *"xorg-env.build" ]]; then sourceme="\$(shell source /etc/profile.d/xorg.sh)"; fi
 
 	target1=${prev%.build}
 	echo "$target1 :" >> $makefile

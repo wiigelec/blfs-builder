@@ -13,6 +13,7 @@
 <xsl:strip-space elements="*" />
 
 <xsl:param name="package" />
+<xsl:param name="version" />
 
 
 <!--
@@ -40,6 +41,14 @@
 #
 ####################################################################
 
+# PACKAGE INFO
+PKG_ID=<xsl:value-of select="$package" />
+PKG_VERS=<xsl:value-of select="$version" />
+
+# TRACKING FILE
+TRCK_FILE=/var/lib/jhalfs/BLFS/instpkg.xml
+
+# ENV
 export MAKEFLAGS="-j$(nproc)"
 
 set -e
