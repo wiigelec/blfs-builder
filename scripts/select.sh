@@ -130,8 +130,8 @@ function make_file
 		echo "	@echo" >> $makefile
 		echo "	@echo" >> $makefile
 		echo "	./scripts/$prev" >> $makefile
-		if [[ ! -z $breakpoint ]]; then echo "	\$(error $breakpoint)" >> $makefile; breakpoint=""; fi
 		echo "	touch $target1" >> $makefile
+		if [[ ! -z $breakpoint ]]; then echo "	\$(error $breakpoint)" >> $makefile; breakpoint=""; fi
 		echo "" >> $makefile
 		prev=$s
 	done	
