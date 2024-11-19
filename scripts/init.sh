@@ -155,15 +155,7 @@ function root_tree
 	echo "Reading book dependencies..."
 	echo
 	[ ! -d $DEPS_DIR ] && mkdir -p $DEPS_DIR
-	packages=$(xmllint --xpath '//package/id/text()' $PKGLIST_XML | sort)
-        for p in $packages
-        do
-		file=$DEPS_DIR/${p}.deps
-		echo "Creating $file..."
-		xsltproc --stringparam package $p \
-			--stringparam required true --stringparam recommended true \
-			$DEPENDENCIES_XSL $BLFSFULL_XML > $file
-        done
+	xsltproc --stringparam required true --stringparam recommended true --stringparam files true $DEPENDENCIES_XSL $BLFSFULL_XML
 
 	### FIX FILES ###
 	# fix dejavu-fonts
@@ -206,21 +198,10 @@ function build_scripts
 {	
 	### GENERATE BUILD SCRIPTS ###
 	echo
-	echo "Generating all build scripts, this could take a while..."
+	echo "Generating build scripts..."
 	echo
 	[ ! -d $BUILDSCRIPTS_DIR ] && mkdir -p $BUILDSCRIPTS_DIR
-	packages=$(xmllint --xpath '//package/id/text()' $PKGLIST_XML | sort)
-	for p in $packages
-	do
-		file=$BUILDSCRIPTS_DIR/${p}.build
-		echo "Creating $file..."
-
-		# get version
-		v=$(xmllint --xpath "//package[id='$p']/version/text()" $PKGLIST_XML)
-
-		xsltproc --stringparam package $p --stringparam version $v $BUILDSCRIPTS_XSL $BLFSFULL_XML > $file
-
-	done
+	xsltproc --stringparam files true $BUILDSCRIPTS_XSL $BLFSFULL_XML
 
 	#########################
 	### FIX BUILD SCRIPTS ###

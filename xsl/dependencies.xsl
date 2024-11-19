@@ -1,7 +1,7 @@
 <!--
 ####################################################################
 #
-#
+# DEPENDENCIES XSL
 #
 ####################################################################
 -->
@@ -19,44 +19,92 @@
 <xsl:param name="required" />
 <xsl:param name="recommended" />
 <xsl:param name="optional" />
+<xsl:param name="files" />
 
 
 <!--
 ####################################################################
-#
+# ROOT
 ####################################################################
 -->
 <xsl:template match="/">
 
-	<xsl:apply-templates select="//sect1[@id = $package]" />
-	<xsl:apply-templates select="//sect2[@id = $package]" />
+	<xsl:choose>
+		<!-- create files -->
+		<xsl:when test="not($files='')">
+			<xsl:apply-templates select="//sect1[@id]" mode="files" />
+			<xsl:apply-templates select="//sect2[@id]" mode="files" />
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:apply-templates select="//sect1[@id=$package]" />
+                        <xsl:apply-templates select="//sect2[@id=$package]" />
+		</xsl:otherwise>
+	</xsl:choose>
+			
 
 </xsl:template>
 
 <!--
 ####################################################################
-#
+# SECT1 SECT2
 ####################################################################
 -->
 <xsl:template match="sect1|sect2">
 
-	<xsl:if test="$required = 'true'">
 	<!-- REQUIRED -->
-	<xsl:apply-templates select=".//para[@role='required']" />
+	<xsl:if test="string($required) = 'true'">
+		<xsl:apply-templates select=".//para[@role='required']" />
 	</xsl:if>
 
 	<!-- RECOMMENDED -->
 	<xsl:if test="$recommended = 'true'">
-	<xsl:apply-templates select=".//para[@role='recommended']" />
+		<xsl:apply-templates select=".//para[@role='recommended']" />
 	</xsl:if>
 
 	<!-- OPTIONAL -->
 	<xsl:if test="$optional = 'true'">
-	<xsl:apply-templates select=".//para[@role='optional']" />
+		<xsl:apply-templates select=".//para[@role='optional']" />
 	</xsl:if>
 
 
 </xsl:template>
+
+<!--
+####################################################################
+# SECT1 SECT2 CREATE FILES
+####################################################################
+-->
+<xsl:template match="sect1|sect2" mode="files">
+
+	<xsl:variable name="create-file" select="concat('build/deptree/deps/',@id,'.deps')" />
+	<xsl:text>Creating </xsl:text>
+	<xsl:value-of select="$create-file" />
+	<xsl:text>...</xsl:text>
+	<xsl:text>&#xA;</xsl:text>
+
+        <exsl:document href="{$create-file}" method="text">
+		
+        	<!-- REQUIRED -->
+        	<xsl:if test="string($required) = 'true'">
+        		<xsl:apply-templates select=".//para[@role='required']" />
+        	</xsl:if>
+
+        	<!-- RECOMMENDED -->
+        	<xsl:if test="$recommended = 'true'">
+        		<xsl:apply-templates select=".//para[@role='recommended']" />
+        	</xsl:if>
+
+        	<!-- OPTIONAL -->
+        	<xsl:if test="$optional = 'true'">
+        		<xsl:apply-templates select=".//para[@role='optional']" />
+        	</xsl:if>
+
+		<xsl:text>&#xA;</xsl:text>
+	
+	</exsl:document>
+
+</xsl:template>
+
 
 
 <!--
