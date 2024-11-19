@@ -157,6 +157,21 @@ function root_tree
 	[ ! -d $DEPS_DIR ] && mkdir -p $DEPS_DIR
 	xsltproc --stringparam required true --stringparam recommended true --stringparam files true $DEPENDENCIES_XSL $BLFSFULL_XML
 
+	### REMOVE UNUSED ###
+        # use % for exact match
+        echo
+        echo "Verifying dependencies..."
+        echo
+        packages=$(xmllint --xpath "//package/id/text()" $PKGLIST_XML | sed 's/^\(.*\)$/%\1%/g')
+        for file in $DEPS_DIR/*.deps
+        do
+                # check file is a package
+                cf=${file%.deps}
+                cf=${cf##*/}
+                if [[ ! $packages =~ "%${cf}%" ]]; then rm $file; fi
+
+        done
+
 	### FIX FILES ###
 	# fix dejavu-fonts
 	fix_files=$(grep -rl dejavu-fonts $DEPS_DIR)
@@ -202,6 +217,21 @@ function build_scripts
 	echo
 	[ ! -d $BUILDSCRIPTS_DIR ] && mkdir -p $BUILDSCRIPTS_DIR
 	xsltproc --stringparam files true $BUILDSCRIPTS_XSL $BLFSFULL_XML
+
+	### REMOVE UNUSED ###
+	# use % for exact match
+	echo
+	echo "Verifying build scripts..."
+	echo
+	packages=$(xmllint --xpath "//package/id/text()" $PKGLIST_XML | sed 's/^\(.*\)$/%\1%/g')
+	for file in $BUILDSCRIPTS_DIR/*.build
+	do
+		# check file is a package
+		cf=${file%.build}
+		cf=${cf##*/}
+		if [[ ! $packages =~ "%${cf}%" ]]; then rm $file; fi
+
+	done
 
 	#########################
 	### FIX BUILD SCRIPTS ###

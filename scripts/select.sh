@@ -110,18 +110,6 @@ function make_file
 	makefile=$WORK_DIR/Makefile
 	[ -f $makefile ] && rm $makefile
 	scripts=$(ls -r $WORK_DIR/scripts)
-
-	### MAKEFILE ENV ###
-	# xorg-env
-	if [[ $scripts == *"-xorg-env.build"* ]]; then
-
-		echo ".EXPORT_ALL_VARIABLES" >> $makefile
-		echo >> $makefile
-		echo "XORG_PREFIX:=/usr" >> $makefile
-		echo "XORG_CONFIG:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var --disable-static" >> $makefile
-		echo >> $makefile
-	fi
-
 	prev=""
 	for s in $scripts
 	do
@@ -163,20 +151,6 @@ function make_file
 ####################################################################
 # MAIN
 ###################################################################
-
-### PRECHECK ###
-if [[ ! -e $BUILDSCRIPTS_DIR ]]; then
-	echo
-	echo "$BUILDSCRIPTS_DIR does not exist, please run make config first."
-	echo
-	exit 1
-fi
-if [[ ! -e $DEPTREE_DIR ]]; then
-	echo
-	echo "$DEPTREE_DIR does not exist, please run make config first."
-	echo
-	exit 1
-fi
 
 ### PARSE PARAMS ###
 
