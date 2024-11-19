@@ -110,8 +110,19 @@ function make_file
 	makefile=$WORK_DIR/Makefile
 	[ -f $makefile ] && rm $makefile
 	scripts=$(ls -r $WORK_DIR/scripts)
+
+	### MAKEFILE ENV ###
+	# xorg-env
+	if [[ $scripts == *"-xorg-env.build"* ]]; then
+
+		echo ".EXPORT_ALL_VARIABLES" >> $makefile
+		echo >> $makefile
+		echo "XORG_PREFIX:=/usr" >> $makefile
+		echo "XORG_CONFIG:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var --disable-static" >> $makefile
+		echo >> $makefile
+	fi
+
 	prev=""
-	sourceme=""
 	for s in $scripts
 	do
 		[ -z $prev ] && prev=$s && continue
@@ -131,15 +142,6 @@ function make_file
 		echo "	touch $target1" >> $makefile
 		echo "" >> $makefile
 		prev=$s
-
-		### SOURCE ENV PACKAGES ###
-		# xorg-env
-		if [[ $s = *"xorg-env.build" ]]; then
-			echo >> $makefile
-			echo "IGNORE := \$(shell bash -c \"cat /etc/profile.d/xorg.sh | sed '/export/d' | sed 's/=/:=/' | sed 's/\\\"\(.*\)\\\"/\1/' > xorgenv\")" >> $makefile
-			echo "include xorgenv" >> $makefile
-			echo >> $makefile
-		fi
 	done	
 
 	target1=${prev%.build}
