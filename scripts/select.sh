@@ -115,6 +115,10 @@ function make_file
 	do
 		[ -z $prev ] && prev=$s && continue
 
+		### BREAKPOINT FOR ENV ###
+		breakpoint=""
+		if [[ $prev == *"-xorg-env.build" ]];then breakpoint="Logout, login and resume build for xorg-env."; fi
+
 		target1=${prev%.build}
 		target2=${s%.build}
 		echo "$target1 : $target2 " >> $makefile
@@ -126,7 +130,7 @@ function make_file
 		echo "	@echo" >> $makefile
 		echo "	@echo" >> $makefile
 		echo "	./scripts/$prev" >> $makefile
-		if [[ ! -z $sourceme ]]; then echo "	$sourceme" >> $makefile; sourceme=""; fi
+		if [[ ! -z $breakpoint ]]; then echo "	\$(error $breakpoint)" >> $makefile; breakpoint=""; fi
 		echo "	touch $target1" >> $makefile
 		echo "" >> $makefile
 		prev=$s
