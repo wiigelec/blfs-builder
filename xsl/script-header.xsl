@@ -31,7 +31,7 @@
 
 <!--
 ####################################################################
-# SECT1 SECT2 SECT3
+# SECT1 SECT2 SECT3 HEADER
 ####################################################################
 -->
 <xsl:template match="sect1|sect2|sect3" mode="script-header">#!/bin/bash
@@ -46,7 +46,7 @@ PKG_ID=<xsl:value-of select="$package" />
 PKG_VERS=<xsl:value-of select="$version" />
 
 # TRACKING FILE
-TRCK_FILE=/var/lib/jhalfs/BLFS/instpkg.xml
+TRACK_FILE=/var/lib/jhalfs/BLFS/instpkg.xml
 
 # ENV
 export MAKEFLAGS="-j$(nproc)"
@@ -57,6 +57,24 @@ set -e
 SRC_DIR=/sources
 </xsl:template>
 
+
+<!--
+####################################################################
+# SECT1 SECT2 SECT3 FOOTER
+####################################################################
+-->
+<xsl:template match="sect1|sect2|sect3" mode="script-footer">
+
+### UPDATE TRACKING FILE ###
+
+sed -i '/&lt;\/sublist&gt;/d' $TRCK_FILE
+echo "&lt;package&gt;" &gt;&gt; $TRACK_FILE
+echo "  &lt;name&gt;$PKG_ID&lt;/name&gt;" &gt;&gt; $TRACK_FILE
+echo "  &lt;version>$PKG_VERS&lt;/version&gt;" &gt;&gt; $TRACK_FILE
+echo "&lt;/package&gt;" &gt;&gt; $TRACK_FILE
+echo "&lt;/sublist&gt;" &gt;&gt; $TRACK_FILE
+
+</xsl:template>
 
 
 

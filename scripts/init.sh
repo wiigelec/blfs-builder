@@ -172,7 +172,7 @@ function root_tree
 
         done
 
-	### FIX FILES ###
+	### FIX DEPS ###
 	# fix dejavu-fonts
 	fix_files=$(grep -rl dejavu-fonts $DEPS_DIR)
 	for a in $fix_files; do sed -i '/dejavu-fonts/d' $a; done
@@ -201,6 +201,12 @@ function root_tree
 	echo
 	$GENDEPS_SCRIPT
 	echo
+
+	### FIX TREES ###
+	# harfbuzz
+	echo "freetype2" >> $TREE_DIR/harfbuzz.tree
+	echo "graphite2" >> $TREE_DIR/harfbuzz.tree
+
 
 }
 

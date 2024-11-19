@@ -55,6 +55,11 @@
         		<xsl:apply-templates select="//sect2[@id = $package]" mode="script-commands"  />
         		<xsl:apply-templates select="//sect3[@id = $package]" mode="script-commands"  />
 
+			<!-- FOOTER -->
+                        <xsl:apply-templates select="//sect1[@id = $package]" mode="script-footer" />
+                        <xsl:apply-templates select="//sect2[@id = $package]" mode="script-footer" />
+                        <xsl:apply-templates select="//sect3[@id = $package]" mode="script-footer" />
+
                 </xsl:otherwise>
         </xsl:choose>
 
@@ -84,6 +89,9 @@
 
        		<!-- COMMANDS -->
        		<xsl:apply-templates select="." mode="script-commands"  />
+
+		<!-- FOOTER -->
+       		<xsl:apply-templates select="." mode="script-footer" />
 
 	</exsl:document>
 
