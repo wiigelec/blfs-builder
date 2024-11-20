@@ -42,8 +42,8 @@
 ####################################################################
 
 # PACKAGE INFO
-PKG_ID=<xsl:value-of select="$package" />
-PKG_VERS=<xsl:value-of select="$version" />
+PKG_ID=<xsl:value-of select="@id" />
+PKG_VERS=$(xmllint --xpath "//package[id='$PKG_ID']/version/text()" ../xml/pkg-list.xml) 
 
 # TRACKING FILE
 TRACK_FILE=/var/lib/jhalfs/BLFS/instpkg.xml
