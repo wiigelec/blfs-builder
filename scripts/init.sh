@@ -204,6 +204,8 @@ function root_tree
 
 	### FIX TREES ###
 	# harfbuzz
+	sed -i 's/\(freetype2\)/\1-pass1/' $TREE_DIR/harfbuzz.tree
+	sed -i 's/\(graphite2\)/\1-pass1/' $TREE_DIR/harfbuzz.tree
 	echo "freetype2" >> $TREE_DIR/harfbuzz.tree
 	echo "graphite2" >> $TREE_DIR/harfbuzz.tree
 
@@ -251,6 +253,10 @@ function build_scripts
 
 	# xorg libs
 	sed -i '/grep -A9 summary \*make_check\.log/d' $BUILDSCRIPTS_DIR/xorg7-lib.build	
+
+	# harfbuzz
+	cp $BUILDSCRIPTS_DIR/freetype2.build $BUILDSCRIPTS_DIR/freetype2-pass1.build 
+	cp $BUILDSCRIPTS_DIR/graphite2.build $BUILDSCRIPTS_DIR/graphite2-pass1.build 
 
 
 	### BUILD.SCRIPTS ###
