@@ -118,7 +118,7 @@ function make_file
 		### BREAKPOINT FOR ENV ###
 		breakpoint=""
 		if [[ $prev == *"-xorg-env.build" ]]; then 
-			breakpoint="@[ "$XORG_PREFIX" = "" ] && echo "source /etc/profile.d/xorg.sh" && false";
+			breakpoint="@[ \"$XORG_PREFIX\" = \"\" ] && echo \"source /etc/profile.d/xorg.sh\" && false";
 		fi
 
 		target1=${prev%.build}
@@ -132,7 +132,7 @@ function make_file
 		echo "	@echo" >> $makefile
 		echo "	@echo" >> $makefile
 		echo "	./scripts/$prev" >> $makefile
-		if [[ ! -z $breakpoint ]]; then echo $breakpoint >> $makefile; breakpoint=""; fi
+		if [[ ! -z $breakpoint ]]; then echo "	$breakpoint" >> $makefile; breakpoint=""; fi
 		echo "	touch $target1" >> $makefile
 		echo "" >> $makefile
 		prev=$s
