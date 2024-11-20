@@ -67,7 +67,7 @@ SRC_DIR=/sources
 
 ### UPDATE TRACKING FILE ###
 
-sed -i '/&lt;\/sublist&gt;/d' $TRCK_FILE
+sed -i '/&lt;\/sublist&gt;/d' $TRACK_FILE
 echo "&lt;package&gt;" &gt;&gt; $TRACK_FILE
 echo "  &lt;name&gt;$PKG_ID&lt;/name&gt;" &gt;&gt; $TRACK_FILE
 echo "  &lt;version>$PKG_VERS&lt;/version&gt;" &gt;&gt; $TRACK_FILE
