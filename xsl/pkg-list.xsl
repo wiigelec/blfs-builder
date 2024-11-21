@@ -197,7 +197,7 @@ $$ VERSION $$ for later string correction in bash
 							<version>$$version-<xsl:value-of select="$kf6-version" />$$</version>
 						</xsl:when>
 						<xsl:otherwise>
-							<version>$$<xsl:value-of select="@xreflabel" />$$</version>
+							<version>$$version-<xsl:value-of select="@xreflabel" />$$</version>
 						</xsl:otherwise>
 					</xsl:choose>
 				</package>
@@ -235,7 +235,7 @@ $$ VERSION $$ for later string correction in bash
 				<version>$$version-<xsl:value-of select="$kf6-version" />$$</version>
 			</xsl:when>
 			<xsl:otherwise>
-				<version>$$<xsl:value-of select="@xreflabel" />$$</version>
+				<version>$$version-<xsl:value-of select="@xreflabel" />$$</version>
 			</xsl:otherwise>
 		</xsl:choose>
 	</package>

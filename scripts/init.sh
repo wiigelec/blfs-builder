@@ -105,13 +105,13 @@ function pkg_list
 	book_version=$(xmllint --xpath "/book/bookinfo/subtitle/text()" $BLFSFULL_XML | sed 's/Version //')
 	kf6_version=$(grep 'ln -sfv kf6' $BLFSFULL_XML | sed 's/.* kf6-\(.*\) .*/\1/')
 	
-	### PROCESS THE XMS ###
+	### PROCESS THE XML ###
 	xsltproc -o $PKGLIST_XML --stringparam book-version $book_version \
 		--stringparam kf6-version $kf6_version \
 		$PKGLIST_XSL $BLFSFULL_XML
 
 	# fix versions
-	sed -i 's/\$\$.*-\(.*\)\$\$/\1/' $PKGLIST_XML
+	sed -i 's/\$\$version-\(.*\)\$\$/\1/' $PKGLIST_XML
 
 	### WARN UNVERSIONED ##
         unversioned=$(grep -F "$" $PKGLIST_XML | sed 's/.*<id>\(.*\)<\/id>.*/\1/')
@@ -125,14 +125,14 @@ function pkg_list
 	echo
 	echo "Adding installed packages..."
 	echo
-	installed=$(xmllint --xpath "//package/name/text()" $BLFSINST_FILE | sort)
+	installed=$(xmllint --xpath "//package/name/text()" $INSTPKG_XML | sort)
 	for ip in $installed 
 	do
 		#echo $ip && continue
 		
 		# get version
-		#echo "xmllint --xpath \"//package[name='$ip']/version/text()\" $BLFSINST_FILE"
-		iv=$(xmllint --xpath "//package[name='$ip']/version/text()" $BLFSINST_FILE)
+		#echo "xmllint --xpath \"//package[name='$ip']/version/text()\" $INSTPKG_XML"
+		iv=$(xmllint --xpath "//package[name='$ip']/version/text()" $INSTPKG_XML)
 
 		# add to pkglist
 		[[ -z $iv ]] && continue

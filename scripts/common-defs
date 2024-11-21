@@ -38,7 +38,8 @@ BUILDSCRIPTS_XSL=$XSL_DIR/build-scripts.xsl
 SCRIPTHEADER_XSL=$XSL_DIR/script-header.xsl
 SCRIPTDOWNLOADS_XSL=$XSL_DIR/script-downloads.xsl
 SCRIPTCOMMANDS_XSL=$XSL_DIR/script-commands.xsl
-BLFSINST_FILE=/var/lib/jhalfs/BLFS/instpkg.xml
+INSTPKG_XML=/var/lib/jhalfs/BLFS/instpkg.xml
+VERSINSTPKG_XSL=$XSL_DIR/vers-instpkg.xsl
 ADDINSTALLED_XSL=xsl/add-installed.xsl
 BUILD_SCRIPTS=$BUILD_DIR/build.scripts
 

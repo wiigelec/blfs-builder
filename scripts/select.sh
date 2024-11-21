@@ -125,6 +125,7 @@ function make_file
 
 		target1=${prev%.build}
 		target2=${s%.build}
+		package=${target1#*z-}
 		echo "$target1 : $target2 " >> $makefile
 		echo "	@echo" >> $makefile
 		echo "	@echo" >> $makefile
@@ -136,11 +137,13 @@ function make_file
 		echo "	./scripts/$prev" >> $makefile
 		if [[ ! -z $breakpoint ]]; then echo "	$breakpoint" >> $makefile; breakpoint=""; fi
 		echo "	touch $target1" >> $makefile
+		echo "	../../scripts/select.sh VERSINSTPKG $package" >> $makefile
 		echo "" >> $makefile
 		prev=$s
 	done	
 
 	target1=${prev%.build}
+	package=${target1#*z-}
 	echo "$target1 :" >> $makefile
 	echo "	@echo" >> $makefile
 	echo "	@echo" >> $makefile
@@ -152,6 +155,7 @@ function make_file
 	echo "	./scripts/$prev" >> $makefile
 	if [[ ! -z $sourceme ]]; then echo "	$sourceme" >> $makefile; fi
 	echo "	touch $target1" >> $makefile
+	echo "	../../scripts/select.sh VERSINSTPKG $package" >> $makefile
 
 }
 
@@ -164,6 +168,15 @@ function vers_instpkg
 {
 	package=$1
 	[[ -z $package ]] && echo "NO PACKAGE!" && return
+
+	# get version
+	version=$(xmllint --xpath "//package[id='$package']/version/text()" $PKGLIST_XML)
+
+	# add/update version
+	xsltproc -o $INSTPKG_XML \
+		--stringparam package $package \
+		--stringparam version $version \
+		$VERSINSTPKG_XSL $INSTPKG_XML
 
 }
 

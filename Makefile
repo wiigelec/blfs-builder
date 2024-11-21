@@ -185,6 +185,7 @@ $(SELECT_OUT) : $(SELECT_IN)
 	@echo "Running menu config..."
 	@echo
 	$(INIT_SCRIPT) PKG_LIST
+	$(SELECT_SCRIPT) IN
 	$(SELECT_SCRIPT) MENUCONFIG
 
 
