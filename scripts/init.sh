@@ -135,7 +135,7 @@ function pkg_list
 		iv=$(xmllint --xpath "//package[name='$ip']/version/text()" $BLFSINST_FILE)
 
 		# add to pkglist
-		[ -z $iv ] && continue
+		[[ -z $iv ]] && continue
 		#echo "$ip-$iv"
 		xsltproc --stringparam package $ip --stringparam version $iv -o $PKGLIST_XML $ADDINSTALLED_XSL $PKGLIST_XML
 

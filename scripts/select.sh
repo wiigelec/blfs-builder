@@ -47,6 +47,8 @@ function work_scripts
 		while IFS= read -r treeline;
         	do
 			# check version
+			# handle pass1
+			check=${treeline%-pass1}
 			#echo "xmllint --xpath \"//package[id='$treeline']/installed/text()\" $PKGLIST_XML"
 			iv=$(xmllint --xpath "//package[id='$treeline']/installed/text()" $PKGLIST_XML 2>/dev/null)
 			#echo "xmllint --xpath \"//package[id='$treeline']/version/text()\" $PKGLIST_XML"
@@ -155,6 +157,17 @@ function make_file
 
 
 ####################################################################
+# VERS INSTPKG
+###################################################################
+
+function vers_instpkg
+{
+	package=$1
+	[[ -z $package ]] && echo "NO PACKAGE!" && return
+
+}
+
+####################################################################
 # MAIN
 ###################################################################
 
@@ -165,5 +178,6 @@ case $1 in
 	MENUCONFIG ) menu_config ;;
 	WORKSCRIPTS ) work_scripts ;;
 	MAKEFILE ) make_file ;;
+	VERSINSTPKG ) vers_instpkg $2 ;;
 esac
 
