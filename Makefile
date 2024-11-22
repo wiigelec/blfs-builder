@@ -10,10 +10,11 @@
 ####################################################################
 
 TOPDIR = $(shell pwd)
+SCRIPT_DIR = $(TOPDIR)/scripts
+export $(SCRIPT_DIR)
 
 BUILD_DIR = $(TOPDIR)/build
 BUILD_XML = $(BUILD_DIR)/xml
-SCRIPT_DIR = $(TOPDIR)/scripts
 
 INIT_SCRIPT = $(SCRIPT_DIR)/init.sh
 SELECT_SCRIPT = $(SCRIPT_DIR)/select.sh
