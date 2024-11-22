@@ -6,11 +6,11 @@
 ####################################################################
 
 # dirs
-SCRIPTS_DIR=scripts
-BUILD_DIR=build
+SCRIPTS_DIR=$TOPDIR/scripts
+BUILD_DIR=$TOPDIR/build
+XSL_DIR=$TOPDIR/xsl
 BUILD_CONFIG=$BUILD_DIR/config
 BUILD_XML=$BUILD_DIR/xml
-XSL_DIR=xsl
 BUILDSCRIPTS_DIR=$BUILD_DIR/scripts
 BLFS_BOOK=$BUILD_XML/blfs-xml
 DEPTREE_DIR=$BUILD_DIR/deptree
@@ -49,7 +49,7 @@ BUILDSCRIPTS_XSL=$XSL_DIR/build-scripts.xsl
 SELECTIN_XSL=$XSL_DIR/select-menu.xsl
 
 # scripts
-MENU_CONFIG=kconfiglib/menuconfig.py
+MENU_CONFIG=$TOPDIR/kconfiglib/menuconfig.py
 GENDEPS_SCRIPT=$SCRIPTS_DIR/build-tree.sh
 
 

@@ -10,6 +10,7 @@
 ####################################################################
 
 TOPDIR = $(shell pwd)
+export TOPDIR
 SCRIPT_DIR = $(TOPDIR)/scripts
 export SCRIPT_DIR
 

@@ -102,7 +102,7 @@ function full_xml
 function pkg_list
 {
 	### GET SOME VERSIONS ###
-	book_version=$(xmllint --xpath "/book/bookinfo/subtitle/text()" $BLFSFULL_XML | sed 's/Version //')
+	book_version=$(xmllint --xpath "/book/bookinfo/subtitle/text()" $BLFSFULL_XML | sed 's/Version //' | sed 's/-/\./')
 	kf6_version=$(grep 'ln -sfv kf6' $BLFSFULL_XML | sed 's/.* kf6-\(.*\) .*/\1/')
 	
 	### PROCESS THE XML ###
@@ -111,7 +111,7 @@ function pkg_list
 		$PKGLIST_XSL $BLFSFULL_XML
 
 	# fix versions
-	sed -i 's/\$\$version-\(.*\)\$\$/\1/' $PKGLIST_XML
+	sed -i 's/\$\$.*-\(.*\)\$\$/\1/' $PKGLIST_XML
 
 	### WARN UNVERSIONED ##
         unversioned=$(grep -F "$" $PKGLIST_XML | sed 's/.*<id>\(.*\)<\/id>.*/\1/')
