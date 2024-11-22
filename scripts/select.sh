@@ -136,7 +136,7 @@ function make_file
 		echo "	@echo" >> $makefile
 		echo "	./scripts/$prev" >> $makefile
 		if [[ ! -z $breakpoint ]]; then echo "	$breakpoint" >> $makefile; breakpoint=""; fi
-		echo "	\$SCRIPT_DIR/scripts/select.sh VERSINSTPKG $package" >> $makefile
+		echo "	\$(SCRIPT_DIR)/select.sh VERSINSTPKG $package" >> $makefile
 		echo "	touch $target1" >> $makefile
 		echo "" >> $makefile
 		prev=$s
@@ -154,7 +154,7 @@ function make_file
 	echo "	@echo" >> $makefile
 	echo "	./scripts/$prev" >> $makefile
 	if [[ ! -z $sourceme ]]; then echo "	$sourceme" >> $makefile; fi
-	echo "	\$SCRIPT_DIR/select.sh VERSINSTPKG $package" >> $makefile
+	echo "	\$(SCRIPT_DIR)/select.sh VERSINSTPKG $package" >> $makefile
 	echo "	touch $target1" >> $makefile
 
 }
