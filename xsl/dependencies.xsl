@@ -114,7 +114,7 @@
 -->
 <xsl:template match="para">
 
-	<xsl:for-each select="xref[not(@role='nodep')]">
+	<xsl:for-each select=".//xref[not(@role='nodep')]">
 		<xsl:value-of select="@linkend" />
 		<xsl:text>&#xA;</xsl:text>
 	</xsl:for-each>
