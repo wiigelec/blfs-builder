@@ -11,7 +11,7 @@
 
 TOPDIR = $(shell pwd)
 SCRIPT_DIR = $(TOPDIR)/scripts
-export $(SCRIPT_DIR)
+export SCRIPT_DIR
 
 BUILD_DIR = $(TOPDIR)/build
 BUILD_XML = $(BUILD_DIR)/xml
