@@ -1,6 +1,1 @@
-
-
-harfbuzz/freetype/graphite
-xorg-libinput-driver runtime dep (remove from xorg-xerver)
-seperate deps/trees build steps in makefile
-
+source dir cleaning

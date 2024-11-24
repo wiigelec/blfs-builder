@@ -145,6 +145,7 @@ $(BLFS_BOOK) :
 
 clean-init-scripts :
 	-rm -rf $(BUILDSCRIPTS_DIR)
+	-rm $(BUILD_SCRIPTS)
 
 clean-init-deps :
 	-rm -rf $(DEPS_DIR)

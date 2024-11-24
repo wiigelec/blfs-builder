@@ -132,7 +132,7 @@ function make_file
 			breakpoint="@if [ \"\$(XORG_PREFIX)\" = \"\" ]; then echo \" *** source /etc/profile.d/xorg.sh ***\"; false; fi";
 		fi
 		if [[ $prev == *"-rust.build" ]]; then 
-			breakpoint="@if [ \"\$(PATH)\" = *\"rustc\"* ]; then echo \" *** source /etc/profile.d/rustc.sh ***\"; false; fi";
+			breakpoint="@if [[ ! \$(PATH) =~ \"rustc\" ]]; then echo \" *** source /etc/profile.d/rustc.sh ***\"; false; fi";
 		fi
 
 		target1=${prev%.build}
