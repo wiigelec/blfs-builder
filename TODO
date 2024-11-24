@@ -1,8 +1,6 @@
 
-====================================================================
-BUILD SCRIPTS
 
-template match sect2[@role=installation]//screen
-
-screen nodump
+harfbuzz/freetype/graphite
+xorg-libinput-driver runtime dep (remove from xorg-xerver)
+seperate deps/trees build steps in makefile
 

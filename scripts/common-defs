@@ -42,6 +42,8 @@ INSTPKG_XML=/var/lib/jhalfs/BLFS/instpkg.xml
 VERSINSTPKG_XSL=$XSL_DIR/vers-instpkg.xsl
 ADDINSTALLED_XSL=xsl/add-installed.xsl
 BUILD_SCRIPTS=$BUILD_DIR/build.scripts
+BUILD_DEPS=$DEPTREE_DIR/build.deps
+BUILD_TREES=$DEPTREE_DIR/build.trees
 
 # xsl
 DEPENDENCIES_XSL=$XSL_DIR/dependencies.xsl

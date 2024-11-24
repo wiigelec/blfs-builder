@@ -5,6 +5,8 @@
 #
 ####################################################################
 
+set -e
+
 source ./scripts/common-defs
 
 ####################################################################
@@ -145,10 +147,10 @@ function pkg_list
 
 
 ####################################################################
-# DEP TREE
+# BUILD DEPS
 ###################################################################
 
-function root_tree
+function build_deps
 {
 	### GEN DEPS ###
 	echo
@@ -193,22 +195,57 @@ function root_tree
 	fix_files=$(grep -rl java-bin $DEPS_DIR)
 	for a in $fix_files; do sed -i 's/java-bin/java/' $a; done
 
+	# harfbuzz/freetype/graphite
+	sed -i 's/\(freetype2\)/\1-pass1/' $DEPS_DIR/harfbuzz.deps	
+	sed -i 's/\(graphite2\)/\1-pass1/' $DEPS_DIR/harfbuzz.deps
+
+	cp $DEPS_DIR/freetype2.deps $DEPS_DIR/freetype2-pass1.deps
+	cp $DEPS_DIR/graphite2.deps $DEPS_DIR/graphite2-pass1.deps
+
+	sed -i '/freetype2/d' $DEPS_DIR/freetype2-pass1.deps
+	sed -i '/harfbuzz/d' $DEPS_DIR/freetype2-pass1.deps
+	sed -i '/graphite2/d' $DEPS_DIR/graphite2-pass1.deps
+
+	echo "--freetype2-pass1--" >> $DEPS_DIR/freetype2-pass1.deps 
+	echo "--graphite2-pass1--" >> $DEPS_DIR/graphite2-pass1.deps 
+
+	echo "--freetype2--" >> $DEPS_DIR/harfbuzz.deps 
+	echo "--graphite2--" >> $DEPS_DIR/harfbuzz.deps 
+
+	cp $DEPS_DIR/harfbuzz.deps $DEPS_DIR/freetype2.deps
+	cp $DEPS_DIR/harfbuzz.deps $DEPS_DIR/graphite2.deps
+	
+	# libva/mesa
+	sed -i 's/\(libva\)/\1-pass1/' $DEPS_DIR/mesa.deps	
+	cp $DEPS_DIR/libva.deps $DEPS_DIR/libva-pass1.deps
+	sed -i '/libva/d' $DEPS_DIR/libva-pass1.deps
+	sed -i '/mesa/d' $DEPS_DIR/libva-pass1.deps
+	echo "--libva-pass1--" >> $DEPS_DIR/libva-pass1.deps 
+	echo "--libva--" >> $DEPS_DIR/mesa.deps 
+
+	# build.deps
+	touch $BUILD_DEPS
+
+}
+
+
+####################################################################
+# BUILD TREES
+###################################################################
+
+function build_trees
+{
 	### BUILD TREES ###
 	# root.deps
-	ls $DEPS_DIR | sed 's/\.deps//' > $ROOT_DEPS
+	[[ ! -f $ROOT_DEPS ]] && ls $DEPS_DIR | sed 's/\.deps//' > $ROOT_DEPS
 	echo
 	echo "Building full dependency tree, this could take a while..."
 	echo
 	$GENDEPS_SCRIPT
 	echo
 
-	### FIX TREES ###
-	# harfbuzz
-	sed -i 's/\(freetype2\)/\1-pass1/' $TREE_DIR/harfbuzz.tree
-	sed -i 's/\(graphite2\)/\1-pass1/' $TREE_DIR/harfbuzz.tree
-	echo "freetype2" >> $TREE_DIR/harfbuzz.tree
-	echo "graphite2" >> $TREE_DIR/harfbuzz.tree
-
+	# build.trees
+	touch $BUILD_TREES
 
 }
 
@@ -254,12 +291,14 @@ function build_scripts
 	# xorg libs
 	sed -i '/grep -A9 summary \*make_check\.log/d' $BUILDSCRIPTS_DIR/xorg7-lib.build	
 
-	# harfbuzz
+	# harfbuzz/freetype/graphite
 	cp $BUILDSCRIPTS_DIR/freetype2.build $BUILDSCRIPTS_DIR/freetype2-pass1.build 
 	cp $BUILDSCRIPTS_DIR/graphite2.build $BUILDSCRIPTS_DIR/graphite2-pass1.build 
 
+	# mesa/libva
+	cp $BUILDSCRIPTS_DIR/libva.build $BUILDSCRIPTS_DIR/libva-pass1.build 
 
-	### BUILD.SCRIPTS ###
+	# build.scripts
 	touch $BUILD_SCRIPTS
 }
 
@@ -348,10 +387,11 @@ function validate
 case $1 in
 	IN) config_in ;;
 	MENUCONFIG ) menu_config ;;
-	FULL_XML) full_xml ;;
-	PKG_LIST) pkg_list ;;
-	BUILD_SCRIPTS) build_scripts ;;
-	ROOT_TREE) root_tree ;;
+	FULLXML) full_xml ;;
+	PKGLIST) pkg_list ;;
+	BUILDSCRIPTS) build_scripts ;;
+	BUILDDEPS) build_deps ;;
+	BUILDTREES) build_trees ;;
 	VALIDATE) validate ;;
 
 esac

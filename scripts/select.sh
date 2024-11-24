@@ -44,20 +44,27 @@ function work_scripts
 	for p in $packages
 	do
 		tree_file=$TREE_DIR/${p}.tree
+		echo
+		echo "tree_file: $tree_file"
 		while IFS= read -r treeline;
         	do
+			echo "treeline: $treeline"
 			# check version
 			# handle pass1
-			check=${treeline%-pass1}
+			pass1=""
+			[[ $treeline =~ "-pass1" ]] && pass1=${treeline} && treeline=${treeline%-pass1}
 			#echo "xmllint --xpath \"//package[id='$treeline']/installed/text()\" $PKGLIST_XML"
 			iv=$(xmllint --xpath "//package[id='$treeline']/installed/text()" $PKGLIST_XML 2>/dev/null)
 			#echo "xmllint --xpath \"//package[id='$treeline']/version/text()\" $PKGLIST_XML"
 			bv=$(xmllint --xpath "//package[id='$treeline']/version/text()" $PKGLIST_XML 2>/dev/null)
-			
+
+			#echo "$treeline iv: $iv"
+			#echo "$treeline bv: $bv"
 			if [[ "$iv" = "$bv" ]]; then continue; fi
 
-			#echo "grep $treeline $ROOT_TREE"
-			[ -z "$(grep $treeline $ROOT_TREE)" ] && echo $treeline >> $ROOT_TREE
+			#echo "grep -x $treeline $ROOT_TREE"
+			[[ ! -z $pass1 ]] && treeline=$pass1
+			[[ -z "$(grep -x $treeline $ROOT_TREE)" ]] && echo $treeline >> $ROOT_TREE
         	done < $tree_file
 
 	#	echo $p >> $ROOT_DEPS
@@ -77,6 +84,8 @@ function work_scripts
         do
 		file=""
 		file=$(find $BUILDSCRIPTS_DIR -name "$line.build")
+		#echo "line: $line"
+		#echo "file: $file"
 		[ -z $file ] && echo "File $line not found in $BUILDSCRIPTS_DIR." && continue
 
 		# create ordered list
@@ -121,6 +130,9 @@ function make_file
 		breakpoint=""
 		if [[ $prev == *"-xorg-env.build" ]]; then 
 			breakpoint="@if [ \"\$(XORG_PREFIX)\" = \"\" ]; then echo \" *** source /etc/profile.d/xorg.sh ***\"; false; fi";
+		fi
+		if [[ $prev == *"-rust.build" ]]; then 
+			breakpoint="@if [ \"\$(PATH)\" = *\"rustc\"* ]; then echo \" *** source /etc/profile.d/rustc.sh ***\"; false; fi";
 		fi
 
 		target1=${prev%.build}

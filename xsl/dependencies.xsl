@@ -99,7 +99,25 @@
         		<xsl:apply-templates select=".//para[@role='optional']" />
         	</xsl:if>
 
+		<!-- SELF -->
+		<xsl:text>--</xsl:text><xsl:value-of select="@id" /><xsl:text>--</xsl:text>
 		<xsl:text>&#xA;</xsl:text>
+
+		<!-- RUNTIME -->
+        	<!-- REQUIRED -->
+        	<xsl:if test="string($required) = 'true'">
+        		<xsl:apply-templates select=".//para[@role='required']" mode="runtime" />
+        	</xsl:if>
+
+        	<!-- RECOMMENDED -->
+        	<xsl:if test="$recommended = 'true'">
+        		<xsl:apply-templates select=".//para[@role='recommended']" mode="runtime" />
+        	</xsl:if>
+
+        	<!-- OPTIONAL -->
+        	<xsl:if test="$optional = 'true'">
+        		<xsl:apply-templates select=".//para[@role='optional']" mode="runtime" />
+        	</xsl:if>
 	
 	</exsl:document>
 
@@ -109,18 +127,32 @@
 
 <!--
 ####################################################################
-#
+# PARA
 ####################################################################
 -->
 <xsl:template match="para">
 
-	<xsl:for-each select=".//xref[not(@role='nodep')]">
+	<xsl:for-each select=".//xref[not(@role='nodep') and not(@role='runtime')]">
 		<xsl:value-of select="@linkend" />
 		<xsl:text>&#xA;</xsl:text>
 	</xsl:for-each>
 
 </xsl:template>
 
+
+<!--
+####################################################################
+# PARA RUNTIME
+####################################################################
+-->
+<xsl:template match="para" mode="runtime">
+
+	<xsl:for-each select=".//xref[not(@role='nodep') and @role='runtime']">
+		<xsl:value-of select="@linkend" />
+		<xsl:text>&#xA;</xsl:text>
+	</xsl:for-each>
+
+</xsl:template>
 
 
 

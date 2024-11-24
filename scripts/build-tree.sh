@@ -1,47 +1,110 @@
 #!/bin/bash
 ####################################################################
 #
-#
+# BUILD TREE SH
 #
 ####################################################################
 
 source ./scripts/common-defs
 
+debug="yes"
+
 level=1
+spaces=""
+deps_file=""
 tree_file=""
 
-#------------------------------------------------------------------#
+
+####################################################################
+# RECURSE
+####################################################################
+
 function recurse
 {
-	#echo "Recursing $1"
+	local file=$1
+	local name=${file##*/}
 
-	### CHECK IF ALREADY PROCESSED ###
-	[ ! -z $(grep $1 $PROCD_FILE) ] && return
+	debug ""
+	[ $level -eq 1 ] && debug "===================================================================="
+	[ $level -eq 2 ] && debug "--------------------------------------------------------------------" false
+	[ $level -eq 3 ] && debug "3-----3-----3-----3-----3-----3-----3-----3-----3-----3-----3---"
+	[ $level -eq 4 ] && debug "4-----4-----4-----4-----4-----4-----4-----4-----4-----4-----4-"
+	[ $level -eq 5 ] && debug "5-----5-----5-----5-----5-----5-----5-----5-----5-----5-----"
+	[ $level -eq 6 ] && debug "6-----6-----6-----6-----6-----6-----6-----6-----6-----6---"
+	[ $level -eq 7 ] && debug "7-----7-----7-----7-----7-----7-----7-----7-----7-----7 "
+	[ $level -eq 8 ] && debug "8-----8-----8-----8-----8-----8-----8-----8-----8-----"
+	[ $level -eq 9 ] && debug "9-----9-----9-----9-----9-----9-----9-----9-----9---"
+	debug "LEVEL:$level Recursing $name"
 
-	### MARK AS PROCESSED TO PREVENT CIRCULAR DEP LOOP ###
-	echo $1 >> $PROCD_FILE
+	# check -- endpoint
+	local endpoint=""
+	name=${file##*/}
+	name=${name%.deps}
+	if [[ $file =~ "--" ]]; then
+		endpoint="true"
+		name=$(echo $name | sed 's/--\(.*\)--/\1/')
+		debug "Endpoint: $name"
+	fi	
 
-	### READ FILE ###
-	while IFS= read -r line;
-	do
-		[ -z "${line// }" ] && continue
+	### RECURSE ###
+	if [[ -z $endpoint ]]; then
+	
+		### CYLCLE BREAK ###
+		if [[ ! -z $(grep $1 $PROCD_FILE) ]]; then
+			debug "*** Already processed ${file##*/}. ***"
+			return 0
+		fi
+		if [ $level -ne 1 ]; then
+			debug "Adding ${file##*/} to process cycle queue."
+			echo $file >> $PROCD_FILE
+		fi
+
+		# output format
+		((level++))
+		spaces+="  "  
+
 		
-		#echo "Processing $line dependencies..."
+		while IFS= read -r line;
+		do
+			# skip empty
+			[[ $line = '' ]] && continue 
 
-		### RECURSE ###
-		dep=$DEPS_DIR/$line.deps
-		#echo $dep
-		recurse $dep
+			### RECURSE ###
+			recurse "$DEPS_DIR/$line.deps"
 
-	done < $1
+		done < $file
+	
+		# output formatting
+		((level--))
+		spaces=${spaces##  }
+		debug " "
+
+	fi	
+
+	### WRITE TO TREE ONLY ENDPOINTS ###
+	if [[ ! -z $endpoint ]]; then
+		if [[ -z $(grep -x $name $tree_file) ]]; then
+			debug ""
+			debug "##### LEVEL:$level Adding $name to tree. #####"
+			echo $name >> $tree_file
+		else
+			debug "Skipping $name, already in tree."
+		fi
+	fi
 		
-	### WRITE POSTORDER ###
-	add_file=${1##*/}
-	add_file=${add_file%.deps}
-	[ $add_file = "root" ] && return
-	#echo "Adding $add_file to $tree_file..."
-	echo $add_file >> $tree_file
+}
 
+
+
+#------------------------------------------------------------------#
+function debug
+{
+	[[ -z $debug ]] && return
+
+	nospace=$2
+	s=""
+	if [[ -z $nospace ]]; then s=$spaces; fi
+	echo "${s}$1"
 }
 
 
@@ -56,8 +119,6 @@ touch $PROCD_FILE
 
 
 ### PROCESS ROOT FILE ###
-#[ -f $ROOT_TREE ] && rm $ROOT_TREE
-#touch $ROOT_TREE.tmp
 set -e
 while IFS= read -r line;
 do
@@ -66,20 +127,14 @@ do
 	echo "" > $PROCD_FILE
 	
 	# create tree file
-	[ -f $tree_file ] && rm $tree_file
+	[ -f $tree_file ] && continue
 	echo "Creating $tree_file..."
+	touch $tree_file
+	level=1
 	recurse $deps_file
-
-	# update root tree
-	#while IFS= read -r treeline;
-	#do
-	#	#echo "grep $treeline $ROOT_TREE"
-	#	[ -z "$(grep $treeline $ROOT_TREE.tmp)" ] && echo $treeline >> $ROOT_TREE.tmp
-	#done < $tree_file	
 
 done < $ROOT_DEPS
 
-#mv $ROOT_TREE.tmp $ROOT_TREE
 touch $ROOT_TREE
 
 ### FINAL CLEANUP ###
