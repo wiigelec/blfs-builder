@@ -181,6 +181,9 @@ function vers_instpkg
 	package=$1
 	[[ -z $package ]] && echo "NO PACKAGE!" && return
 
+	# strip pass 1
+	package=${package%-pass1}
+
 	# get version
 	version=$(xmllint --xpath "//package[id='$package']/version/text()" $PKGLIST_XML)
 
