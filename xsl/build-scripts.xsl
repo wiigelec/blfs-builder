@@ -90,6 +90,9 @@
        		<!-- COMMANDS -->
        		<xsl:apply-templates select="." mode="script-commands"  />
 
+		<!-- FOOTER -->
+       		<xsl:apply-templates select="." mode="script-footer" />
+
 	</exsl:document>
 
 </xsl:template>

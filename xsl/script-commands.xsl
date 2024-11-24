@@ -44,14 +44,49 @@
         <xsl:text>####################################################################</xsl:text>
         <xsl:text>&#xA;</xsl:text>
 
+	<!-- DIFFLOG1 -->
+	<xsl:text>&#xA;</xsl:text>
+	<xsl:text>### DIFFLOG1 ###</xsl:text>
+	<xsl:text>&#xA;</xsl:text>
+	<xsl:text>sudo -E sh -e &lt;&lt; ROOT_EOF</xsl:text>
+	<xsl:text>&#xA;</xsl:text>
+ 	<xsl:text>touch $TIMESTAMP</xsl:text>
+	<xsl:text>&#xA;</xsl:text>
+ 	<xsl:text>find / -xdev > $difflog1</xsl:text>
+	<xsl:text>&#xA;</xsl:text>
+ 	<xsl:text>ROOT_EOF</xsl:text>
+	<xsl:text>&#xA;</xsl:text>
+	<xsl:text>&#xA;</xsl:text>
+
+	<!-- APPLY TEMPLATES -->
+	<xsl:text>&#xA;</xsl:text>
+	<xsl:text>### CONFIG MAKE INSTALL ###</xsl:text>
+	<xsl:text>&#xA;</xsl:text>
 	<xsl:apply-templates select="sect1[not(@role='package') and not(@role='kernel')]//screen[not(@role='nodump')][not(@remap)][not(ancestor::para)]" mode="script-commands"  />
 	<xsl:apply-templates select="sect2[not(@role='package') and not(@role='kernel')]//screen[not(@role='nodump')][not(@remap)][not(ancestor::para)]" mode="script-commands"  />
 	<xsl:apply-templates select="sect3[not(@role='package') and not(@role='kernel')]//screen[not(@role='nodump')][not(@remap)][not(ancestor::para)]" mode="script-commands" />
 
-	<!-- xorg-env -->
+	<!-- xorg-env special handling -->
 	<xsl:if test="@id = 'xorg-env'">
 		<xsl:apply-templates select="//sect2[@id='xorg-env']//screen[not(@role='nodump')]" mode="script-commands" />
 	</xsl:if>
+
+	<!-- DIFFLOG2 -->
+	<xsl:text>&#xA;</xsl:text>
+	<xsl:text>&#xA;</xsl:text>
+	<xsl:text>### DIFFLOG2 ###</xsl:text>
+	<xsl:text>&#xA;</xsl:text>
+	<xsl:text>sudo -E sh -e &lt;&lt; ROOT_EOF</xsl:text>
+	<xsl:text>&#xA;</xsl:text>
+ 	<xsl:text>find / -xdev > $difflog2</xsl:text>
+	<xsl:text>&#xA;</xsl:text>
+ 	<xsl:text>find / -xdev -newer $TIMESTAMP >> $difflog2</xsl:text>
+	<xsl:text>&#xA;</xsl:text>
+ 	<xsl:text>rm $TIMESTAMP</xsl:text>
+	<xsl:text>&#xA;</xsl:text>
+ 	<xsl:text>ROOT_EOF</xsl:text>
+	<xsl:text>&#xA;</xsl:text>
+
 
 </xsl:template>
 

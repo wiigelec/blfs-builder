@@ -52,6 +52,29 @@ set -e
 
 # CONFIG VARS
 SRC_DIR=/sources
+
+# DIFF LOGS
+TIMESTAMP=/tmp/timestamp$RANDOM
+DIFFLOG_DIR=/var/lib/jhalfs/BLFS/difflog
+[ ! -d $DIFFLOG_DIR ] &amp;&amp; mkdir -p $DIFFLOG_DIR
+difflog1=$DIFFLOG_DIR/${PKG_ID}-${PKG_VERS}.difflog1
+difflog2=$DIFFLOG_DIR/${PKG_ID}-${PKG_VERS}.difflog2
+</xsl:template>
+
+
+<!--
+####################################################################
+# SECT1 SECT2 SECT3 FOOTER
+####################################################################
+-->
+<xsl:template match="sect1|sect2|sect3" mode="script-footer">
+
+### CLEANUP ###
+rm -rf $JH_UNPACKDIR
+
+
+exit
+
 </xsl:template>
 
 
