@@ -132,7 +132,7 @@ $(FULL_XML) : $(BLFS_BOOK)
 	@echo "===================================================================="
 	@echo "Preparing book sources..."
 	@echo
-	$(INIT_SCRIPT) FULL_XML
+	$(INIT_SCRIPT) FULLXML
 
 
 $(BLFS_BOOK) : 

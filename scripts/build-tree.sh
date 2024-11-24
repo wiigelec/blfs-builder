@@ -7,7 +7,7 @@
 
 source ./scripts/common-defs
 
-debug="yes"
+debug=""
 
 level=1
 spaces=""

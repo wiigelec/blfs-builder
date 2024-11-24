@@ -356,6 +356,7 @@ function validate
 		while IFS= read -r line;
 		do
 			[ -z $line ] && continue
+			[[ $line =~ "--" ]] && continue
 			check=$DEPS_DIR/${line}.deps
 			if [[ ! -f $check ]]; then
 				# if not already add to queue

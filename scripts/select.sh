@@ -44,11 +44,11 @@ function work_scripts
 	for p in $packages
 	do
 		tree_file=$TREE_DIR/${p}.tree
-		echo
-		echo "tree_file: $tree_file"
+		#echo
+		#echo "tree_file: $tree_file"
 		while IFS= read -r treeline;
         	do
-			echo "treeline: $treeline"
+			#echo "treeline: $treeline"
 			# check version
 			# handle pass1
 			pass1=""
