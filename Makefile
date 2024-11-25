@@ -1,9 +1,26 @@
 ####################################################################
 #
-#
+# BLFS BUILDER MAIN MAKEFIL
 #
 ####################################################################
 
+### DISPLAY OUTPUT ###
+BOLD= "[0;1m"
+NORMAL= "[0;0m"
+BLUE= "[1;34m"
+
+
+define bold_message
+  @echo $(BOLD)
+  @echo "===================================================================="
+  @echo  $(BOLD)$(1)
+  @echo $(NORMAL)
+endef
+
+define blue_message
+  @echo  $(BLUE)$(1)
+  @echo $(WHITE)
+endef
 
 ####################################################################
 # CONFIGURATION
@@ -80,66 +97,50 @@ make init-deptree: init-deps init-trees
 
 $(VALIDATED) : $(BUILD_TREES) $(BUILD_SCRIPTS)
 	@echo
-	@echo "===================================================================="
-	@echo "Validating dependency trees and build scripts..."
-	@echo
+	@$(call bold_message, Validating dependency trees and build scripts...)
 	$(INIT_SCRIPT) VALIDATE
 	@echo
-	@echo "Initialization complete."
+	@echo
+	@$(call bold_message, Initialization complete.)
 	@echo
 
 
 $(BUILD_TREES) :  $(BUILD_DEPS)
 	@echo
-	@echo "===================================================================="
-	@echo "Building dependency trees..."
-	@echo
+	@$(call bold_message, Building dependency trees...)
 	$(INIT_SCRIPT) BUILDTREES
 
 
 $(BUILD_DEPS) :  $(FULL_XML) $(PKG_LIST)
 	@echo
-	@echo "===================================================================="
-	@echo "Reading package dependencies..."
-	@echo
+	@$(call bold_message, Reading package dependencies...)
 	$(INIT_SCRIPT) BUILDDEPS
 
 
 $(BUILD_SCRIPTS) : $(FULL_XML) $(PKG_LIST)
 	@echo
-	@echo "===================================================================="
-	@echo "Generating build scripts..."
-	@echo
+	@$(call bold_message, Generating build scripts...)
 	$(INIT_SCRIPT) BUILDSCRIPTS
 
 
 $(PKG_LIST) : $(FULL_XML)
 	@echo
-	@echo "===================================================================="
-	@echo "Generating package list..."
-	@echo
+	@$(call bold_message, Generating package list...)
 	$(INIT_SCRIPT) PKGLIST
 
 
 $(FULL_XML) : $(BLFS_BOOK)
 	@echo
-	@echo "===================================================================="
-	@echo "Running menu config..."
-	@echo
+	@$(call bold_message, Running menu config...)
 	$(INIT_SCRIPT) IN
 	$(INIT_SCRIPT) MENUCONFIG
-	@echo
-	@echo "===================================================================="
-	@echo "Preparing book sources..."
-	@echo
+	@$(call bold_message, Preparing book sources...)
 	$(INIT_SCRIPT) FULLXML
 
 
 $(BLFS_BOOK) : 
 	@echo
-	@echo "===================================================================="
-	@echo "Retrieving BLFS book..."
-	@echo
+	@$(call bold_message, Retrieving BLFS book...)
 	git clone https://git.linuxfromscratch.org/blfs $(BLFS_BOOK)
 
 

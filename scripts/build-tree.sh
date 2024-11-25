@@ -86,7 +86,7 @@ function recurse
 
 		if [[ -z $(grep -x $name $tree_file) ]]; then
 			debug ""
-			debug "##### LEVEL:$level Adding $name to tree. #####"
+			debug ">>>>> LEVEL:$level Adding $name to tree. <<<<<"
 			echo $name >> $tree_file
 		else
 			debug "Skipping $name, already in tree."

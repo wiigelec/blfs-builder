@@ -104,13 +104,20 @@ function work_scripts
 
 	done < $ROOT_TREE
 
+	if [ $cnt -eq 1 ]; then
+		echo
+		echo ">>>>> Nothing to be done. <<<<<"
+		echo
+		return 1
+	fi
+
 	chmod +x $WORK_DIR/scripts/*
 }
 
 
 ####################################################################
 # GEN MAKEFILE
-###################################################################
+####################################################################
 
 function make_file
 {
@@ -121,7 +128,38 @@ function make_file
 	makefile=$WORK_DIR/Makefile
 	[ -f $makefile ] && rm $makefile
 	scripts=$(ls -r $WORK_DIR/scripts)
+
+	### MAKEFILE HEADER ###
+	cat << EOF > $makefile
+####################################################################
+# AUTO GENERATED MAKEFILE
+####################################################################
+
+### DISPLAY OUTPUT ###
+BOLD= "[0;1m"
+NORMAL= "[0;0m"
+BLUE= "[1;34m"
+
+define echo_message
+  @echo \$(BOLD)
+  @echo "===================================================================="
+  @echo \$(BOLD)Building target: \$(BLUE)\$@\$(BOLD)
+  @echo "===================================================================="
+  @echo \$(NORMAL)
+endef
+
+define end_message
+  @echo \$(BOLD)
+  @echo "===================================================================="
+  @echo \$(BOLD) SUCCESS: \$(BLUE)Build completed.
+  @echo \$(NORMAL)
+endef
+
+EOF
+
+	### ADD SCRIPTS ###
 	prev=""
+	first="true"
 	for s in $scripts
 	do
 		[ -z $prev ] && prev=$s && continue
@@ -140,16 +178,13 @@ function make_file
 		package=${target1#*z-}
 		echo "$target1 : $target2 " >> $makefile
 		echo "	@echo" >> $makefile
-		echo "	@echo" >> $makefile
-		echo "	@echo \"====================================================================\"" >> $makefile
-		echo "	@echo \"\$@\"" >> $makefile
-		echo "	@echo \"====================================================================\"" >> $makefile	
-		echo "	@echo" >> $makefile
+		echo "	@\$(call echo_message)" >> $makefile
 		echo "	@echo" >> $makefile
 		echo "	./scripts/$prev" >> $makefile
 		if [[ ! -z $breakpoint ]]; then echo "	$breakpoint" >> $makefile; breakpoint=""; fi
 		echo "	\$(SCRIPT_DIR)/select.sh VERSINSTPKG $package" >> $makefile
 		echo "	touch $target1" >> $makefile
+		[[ ! -z $first ]] && echo "	@\$(call end_message)" >> $makefile && first=""
 		echo "" >> $makefile
 		prev=$s
 	done	
@@ -158,11 +193,7 @@ function make_file
 	package=${target1#*z-}
 	echo "$target1 :" >> $makefile
 	echo "	@echo" >> $makefile
-	echo "	@echo" >> $makefile
-	echo "	@echo \"====================================================================\"" >> $makefile
-	echo "	@echo \"\$@\"" >> $makefile
-	echo "	@echo \"====================================================================\"" >> $makefile	
-	echo "	@echo" >> $makefile
+	echo "	@\$(call echo_message)" >> $makefile
 	echo "	@echo" >> $makefile
 	echo "	./scripts/$prev" >> $makefile
 	if [[ ! -z $sourceme ]]; then echo "	$sourceme" >> $makefile; fi
