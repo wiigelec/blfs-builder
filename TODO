@@ -1,7 +1,8 @@
 source dir cleaning
 enhance build makefile env message
 make build archive/package
-file exists in sources dir
 download md5
-
+build completed successfully message
+move script deps fixes to script functions
 makefile variable export
+blfs bootscripts

@@ -6,6 +6,7 @@
 ####################################################################
 
 # dirs
+TOPDIR=${TOPDIR:-$(pwd)}
 SCRIPTS_DIR=$TOPDIR/scripts
 BUILD_DIR=$TOPDIR/build
 XSL_DIR=$TOPDIR/xsl

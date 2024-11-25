@@ -7,7 +7,7 @@
 
 source ./scripts/common-defs
 
-debug=""
+DEBUG=${DEBUG:-""}
 
 level=1
 spaces=""
@@ -83,12 +83,23 @@ function recurse
 
 	### WRITE TO TREE ONLY ENDPOINTS ###
 	if [[ ! -z $endpoint ]]; then
-		if [[ -z $(grep -x $name $tree_file) ]]; then
+
+		add=false
+		# move level 2 endpoint to here if already in tree
+		if [ $level -eq 2 ]; then
+			sed -i "/^$name\$/d" $tree_file
+			add=true
+		elif [[ -z $(grep -x $name $tree_file) ]]; then 
+			add=true
+		else
+			debug "Skipping $name, already in tree."
+		fi
+
+		# add to tree
+		if [[ $add ]]; then
 			debug ""
 			debug "##### LEVEL:$level Adding $name to tree. #####"
 			echo $name >> $tree_file
-		else
-			debug "Skipping $name, already in tree."
 		fi
 	fi
 		
@@ -99,7 +110,7 @@ function recurse
 #------------------------------------------------------------------#
 function debug
 {
-	[[ -z $debug ]] && return
+	[[ -z $DEBUG ]] && return
 
 	nospace=$2
 	s=""
@@ -120,6 +131,7 @@ touch $PROCD_FILE
 
 ### PROCESS ROOT FILE ###
 set -e
+echo "Reading $ROOT_DEPS..."
 while IFS= read -r line;
 do
 	deps_file=$DEPS_DIR/${line}.deps
