@@ -1,5 +1,7 @@
 source dir cleaning
 enhance build makefile env message
 make build archive/package
+file exists in sources dir
+download md5
 
 makefile variable export

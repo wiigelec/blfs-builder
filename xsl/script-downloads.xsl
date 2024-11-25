@@ -129,7 +129,7 @@ if [[ ! -z $JH_UNPACKDIR ]]; then pushd $JH_UNPACKDIR; fi
 
         <!-- wget -->
         <xsl:text>&#xA;</xsl:text>
-        <xsl:text>wget $PKG_URL</xsl:text>
+        <xsl:text>[[ ! -f $PACKAGE ]] &amp;&amp; wget $PKG_URL</xsl:text>
         <xsl:text>&#xA;</xsl:text>
 
 </xsl:template>
