@@ -231,6 +231,12 @@ function build_deps
 	echo "--libva-pass1--" >> $DEPS_DIR/libva-pass1.deps 
 	echo "--libva--" >> $DEPS_DIR/mesa.deps 
 
+	# gcr
+	sed -i '/--gcr--/d' $DEPS_DIR/gcr.deps
+	echo "openssh" >> $DEPS_DIR/gcr.deps 
+	echo "--gcr--" >> $DEPS_DIR/gcr.deps 
+	
+
 	# build.deps
 	touch $BUILD_DEPS
 

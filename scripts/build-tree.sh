@@ -84,22 +84,12 @@ function recurse
 	### WRITE TO TREE ONLY ENDPOINTS ###
 	if [[ ! -z $endpoint ]]; then
 
-		add=false
-		# move level 2 endpoint to here if already in tree
-		if [ $level -eq 2 ]; then
-			sed -i "/^$name\$/d" $tree_file
-			add=true
-		elif [[ -z $(grep -x $name $tree_file) ]]; then 
-			add=true
-		else
-			debug "Skipping $name, already in tree."
-		fi
-
-		# add to tree
-		if [[ $add ]]; then
+		if [[ -z $(grep -x $name $tree_file) ]]; then
 			debug ""
 			debug "##### LEVEL:$level Adding $name to tree. #####"
 			echo $name >> $tree_file
+		else
+			debug "Skipping $name, already in tree."
 		fi
 	fi
 		
