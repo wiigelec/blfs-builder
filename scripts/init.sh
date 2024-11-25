@@ -123,6 +123,14 @@ function pkg_list
 		echo $each
 	done
 
+
+	### INITIALIZE BLFS INSTPKG ###
+	if [[ ! -f $INSTPKG_XML ]]; then
+		echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>" > $INSTPKG_XML
+		echo "<sublist><name>Installed</name></sublist>" >> $INSTPKG_XML
+	fi
+
+
 	### ADD INSTALLED ###
 	echo
 	echo "Adding installed packages..."

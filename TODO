@@ -1,4 +1,5 @@
 source dir cleaning
 enhance build makefile env message
+make build archive/package
 
 makefile variable export
