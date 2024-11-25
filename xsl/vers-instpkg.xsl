@@ -66,6 +66,7 @@
 
 <xsl:template match="//package">
 
+	<xsl:text>&#xA;</xsl:text>
 	<package>
                 <xsl:choose>
 
