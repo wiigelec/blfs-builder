@@ -177,18 +177,14 @@ select-makefile :
 
 $(SELECT_MAKEFILE) : $(SELECT_OUT)
 	@echo
-	@echo "===================================================================="
-	@echo "Setting up the build..."
-	@echo
+	@$(call bold_message, Setting up the build...)
 	$(SELECT_SCRIPT) WORKSCRIPTS
 	$(SELECT_SCRIPT) MAKEFILE
 
 
 $(SELECT_OUT) : $(SELECT_IN)
 	@echo
-	@echo "===================================================================="
-	@echo "Running menu config..."
-	@echo
+	@$(call bold_message, Running menu config...)
 	$(INIT_SCRIPT) PKGLIST
 	$(SELECT_SCRIPT) IN
 	$(SELECT_SCRIPT) MENUCONFIG
@@ -216,6 +212,7 @@ clean-select :
 ####################################################################
 
 build : 
+	@$(call bold_message, Starting build sequence...)
 	$(MAKE) -C $(WORK_DIR)
 
 
