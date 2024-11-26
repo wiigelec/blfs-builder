@@ -102,6 +102,7 @@ PKG_URL=<xsl:value-of select="@url" />
 
 PACKAGE=${PKG_URL##*/}
 
+[[ -d $SRC_DIR ]] &amp;&amp; rm -rf $SRC_DIR
 mkdir -p $SRC_DIR
 cd $SRC_DIR
 
