@@ -188,6 +188,7 @@ EOF
 		if [[ ! -z $breakpoint ]]; then echo "	$breakpoint" >> $makefile; breakpoint=""; fi
 		echo "	\$(SCRIPT_DIR)/select.sh VERSINSTPKG $package" >> $makefile
 		echo "	touch $target1" >> $makefile
+		[[ ! -z $first ]] && echo "	@\$(call end_message)" >> $makefile && first=""
 		echo "" >> $makefile
 		prev=$s
 	done	
