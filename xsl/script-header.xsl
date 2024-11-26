@@ -46,12 +46,14 @@ PKG_ID=<xsl:value-of select="@id" />
 PKG_VERS=$(xmllint --xpath "//package[id='$PKG_ID']/version/text()" ../xml/pkg-list.xml) 
 
 # ENV
+if [ -r /etc/profile ]; then source /etc/profile; fi
 export MAKEFLAGS="-j$(nproc)"
 
 set -e
 
 # CONFIG VARS
-SRC_DIR=/sources
+SOURCE_DIR=/sources
+SRC_DIR=$SOURCE_DIR/$PKG_ID
 
 # DIFF LOGS
 TIMESTAMP=/tmp/timestamp$RANDOM
@@ -70,7 +72,8 @@ difflog2=$DIFFLOG_DIR/${PKG_ID}-${PKG_VERS}.difflog2
 <xsl:template match="sect1|sect2|sect3" mode="script-footer">
 
 ### CLEANUP ###
-rm -rf $JH_UNPACKDIR
+cd $SOURCE_DIR
+rm -rf $BUILD_DIR
 
 
 exit

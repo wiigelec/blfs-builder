@@ -17,7 +17,6 @@
 
 <!-- extract download -->
 <xsl:variable name="extractdownload">
-
 JH_UNPACKDIR=""
 
 case $PACKAGE in
@@ -51,7 +50,7 @@ case $PACKAGE in
 #     ;;
 esac
 
-if [[ ! -z $JH_UNPACKDIR ]]; then pushd $JH_UNPACKDIR; fi
+if [[ ! -z $JH_UNPACKDIR ]]; then cd $JH_UNPACKDIR; fi
 
 </xsl:variable>
 
@@ -74,34 +73,20 @@ if [[ ! -z $JH_UNPACKDIR ]]; then pushd $JH_UNPACKDIR; fi
 ####################################################################
 -->
 <xsl:template match="sect1|sect2" mode="script-download" >
+####################################################################
+# DOWNLOADS
+####################################################################
 
-        <xsl:text>&#xA;</xsl:text>
+### MAIN DOWNLOAD ###
+<xsl:apply-templates select=".//sect2[@role='package']//itemizedlist[1]/listitem/*/ulink[not(@url = ' ')]" mode="main" />
+<xsl:apply-templates select=".//sect3[@role='package']//itemizedlist[1]/listitem/*/ulink[not(@url = ' ')]" mode="main" />
 
-        <xsl:text>####################################################################</xsl:text>
-        <xsl:text>&#xA;</xsl:text>
-        <xsl:text># DOWNLOADS</xsl:text>
-        <xsl:text>&#xA;</xsl:text>
-        <xsl:text>####################################################################</xsl:text>
-        <xsl:text>&#xA;</xsl:text>
-        <xsl:text>&#xA;</xsl:text>
-        <xsl:text>### MAIN DOWNLOAD ###</xsl:text>
-        <xsl:text>&#xA;</xsl:text>
-        <xsl:text>&#xA;</xsl:text>
-	<xsl:apply-templates select=".//sect2[@role='package']//itemizedlist[1]/listitem/*/ulink[not(@url = ' ')]" mode="main" />
-	<xsl:apply-templates select=".//sect3[@role='package']//itemizedlist[1]/listitem/*/ulink[not(@url = ' ')]" mode="main" />
+### ADDITIONAL DOWNLOADS ###
+<xsl:apply-templates select=".//sect2[@role='package']//itemizedlist[position() &gt; 1]/listitem/*/ulink[not(@url = ' ')]" mode="additional" />
+<xsl:apply-templates select=".//sect3[@role='package']//itemizedlist[position() &gt; 1]/listitem/*/ulink[not(@url = ' ')]" mode="additional" />
 
-        <xsl:text>&#xA;</xsl:text>
-        <xsl:text>&#xA;</xsl:text>
-        <xsl:text>### ADDITIONAL DOWNLOADS ###</xsl:text>
-        <xsl:text>&#xA;</xsl:text>
-        <xsl:text>&#xA;</xsl:text>
-	<xsl:apply-templates select=".//sect2[@role='package']//itemizedlist[position() &gt; 1]/listitem/*/ulink[not(@url = ' ')]" mode="additional" />
-	<xsl:apply-templates select=".//sect3[@role='package']//itemizedlist[position() &gt; 1]/listitem/*/ulink[not(@url = ' ')]" mode="additional" />
-
-        <xsl:text>&#xA;</xsl:text>
-        <xsl:text>&#xA;</xsl:text>
-        <xsl:text>### FILE EXTRACTION ###</xsl:text>
-	<xsl:value-of select="$extractdownload" />
+### FILE EXTRACTION ###
+<xsl:value-of select="$extractdownload" />
 
 </xsl:template>
 
@@ -113,25 +98,14 @@ if [[ ! -z $JH_UNPACKDIR ]]; then pushd $JH_UNPACKDIR; fi
 -->
 <!-- main download -->
 <xsl:template match="ulink" mode="main">
+PKG_URL=<xsl:value-of select="@url" />
 
-        <!-- pkg url -->
-        <xsl:text>PKG_URL=</xsl:text>
-        <xsl:value-of select="@url" />
-        <xsl:text>&#xA;</xsl:text>
+PACKAGE=${PKG_URL##*/}
 
-        <!-- package -->
-        <xsl:text>PACKAGE=${PKG_URL##*/}</xsl:text>
-        <xsl:text>&#xA;</xsl:text>
+mkdir -p $SRC_DIR
+cd $SRC_DIR
 
-        <xsl:text>&#xA;</xsl:text>
-	<xsl:text>pushd $SRC_DIR</xsl:text>
-        <xsl:text>&#xA;</xsl:text>
-
-        <!-- wget -->
-        <xsl:text>&#xA;</xsl:text>
-        <xsl:text>[[ ! -f $PACKAGE ]] &amp;&amp; wget $PKG_URL</xsl:text>
-        <xsl:text>&#xA;</xsl:text>
-
+[[ ! -f $PACKAGE ]] &amp;&amp; wget $PKG_URL
 </xsl:template>
 
 <!-- additional downloads -->
