@@ -51,7 +51,7 @@ function time_package
                 minutes=$((SECONDS / 60))
                 seconds=$((SECONDS % 60))
 
-		echo "$package:			$minutes min. $seconds sec" > $PKGTIMER_FILE 
+		echo "$target:				$minutes min. $seconds sec" > $PKGTIMER_FILE 
         done	
 
 	rm $PKGTIMER_FILE
@@ -66,10 +66,12 @@ function time_package
 function timer_manager
 {
 	# init file
-	echo "" > $ELAPTIME_FILE
-	echo "" >> $ELAPTIME_FILE
-	echo "--------------------------------------------------------" >> $ELAPTIME_FILE
-	echo "Total build time: " >> $ELAPTIME_FILE
+	if [[ ! -f $ELAPTIME_FILE ]]; then
+		echo "" > $ELAPTIME_FILE
+		echo "" >> $ELAPTIME_FILE
+		echo "--------------------------------------------------------------------" >> $ELAPTIME_FILE
+		echo "Total build time: " >> $ELAPTIME_FILE
+	fi
 		
 	### LOOP ###
         while true; do
