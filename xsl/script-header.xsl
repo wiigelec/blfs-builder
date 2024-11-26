@@ -73,7 +73,7 @@ difflog2=$DIFFLOG_DIR/${PKG_ID}-${PKG_VERS}.difflog2
 
 ### CLEANUP ###
 cd $SOURCE_DIR
-rm -rf $BUILD_DIR
+rm -rf $SRC_DIR
 
 
 exit
