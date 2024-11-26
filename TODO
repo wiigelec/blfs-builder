@@ -6,3 +6,5 @@ build completed successfully message
 move script deps fixes to script functions
 makefile variable export
 blfs bootscripts
+build log
+build times
