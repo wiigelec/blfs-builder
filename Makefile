@@ -26,15 +26,14 @@ endef
 ####################################################################
 
 TOPDIR = $(shell pwd)
-export TOPDIR
 SCRIPT_DIR = $(TOPDIR)/scripts
-export SCRIPT_DIR
 
 BUILD_DIR = $(TOPDIR)/build
 BUILD_XML = $(BUILD_DIR)/xml
 
 INIT_SCRIPT = $(SCRIPT_DIR)/init.sh
 SELECT_SCRIPT = $(SCRIPT_DIR)/select.sh
+TIMER_SCRIPT = $(SCRIPT_DIR)/timer.sh
 
 DEPTREE_DIR = $(BUILD_DIR)/deptree
 DEPS_DIR = $(DEPTREE_DIR)/deps
@@ -64,6 +63,8 @@ SELECT_IN = $(BUILD_CONFIG)/select.in
 SELECT_OUT = $(BUILD_CONFIG)/select.out
 WORK_DIR = $(BUILD_DIR)/work
 SELECT_MAKEFILE = $(WORK_DIR)/Makefile
+
+export
 
 ####################################################################
 #
@@ -214,7 +215,9 @@ clean-select :
 
 build : 
 	@$(call bold_message, Starting build sequence...)
-	$(MAKE) -C $(WORK_DIR)
+	@$(TIMER_SCRIPT) MGR $$PPID &
+	@$(TIMER_SCRIPT) BLD $$PPID &
+	@$(MAKE) -C $(WORK_DIR)
 
 
 

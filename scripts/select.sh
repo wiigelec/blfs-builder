@@ -189,6 +189,7 @@ EOF
 		echo "$target1 : $target2 " >> $makefile
 		echo "	@echo" >> $makefile
 		echo "	@\$(call echo_message)" >> $makefile
+		echo "	@\$(TIMER_SCRIPT) PKG \$\$PPID $target1 &" >> $makefile	
 		echo "	@echo" >> $makefile
 		echo "	./scripts/$prev" >> $makefile
 		if [[ ! -z $breakpoint ]]; then echo "	$breakpoint" >> $makefile; breakpoint=""; fi
@@ -206,6 +207,7 @@ EOF
 	echo "$target1 :" >> $makefile
 	echo "	@echo" >> $makefile
 	echo "	@\$(call echo_message)" >> $makefile
+	echo "	@\$(TIMER_SCRIPT) PKG \$\$PPID $target1 &" >> $makefile	
 	echo "	@echo" >> $makefile
 	echo "	./scripts/$prev" >> $makefile
 	if [[ ! -z $sourceme ]]; then echo "	$sourceme" >> $makefile; fi
