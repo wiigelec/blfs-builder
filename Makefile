@@ -179,6 +179,7 @@ $(SELECT_MAKEFILE) : $(SELECT_OUT)
 	@echo
 	@$(call bold_message, Setting up the build...)
 	$(SELECT_SCRIPT) WORKSCRIPTS
+	@echo
 	$(SELECT_SCRIPT) MAKEFILE
 
 

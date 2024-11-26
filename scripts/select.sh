@@ -72,12 +72,15 @@ function work_scripts
 	#$GENDEPS_SCRIPT
 
 	### COPY BUILD SCRIPTS ###
-	echo
 	echo "Ordering build scripts..."
 	echo
 	# work dir
 	[ -d $WORK_DIR ] && rm -rf $WORK_DIR
-	mkdir -pv $WORK_DIR/scripts
+	echo "Initializing $WORK_DIR..."
+	echo
+	echo "Copying scripts..."
+	echo
+	mkdir -p $WORK_DIR/{scripts,logs}
 	# read tree file
 	cnt=1
 	while IFS= read -r line;
@@ -98,7 +101,9 @@ function work_scripts
                	fi
 		
 		name=${file##*/}
-		cp -v $file $WORK_DIR/scripts/$order-z-$name
+		work_script=$WORK_DIR/scripts/$order-z-$name
+		cp $file $work_script
+		echo "Copied ${work_script##*/}."
 
 		((cnt++))
 
@@ -167,6 +172,7 @@ EOF
 	for s in $scripts
 	do
 		[ -z $prev ] && prev=$s && continue
+		echo "Adding target $prev..." 
 
 		### BREAKPOINT FOR ENV ###
 		breakpoint=""
@@ -193,6 +199,8 @@ EOF
 		prev=$s
 	done	
 
+	echo "Adding target $prev..." 
+
 	target1=${prev%.build}
 	package=${target1#*z-}
 	echo "$target1 :" >> $makefile
@@ -204,6 +212,9 @@ EOF
 	echo "	\$(SCRIPT_DIR)/select.sh VERSINSTPKG $package" >> $makefile
 	echo "	touch $target1" >> $makefile
 	[[ ! -z $first ]] && echo "	@\$(call end_message)" >> $makefile && first=""
+
+	echo
+	echo "Makefile complete."
 
 }
 
