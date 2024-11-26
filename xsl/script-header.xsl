@@ -73,7 +73,9 @@ difflog2=$DIFFLOG_DIR/${PKG_ID}-${PKG_VERS}.difflog2
 
 ### CLEANUP ###
 cd $SOURCE_DIR
+sudo -E sh -e &lt;&lt; ROOT_EOF
 rm -rf $SRC_DIR
+ROOT_EOF
 
 
 exit
