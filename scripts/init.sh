@@ -315,6 +315,9 @@ function build_scripts
 	# libvdpau
 	sed -i '/[ -e \$XORG_PREFIX\/share\/doc\/libvdpau ] && mv -v \$XORG_PREFIX\/share\/doc\/libvdpau{,1\.5}/d' $BUILDSCRIPTS_DIR/libvdpau.build
 
+	# boost
+	sed -i 's/-j<N>/-j\$(nproc)/' $BUILDSCRIPTS_DIR/boost.build
+
 	# build.scripts
 	touch $BUILD_SCRIPTS
 }

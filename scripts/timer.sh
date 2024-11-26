@@ -24,7 +24,7 @@ function time_build
 		minutes=$((SECONDS / 60))
 		seconds=$((SECONDS % 60))
 
-		echo "Total build time:	$minutes min. $seconds sec" > $BLDTIMER_FILE 
+		echo "Session build time:	$minutes min. $seconds sec" > $BLDTIMER_FILE 
 	done
 
 	rm $BLDTIMER_FILE
