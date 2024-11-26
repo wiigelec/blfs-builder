@@ -102,7 +102,13 @@ PKG_URL=<xsl:value-of select="@url" />
 
 PACKAGE=${PKG_URL##*/}
 
-[[ -d $SRC_DIR ]] &amp;&amp; rm -rf $SRC_DIR
+# SOURCE DIR
+if [[ -d $SRC_DIR ]]; then
+	sudo -E sh -e &lt;&lt; ROOT_EOF
+	rm -rf $SRC_DIR
+	ROOT_EOF
+fi
+
 mkdir -p $SRC_DIR
 cd $SRC_DIR
 
