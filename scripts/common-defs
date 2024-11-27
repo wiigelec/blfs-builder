@@ -45,9 +45,10 @@ ADDINSTALLED_XSL=xsl/add-installed.xsl
 BUILD_SCRIPTS=$BUILD_DIR/build.scripts
 BUILD_DEPS=$DEPTREE_DIR/build.deps
 BUILD_TREES=$DEPTREE_DIR/build.trees
-PKGTIMER_FILE=$WORK_DIR/pkg-timer
-BLDTIMER_FILE=$WORK_DIR/bld-timer
-ELAPTIME_FILE=$WORK_DIR/elapsed-time
+PKG_TIME=$WORK_DIR/pkg-time
+BLD_TIME=$WORK_DIR/bld-time
+ELAP_TIME=$WORK_DIR/elapsed-time
+CUMU_TIME=$WORK_DIR/cumu-time
 
 # xsl
 DEPENDENCIES_XSL=$XSL_DIR/dependencies.xsl

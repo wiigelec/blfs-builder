@@ -103,6 +103,8 @@ function full_xml
 
 function pkg_list
 {
+	echo
+	echo "Generating package list..."
 	### GET SOME VERSIONS ###
 	book_version=$(xmllint --xpath "/book/bookinfo/subtitle/text()" $BLFSFULL_XML | sed 's/Version //' | sed 's/-/\./')
 	kf6_version=$(grep 'ln -sfv kf6' $BLFSFULL_XML | sed 's/.* kf6-\(.*\) .*/\1/')
