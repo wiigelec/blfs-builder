@@ -333,6 +333,11 @@ function build_scripts
 	# v4l-utils
 	sed -i 's/contrib\/test\/\$prog/contrib\/test\/\\$prog/' $BUILDSCRIPTS_DIR/v4l-utils.build
 
+	# network manager
+	sed -i 's/\/usr\/share\/man\/man\$section/\/usr\/share\/man\/man\\$section/' $BUILDSCRIPTS_DIR/NetworkManager.build
+	sed -i 's/install -vm 644 \$file/install -vm 644 \\$file/' $BUILDSCRIPTS_DIR/NetworkManager.build
+
+
 	# build.scripts
 	touch $BUILD_SCRIPTS
 }
