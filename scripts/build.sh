@@ -108,7 +108,7 @@ function build_archives
     		# tar files
     		pkg=${FILE%.pkglog}
     		pkg=${pkg##*/}
-    		tar_file=$ARCHIVE_DIR/$pkg.tar
+    		tar_file=$ARCHIVE_DIR/$pkg.tar.xz
     		sudo tar --no-recursion -cJpf $tar_file -T $FILE
 	done
 }
@@ -125,4 +125,5 @@ function build_archives
 case $1 in
         BUILD) build_targets ;;
         ARCHIVE) build_archives ;;
+        PACKAGE) $PACKAGE_SCRIPT ;;
 esac

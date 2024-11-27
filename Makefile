@@ -36,6 +36,7 @@ SELECT_SCRIPT = $(SCRIPT_DIR)/select.sh
 TREE_SCRIPT = $(SCRIPT_DIR)/tree.sh
 TIMER_SCRIPT = $(SCRIPT_DIR)/timer.sh
 BUILD_SCRIPT = $(SCRIPT_DIR)/build.sh
+PACKAGE_SCRIPT = $(SCRIPT_DIR)/package.sh
 
 DEPTREE_DIR = $(BUILD_DIR)/deptree
 DEPS_DIR = $(DEPTREE_DIR)/deps
@@ -70,6 +71,7 @@ INSTPKG_DIR = /var/lib/jhalfs/BLFS
 DIFFLOG_DIR = $(INSTPKG_DIR)/difflog
 PKGLOG_DIR = $(INSTPKG_DIR)/pkglog
 ARCHIVE_DIR = $(INSTPKG_DIR)/archive
+PACKAGE_DIR = $(INSTPKG_DIR)/package
 
 export
 
@@ -231,11 +233,17 @@ build-archive :
 	@$(call bold_message, Archiving complete.)
 
 
+build-package :
+	@$(call bold_message, Running custom packaging script...)
+	$(BUILD_SCRIPT) PACKAGE
+	@$(call bold_message,  Packaging complete.)
+
+
 watch-timer : 
 	@watch -n1 tail -n25 build/work/elapsed-time
 
 
-.PHONY: build watch-timer
+.PHONY: build build-archive watch-timer
 
 ####################################################################
 #
