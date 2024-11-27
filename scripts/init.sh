@@ -345,6 +345,9 @@ function build_scripts
 	sed -i 's/netdev &&/netdev/' $BUILDSCRIPTS_DIR/NetworkManager.build
 	sed -i '/netdev <username>/d' $BUILDSCRIPTS_DIR/NetworkManager.build
 
+	# kf6-frameworks
+	sed -i '/The options used here are:/,+5d' $BUILDSCRIPTS_DIR/kf6-frameworks.build
+
 
 	# build.scripts
 	touch $BUILD_SCRIPTS

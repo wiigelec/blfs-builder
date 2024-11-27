@@ -1,3 +1,6 @@
+
+pkglist single xsltproc
+
 source dir cleaning
 enhance build makefile env message
 make build archive/package
