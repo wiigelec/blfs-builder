@@ -336,6 +336,8 @@ function build_scripts
 	# network manager
 	sed -i 's/\/usr\/share\/man\/man\$section/\/usr\/share\/man\/man\\$section/' $BUILDSCRIPTS_DIR/NetworkManager.build
 	sed -i 's/install -vm 644 \$file/install -vm 644 \\$file/' $BUILDSCRIPTS_DIR/NetworkManager.build
+	sed -i 's/netdev &&/netdev/' $BUILDSCRIPTS_DIR/NetworkManager.build
+	sed -i '/netdev <username>/d' $BUILDSCRIPTS_DIR/NetworkManager.build
 
 
 	# build.scripts
