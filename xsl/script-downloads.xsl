@@ -49,7 +49,24 @@ case $PACKAGE in
 #     ;;
 esac
 
-if [[ ! -z $JH_UNPACKDIR ]]; then cd $JH_UNPACKDIR; fi
+### SRC DIR ###
+# main file downloaded
+if [[ ! -z $JH_UNPACKDIR ]]; then 
+	cd $JH_UNPACKDIR
+# no main file
+else
+	# SOURCE DIR
+	if [[ -d $SRC_DIR ]]; then
+
+sudo -E sh -e &lt;&lt; ROOT_EOF
+rm -rf $SRC_DIR
+ROOT_EOF
+
+	fi
+
+	mkdir -p $SRC_DIR
+	cd $SRC_DIR
+fi
 
 </xsl:variable>
 
