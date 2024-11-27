@@ -327,6 +327,10 @@ function build_scripts
 	# qt6
 	sed -i 's/\$QT6DIR/\\\$QT6DIR/' $BUILDSCRIPTS_DIR/qt6.build
 
+	# qt6
+	sed -i 's/\$QT5DIR/\\\$QT5DIR/' $BUILDSCRIPTS_DIR/qt5-components.build
+
+
 	# build.scripts
 	touch $BUILD_SCRIPTS
 }
