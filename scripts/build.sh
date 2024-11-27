@@ -114,6 +114,29 @@ function build_archives
 }
 
 
+####################################################################
+# BUILD LFS
+###################################################################
+
+function build_lfs
+{
+	### RUN LFS JHALFS ###
+	# clone
+	[[ -d $LFS_DIR ]] && rm -rf $LFS_DIR
+	git clone https://git.linuxfromscratch.org/jhalfs $LFS_DIR
+
+	# setup pkg management
+	echo "#" > $LFS_DIR/pkgmngt/packageManager.xml
+	echo "#" > $LFS_DIR/pkgmngt/packInstall.sh
+	
+	# run make
+	make -C $LFS_DIR
+
+
+
+}
+
+
 
 ####################################################################
 # MAIN
@@ -126,4 +149,5 @@ case $1 in
         BUILD) build_targets ;;
         ARCHIVE) build_archives ;;
         PACKAGE) $PACKAGE_SCRIPT ;;
+        LFS) build_lfs ;;
 esac

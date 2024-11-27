@@ -67,7 +67,7 @@
 
 	<!-- PERL MODULES -->
 	<xsl:if test="contains(@id,'perl-')">
-		<xsl:apply-templates select="sect3[not(@role='package') and not(@role='kernel')]/screen[not(@role='nodump')][not(@remap)]" mode="script-commands" />
+		<xsl:apply-templates select="sect3[not(@role='package') and not(@role='kernel')]//screen[not(@role='nodump')][not(@remap)]" mode="script-commands" />
 	</xsl:if>
 
 	<!-- xorg-env special handling -->

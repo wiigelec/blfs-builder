@@ -73,6 +73,8 @@ PKGLOG_DIR = $(INSTPKG_DIR)/pkglog
 ARCHIVE_DIR = $(INSTPKG_DIR)/archive
 PACKAGE_DIR = $(INSTPKG_DIR)/package
 
+LFS_DIR = $(WORK_DIR)/lfs-jhalfs
+
 export
 
 ####################################################################
@@ -239,11 +241,16 @@ build-package :
 	@$(call bold_message,  Packaging complete.)
 
 
+build-lfs :
+	@$(call bold_message, Running LFS jhalfs...)
+	$(BUILD_SCRIPT) LFS
+
+
 watch-timer : 
 	@watch -n1 tail -n25 build/work/elapsed-time
 
 
-.PHONY: build build-archive watch-timer
+.PHONY: build build-archive build-package watch-timer
 
 ####################################################################
 #
