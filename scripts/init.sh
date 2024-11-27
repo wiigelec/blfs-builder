@@ -324,6 +324,9 @@ function build_scripts
 	num=$(grep -n "cd test" $BUILDSCRIPTS_DIR/sdl2.build | sed 's/:.*//')
 	sed -i "$num,$(($num+2))d" $BUILDSCRIPTS_DIR/sdl2.build
 
+	# qt6
+	sed -i 's/\$QT6DIR/\\\$QT6DIR/' $BUILDSCRIPTS_DIR/qt6.build
+
 	# build.scripts
 	touch $BUILD_SCRIPTS
 }
