@@ -5,9 +5,8 @@
 #
 ####################################################################
 
+SCRIPT_DIR=${SCRIPT_DIR:-$HOME/blfs-builder/scripts}
 source $SCRIPT_DIR/common-defs
-
-SPACE="\t\t\t"
 
 
 ####################################################################
@@ -69,11 +68,17 @@ function time_package
 function timer_manager
 {
 	### INITIALIZE FILES ###
+	first_target=$(ls $WORK_DIR/scripts | head -n1 | sed 's/.build//')
+	last_target=$(ls $WORK_DIR/scripts | tail -n1 | sed 's/.build//')
 
 	if [[ ! -f $ELAP_TIME ]]; then
 		echo "Package build times:" > $ELAP_TIME
 		echo "" >> $ELAP_TIME
+		echo "$first_target" >> $ELAP_TIME
 		echo "" >> $ELAP_TIME
+		echo "..." >> $ELAP_TIME
+		echo "" >> $ELAP_TIME
+		echo "$last_target" >> $ELAP_TIME
 		echo "" >> $ELAP_TIME
 		echo "--------------------------------------------------------------------" >> $ELAP_TIME
 		echo "Elapsed build time: " >> $ELAP_TIME
@@ -85,7 +90,7 @@ function timer_manager
         while : ; do
 
                 # check pid still active
-                [[ ! -e /proc/$pid ]] && break
+                [[ ! -e /proc/$pid ]] && exit
 
 		### PACKAGE BUILD TIME ###
 		pkgline=""
@@ -103,19 +108,29 @@ function timer_manager
 
 			a="$package"
 			b="$pkg_mins:$pkg_secs"
-			write_line=$(printf "%-45s %s" $a $b)
+			write_line=$(printf "%-55s %s" $a $b)
+			write_line=${write_line// /.}
 
 			# NEW PACKAGE
 			new="$(grep $package $ELAP_TIME)"
 			if [[ -z $new ]]; then
 
 				# insert new line
-				sed -i "$(( $(wc -l < $ELAP_TIME)-3 ))a $write_line" $ELAP_TIME
+				sed -i "$(( $(wc -l < $ELAP_TIME)-7 ))a $write_line" $ELAP_TIME
 
 			# EXISTING PACKAGE
 			else
+				offset=7
+
+				# last target
+				if [[ $package == $last_target ]]; then
+					#sed -i '/^\.\.\.$/,-1d' $ELAP_TIME
+					sed -i '/^\.\.\.$/,+2d' $ELAP_TIME
+					sed -i '/^\.\.\.$/d' $ELAP_TIME
+					offset=3
+				fi
 				# replace old line
-				sed -i "$(( $(wc -l < $ELAP_TIME)-3 ))s/^.*$/$write_line/" $ELAP_TIME
+				sed -i "$(( $(wc -l < $ELAP_TIME)-$offset ))s/^.*$/$write_line/" $ELAP_TIME
 				
 			fi
 		fi
@@ -135,7 +150,7 @@ function timer_manager
 		# replace old line
 		a="Elapsed build time: "
 		b="$tot_mins:$tot_secs"
-		write_line=$(printf "%-45s %s" "$a" $b)
+		write_line=$(printf "%-55s %s" "$a" $b)
 		sed -i "$(( $(wc -l < $ELAP_TIME) ))s/^.*$/$write_line/" $ELAP_TIME
 	done
 	
