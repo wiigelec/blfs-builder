@@ -30,6 +30,9 @@ function time_build
 
 	### SAVE BUILD TIME ###
 
+	# give the mgr a chance to exit
+	# to avoid doubling build time
+	sleep .5
 	get_total_time
 
 	echo "$tot_mins:$tot_secs" > $CUMU_TIME
@@ -70,29 +73,43 @@ function timer_manager
 	### INITIALIZE FILES ###
 	first_target=$(ls $WORK_DIR/scripts | head -n1 | sed 's/.build//')
 	last_target=$(ls $WORK_DIR/scripts | tail -n1 | sed 's/.build//')
+	[[ $first_target == $last_target ]] && single_target=true
 
+	### INITIALIZE DISPLAY ###
+
+	# set offset
+	if [[ $single_target ]]; then offset=4;
+	else offset=7; fi
+
+	# initialize elapsed-time
 	if [[ ! -f $ELAP_TIME ]]; then
 		echo "Package build times:" > $ELAP_TIME
 		echo "" >> $ELAP_TIME
 		echo "$first_target" >> $ELAP_TIME
 		echo "" >> $ELAP_TIME
-		echo "..." >> $ELAP_TIME
-		echo "" >> $ELAP_TIME
-		echo "$last_target" >> $ELAP_TIME
-		echo "" >> $ELAP_TIME
+		# multiple targets
+		if [[ ! $single_target ]]; then
+			echo "..." >> $ELAP_TIME
+			echo "" >> $ELAP_TIME
+			echo "$last_target" >> $ELAP_TIME
+			echo "" >> $ELAP_TIME
+		fi
 		echo "--------------------------------------------------------------------" >> $ELAP_TIME
 		echo "Elapsed build time: " >> $ELAP_TIME
 	fi
+
+	# intialize cumuliative-time
 	[[ ! -f $CUMU_TIME ]] && echo "0:0" > $CUMU_TIME
-		
+	
 
 	### LOOP ###
         while : ; do
 
                 # check pid still active
-                [[ ! -e /proc/$pid ]] && exit
+                [[ ! -e /proc/$pid ]] && break
 
 		### PACKAGE BUILD TIME ###
+
 		pkgline=""
 		[[ -f $PKG_TIME ]] && pkgline=$(cat $PKG_TIME)
 		if [[ ! -z $pkgline ]]; then
@@ -120,12 +137,10 @@ function timer_manager
 
 			# EXISTING PACKAGE
 			else
-				offset=7
 
 				# last target
 				if [[ $package == $last_target ]]; then
 					sed -i '/^\.\.\.$/,+2d' $ELAP_TIME
-					sed -i '/^\.\.\.$/d' $ELAP_TIME
 					offset=3
 				fi
 				# replace old line

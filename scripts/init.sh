@@ -105,6 +105,18 @@ function pkg_list
 {
 	echo
 	echo "Generating package list..."
+
+	### INITIALIZE BLFS INSTPKG ###
+	if [[ ! -f $INSTPKG_XML ]]; then
+		if [[ ! -d $INSTPKG_DIR ]]; then
+			sudo mkdir -p $INSTPKG_DIR
+			sudo chown $(whoami) $INSTPKG_DIR
+		fi
+		echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>" > $INSTPKG_XML
+		echo "<sublist><name>Installed</name></sublist>" >> $INSTPKG_XML
+	fi
+
+
 	### GET SOME VERSIONS ###
 	book_version=$(xmllint --xpath "/book/bookinfo/subtitle/text()" $BLFSFULL_XML | sed 's/Version //' | sed 's/-/\./')
 	kf6_version=$(grep 'ln -sfv kf6' $BLFSFULL_XML | sed 's/.* kf6-\(.*\) .*/\1/')
@@ -117,6 +129,7 @@ function pkg_list
 	# fix versions
 	sed -i 's/\$\$.*-\(.*\)\$\$/\1/' $PKGLIST_XML
 
+
 	### WARN UNVERSIONED ##
         unversioned=$(grep -F "$" $PKGLIST_XML | sed 's/.*<id>\(.*\)<\/id>.*/\1/')
 	if [[ ! -z $unversioned ]];then echo; echo "WARNING: the following packages are unversioned:"; fi
@@ -124,13 +137,6 @@ function pkg_list
 	do
 		echo $each
 	done
-
-
-	### INITIALIZE BLFS INSTPKG ###
-	if [[ ! -f $INSTPKG_XML ]]; then
-		echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>" > $INSTPKG_XML
-		echo "<sublist><name>Installed</name></sublist>" >> $INSTPKG_XML
-	fi
 
 
 	### ADD INSTALLED ###

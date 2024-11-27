@@ -18,6 +18,7 @@ DEPTREE_DIR=$BUILD_DIR/deptree
 DEPS_DIR=$DEPTREE_DIR/deps
 TREE_DIR=$DEPTREE_DIR/trees
 WORK_DIR=$BUILD_DIR/work
+INSTPKG_DIR=/var/lib/jhalfs/BLFS/
 
 # files
 INIT_IN=$BUILD_CONFIG/init.in
@@ -39,7 +40,7 @@ BUILDSCRIPTS_XSL=$XSL_DIR/build-scripts.xsl
 SCRIPTHEADER_XSL=$XSL_DIR/script-header.xsl
 SCRIPTDOWNLOADS_XSL=$XSL_DIR/script-downloads.xsl
 SCRIPTCOMMANDS_XSL=$XSL_DIR/script-commands.xsl
-INSTPKG_XML=/var/lib/jhalfs/BLFS/instpkg.xml
+INSTPKG_XML=$INSTPKG_DIR/instpkg.xml
 VERSINSTPKG_XSL=$XSL_DIR/vers-instpkg.xsl
 ADDINSTALLED_XSL=xsl/add-installed.xsl
 BUILD_SCRIPTS=$BUILD_DIR/build.scripts

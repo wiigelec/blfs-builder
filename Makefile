@@ -220,8 +220,11 @@ build :
 	@$(MAKE) -C $(WORK_DIR)
 
 
+watch-timer : 
+	@watch -n1 tail -n25 build/work/elapsed-time
 
 
+.PHONY: watch-timer
 
 ####################################################################
 #
