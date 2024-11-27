@@ -320,6 +320,10 @@ function build_scripts
 	# boost
 	sed -i 's/-j<N>/-j\$(nproc)/' $BUILDSCRIPTS_DIR/boost.build
 
+	# sdl2
+	num=$(grep -n "cd test" $BUILDSCRIPTS_DIR/sdl2.build | sed 's/:.*//')
+	sed -i "$num,$(($num+2))d" $BUILDSCRIPTS_DIR/sdl2.build
+
 	# build.scripts
 	touch $BUILD_SCRIPTS
 }
