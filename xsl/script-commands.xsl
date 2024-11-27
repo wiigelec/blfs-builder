@@ -61,18 +61,18 @@
 	<xsl:text>&#xA;</xsl:text>
 	<xsl:text>### CONFIG MAKE INSTALL ###</xsl:text>
 	<xsl:text>&#xA;</xsl:text>
-	<xsl:apply-templates select="sect1[not(@role='package') and not(@role='kernel')]//screen[not(@role='nodump')][not(@remap)][not(ancestor::para)]" mode="script-commands"  />
-	<xsl:apply-templates select="sect2[not(@role='package') and not(@role='kernel')]//screen[not(@role='nodump')][not(@remap)][not(ancestor::para)]" mode="script-commands"  />
-	<xsl:apply-templates select="sect3[not(@role='package') and not(@role='kernel')]//screen[not(@role='nodump')][not(@remap)][not(ancestor::para)]" mode="script-commands" />
+	<xsl:apply-templates select=".//sect1[not(@role='package') and not(@role='kernel')]/screen[not(@role='nodump')][not(@remap)]" mode="script-commands"  />
+	<xsl:apply-templates select=".//sect2[not(@role='package') and not(@role='kernel')]/screen[not(@role='nodump')][not(@remap)]" mode="script-commands"  />
+	<xsl:apply-templates select=".//sect3[not(@role='package') and not(@role='kernel')]/screen[not(@role='nodump')][not(@remap)]" mode="script-commands" />
 
 	<!-- PERL MODULES -->
 	<xsl:if test="contains(@id,'perl-')">
-		<xsl:apply-templates select="sect3[not(@role='package') and not(@role='kernel')]//screen[not(@role='nodump')][not(@remap)]" mode="script-commands" />
+		<xsl:apply-templates select="sect3[not(@role='package') and not(@role='kernel')]/screen[not(@role='nodump')][not(@remap)]" mode="script-commands" />
 	</xsl:if>
 
 	<!-- xorg-env special handling -->
 	<xsl:if test="@id = 'xorg-env'">
-		<xsl:apply-templates select="//sect2[@id='xorg-env']//screen[not(@role='nodump')]" mode="script-commands" />
+		<xsl:apply-templates select="//sect2[@id='xorg-env']/screen[not(@role='nodump')]" mode="script-commands" />
 	</xsl:if>
 
 	<!-- DIFFLOG2 -->

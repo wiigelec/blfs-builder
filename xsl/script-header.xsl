@@ -56,7 +56,6 @@ SRC_DIR=$SOURCE_DIR/$PKG_ID
 
 # DIFF LOGS
 TIMESTAMP=/tmp/timestamp$RANDOM
-DIFFLOG_DIR=/var/lib/jhalfs/BLFS/difflog
 [ ! -d $DIFFLOG_DIR ] &amp;&amp; mkdir -p $DIFFLOG_DIR
 difflog1=$DIFFLOG_DIR/${PKG_ID}-${PKG_VERS}.difflog1
 difflog2=$DIFFLOG_DIR/${PKG_ID}-${PKG_VERS}.difflog2
