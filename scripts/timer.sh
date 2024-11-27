@@ -57,7 +57,7 @@ function time_package
                 minutes=$((SECONDS / 60))
                 seconds=$((SECONDS % 60))
 
-		echo "$package $minutes:$seconds" > $PKG_TIME
+		echo "$target $minutes:$seconds" > $PKG_TIME
         done	
 }
 
@@ -101,11 +101,12 @@ function timer_manager
 			# seconds padding
 			[ $pkg_secs -lt 10 ] && pkg_secs="0$pkg_secs"
 
-			t="$pkg_mins:$pkg_secs"
-			write_line=$(printf "$package: %35s" $t)
+			a="$package"
+			b="$pkg_mins:$pkg_secs"
+			write_line=$(printf "%-45s %s" $a $b)
 
 			# NEW PACKAGE
-			new="$(grep -n $package: $ELAP_TIME)"
+			new="$(grep $package $ELAP_TIME)"
 			if [[ -z $new ]]; then
 
 				# insert new line
@@ -132,8 +133,9 @@ function timer_manager
 		[ $tot_secs -lt 10 ] && tot_secs="0$tot_secs"
 
 		# replace old line
-		t="$tot_mins:$tot_secs"
-		write_line=$(printf "Elapsed build time: %21s" $t)
+		a="Elapsed build time: "
+		b="$tot_mins:$tot_secs"
+		write_line=$(printf "%-45s %s" "$a" $b)
 		sed -i "$(( $(wc -l < $ELAP_TIME) ))s/^.*$/$write_line/" $ELAP_TIME
 	done
 	
