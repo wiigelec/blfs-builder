@@ -330,6 +330,8 @@ function build_scripts
 	# qt6
 	sed -i 's/\$QT5DIR/\\\$QT5DIR/' $BUILDSCRIPTS_DIR/qt5-components.build
 
+	# v4l-utils
+	sed -i 's/contrib\/test\/\$prog/contrib\/test\/\\$prog/' $BUILDSCRIPTS_DIR/v4l-utils.build
 
 	# build.scripts
 	touch $BUILD_SCRIPTS
