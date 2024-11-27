@@ -108,7 +108,7 @@ function timer_manager
 
 			a="$package"
 			b="$pkg_mins:$pkg_secs"
-			write_line=$(printf "%-55s %s" $a $b)
+			write_line=$(printf "%-45s %10s" $a $b)
 			write_line=${write_line// /.}
 
 			# NEW PACKAGE
@@ -149,7 +149,7 @@ function timer_manager
 		# replace old line
 		a="Elapsed build time: "
 		b="$tot_mins:$tot_secs"
-		write_line=$(printf "%-55s %s" "$a" $b)
+		write_line=$(printf "%-45s %10s" "$a" $b)
 		sed -i "$(( $(wc -l < $ELAP_TIME) ))s/^.*$/$write_line/" $ELAP_TIME
 	done
 	
