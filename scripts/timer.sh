@@ -124,7 +124,6 @@ function timer_manager
 
 				# last target
 				if [[ $package == $last_target ]]; then
-					#sed -i '/^\.\.\.$/,-1d' $ELAP_TIME
 					sed -i '/^\.\.\.$/,+2d' $ELAP_TIME
 					sed -i '/^\.\.\.$/d' $ELAP_TIME
 					offset=3

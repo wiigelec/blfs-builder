@@ -78,12 +78,12 @@ if [[ ! -z $JH_UNPACKDIR ]]; then cd $JH_UNPACKDIR; fi
 ####################################################################
 
 ### MAIN DOWNLOAD ###
-<xsl:apply-templates select=".//sect2[@role='package']//itemizedlist[1]/listitem/*/ulink[not(@url = ' ')]" mode="main" />
-<xsl:apply-templates select=".//sect3[@role='package']//itemizedlist[1]/listitem/*/ulink[not(@url = ' ')]" mode="main" />
+<xsl:apply-templates select=".//sect2[@role='package']//itemizedlist[1]/listitem/*/ulink[not(@url=' ') and not(@url='')]" mode="main" />
+<xsl:apply-templates select=".//sect3[@role='package']//itemizedlist[1]/listitem/*/ulink[not(@url=' ') and not(@url='')]" mode="main" />
 
 ### ADDITIONAL DOWNLOADS ###
-<xsl:apply-templates select=".//sect2[@role='package']//itemizedlist[position() &gt; 1]/listitem/*/ulink[not(@url = ' ')]" mode="additional" />
-<xsl:apply-templates select=".//sect3[@role='package']//itemizedlist[position() &gt; 1]/listitem/*/ulink[not(@url = ' ')]" mode="additional" />
+<xsl:apply-templates select=".//sect2[@role='package']//itemizedlist[position() &gt; 1]/listitem/*/ulink[not(@url=' ')]" mode="additional" />
+<xsl:apply-templates select=".//sect3[@role='package']//itemizedlist[position() &gt; 1]/listitem/*/ulink[not(@url=' ')]" mode="additional" />
 
 ### FILE EXTRACTION ###
 <xsl:value-of select="$extractdownload" />
