@@ -112,7 +112,8 @@ fi
 mkdir -p $SRC_DIR
 cd $SRC_DIR
 
-[[ ! -f $PACKAGE ]] &amp;&amp; wget $PKG_URL
+if [[ -f ../$PACKAGE ]]; then mv ../$PACKAGE ./; 
+else wget $PKG_URL; fi
 </xsl:template>
 
 <!-- additional downloads -->
