@@ -13,7 +13,6 @@
 
 
 <xsl:output method="text" />
-<xsl:strip-space elements="*" />
 
 <xsl:param name="files" />
 

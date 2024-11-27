@@ -8,3 +8,6 @@ makefile variable export
 blfs bootscripts
 build log
 build times
+lfs packages
+bootstrap
+lfs-build (call jhalfs and package convert)
