@@ -348,14 +348,17 @@ function build_scripts
 	# kf6-frameworks
 	sed -i '/The options used here are:/,+5d' $BUILDSCRIPTS_DIR/kf6-frameworks.build
 	sed -i 's/as_root/sudo/' $BUILDSCRIPTS_DIR/kf6-frameworks.build
+	sed -i '/exit/d' $BUILDSCRIPTS_DIR/kf6-frameworks.build
+	echo "exit" >> $BUILDSCRIPTS_DIR/kf6-frameworks.build
 
 	# qcoro
 	sed -i '/make test/d' $BUILDSCRIPTS_DIR/qcoro.build
 
-	# plasma-bild
+	# plasma-build
 	sed -i '/The options used here are:/,+5d' $BUILDSCRIPTS_DIR/plasma-build.build
 	sed -i 's/as_root/sudo/' $BUILDSCRIPTS_DIR/plasma-build.build
-	sed -i 's/download\.kde\.org\/stable/download\.kde\.org\/Attic/' $BUILDSCRIPTS_DIR/plasma-build.build
+	sed -i '/exit/d' $BUILDSCRIPTS_DIR/plasma-build.build
+	echo "exit" >> $BUILDSCRIPTS_DIR/plasma-build.build
 
 
 	# build.scripts
