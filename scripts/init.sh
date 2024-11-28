@@ -355,6 +355,7 @@ function build_scripts
 	# plasma-bild
 	sed -i '/The options used here are:/,+5d' $BUILDSCRIPTS_DIR/plasma-build.build
 	sed -i 's/as_root/sudo/' $BUILDSCRIPTS_DIR/plasma-build.build
+	sed -i 's/download\.kde\.org\/stable/download\.kde\.org\/Attic/' $BUILDSCRIPTS_DIR/plasma-build.build
 
 
 	# build.scripts
