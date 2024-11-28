@@ -284,7 +284,7 @@ function build_scripts
 	echo "Generating build scripts..."
 	echo
 	[ ! -d $BUILDSCRIPTS_DIR ] && mkdir -p $BUILDSCRIPTS_DIR
-	xsltproc --stringparam files true $BUILDSCRIPTS_XSL $BLFSFULL_XML
+	xsltproc --stringparam files true --stringparam pkglist $PKGLIST_XML $BUILDSCRIPTS_XSL $BLFSFULL_XML
 
 	### REMOVE UNUSED ###
 	# use % for exact match

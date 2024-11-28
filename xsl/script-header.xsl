@@ -13,6 +13,7 @@
 
 <xsl:param name="package" />
 <xsl:param name="version" />
+<xsl:param name="pkglist" />
 
 
 <!--
@@ -42,7 +43,8 @@
 
 # PACKAGE INFO
 PKG_ID=<xsl:value-of select="@id" />
-PKG_VERS=$(xmllint --xpath "//package[id='$PKG_ID']/version/text()" ../xml/pkg-list.xml) 
+<xsl:variable name="match" select="@id" />
+PKG_VERS=<xsl:value-of select="document($pkglist)//package[id=$match]/version" />
 
 # ENV
 if [ -r /etc/profile ]; then source /etc/profile; fi
