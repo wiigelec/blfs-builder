@@ -78,14 +78,13 @@ function timer_manager
 	### INITIALIZE DISPLAY ###
 
 	# set offset
-	if [[ $single_target ]]; then offset=4;
+	if [[ $single_target ]]; then offset=3;
 	else offset=7; fi
 
 	# initialize elapsed-time
 	if [[ ! -f $ELAP_TIME ]]; then
 		echo "Package build times:" > $ELAP_TIME
 		echo "" >> $ELAP_TIME
-		echo "$first_target" >> $ELAP_TIME
 		echo "" >> $ELAP_TIME
 		# multiple targets
 		if [[ ! $single_target ]]; then
@@ -103,6 +102,7 @@ function timer_manager
 	
 
 	### LOOP ###
+	first=true
         while : ; do
 
                 # check pid still active
@@ -129,23 +129,21 @@ function timer_manager
 			write_line=${write_line// /.}
 
 			# NEW PACKAGE
-			new="$(grep $package $ELAP_TIME)"
-			if [[ -z $new ]]; then
+			# last target
+			if [[ $package == $last_target ]]; then
+				sed -i '/^\.\.\.$/,+2d' $ELAP_TIME
+				offset=3
+			fi
+			if [[ $first == "true" ]]; then
 
 				# insert new line
-				sed -i "$(( $(wc -l < $ELAP_TIME)-7 ))a $write_line" $ELAP_TIME
+				sed -i "$(( $(wc -l < $ELAP_TIME)-$offset ))a $write_line" $ELAP_TIME
+				first=false
 
 			# EXISTING PACKAGE
 			else
-
-				# last target
-				if [[ $package == $last_target ]]; then
-					sed -i '/^\.\.\.$/,+2d' $ELAP_TIME
-					offset=3
-				fi
 				# replace old line
 				sed -i "$(( $(wc -l < $ELAP_TIME)-$offset ))s/^.*$/$write_line/" $ELAP_TIME
-				
 			fi
 		fi
 
