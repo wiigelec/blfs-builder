@@ -355,10 +355,16 @@ function build_scripts
 	sed -i '/make test/d' $BUILDSCRIPTS_DIR/qcoro.build
 
 	# plasma-build
-	sed -i '/The options used here are:/,+5d' $BUILDSCRIPTS_DIR/plasma-build.build
-	sed -i 's/as_root/sudo/' $BUILDSCRIPTS_DIR/plasma-build.build
-	sed -i '/exit/d' $BUILDSCRIPTS_DIR/plasma-build.build
-	echo "exit" >> $BUILDSCRIPTS_DIR/plasma-build.build
+	FILE=$BUILDSCRIPTS_DIR/plasma-build.build
+	sed -i '/The options used here are:/,+5d' $FILE
+	sed -i 's/as_root/sudo/' $FILE
+	sed -i '/exit/d' $FILE
+	echo "exit" >> $FILE
+	linenum=$(grep -n "# Setup xsessions (X11 sessions)" $FILE | sed 's/:.*//')
+	sed -i "$linenum i sudo -E sh -e << ROOT_EOF" $FILE
+	linenum=$(grep -n "ln -sfv \$KF6_PREFIX/share/xdg-desktop-portal/portals/kde.portal" $FILE | sed 's/:.*//')
+	((linenum++))
+	sed -i "$linenum i ROOT_EOF" $FILE
 
 
 	# build.scripts

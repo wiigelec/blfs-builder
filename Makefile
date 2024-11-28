@@ -41,7 +41,7 @@ PACKAGE_SCRIPT = $(SCRIPT_DIR)/package.sh
 DEPTREE_DIR = $(BUILD_DIR)/deptree
 DEPS_DIR = $(DEPTREE_DIR)/deps
 TREES_DIR = $(DEPTREE_DIR)/trees
-BUILDSCRIPTS_DIR = $(BUILD_DIR)/build-scripts
+BUILDSCRIPTS_DIR = $(BUILD_DIR)/scripts
 
 BUILD_SCRIPTS = $(BUILD_DIR)/build.scripts
 BUILD_DEPS = $(DEPTREE_DIR)/build.deps
