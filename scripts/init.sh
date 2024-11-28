@@ -367,6 +367,10 @@ function build_scripts
 	((linenum++))
 	sed -i "$linenum i ROOT_EOF" $FILE
 
+	# nodejs
+	FILE=$BUILDSCRIPTS_DIR/nodejs.build
+	sed -i 's/make install \&\&/make install/' $FILE
+
 
 	# build.scripts
 	touch $BUILD_SCRIPTS
