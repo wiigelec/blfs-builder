@@ -125,12 +125,27 @@ function build_lfs
 	[[ -d $LFS_DIR ]] && rm -rf $LFS_DIR
 	git clone https://git.linuxfromscratch.org/jhalfs $LFS_DIR
 
-	# setup pkg management
+	### PACKAGE MANAGEMENT ###
 	echo "#" > $LFS_DIR/pkgmngt/packageManager.xml
 	echo "#" > $LFS_DIR/pkgmngt/packInstall.sh
 	
-	# run make
+	### MENUCONFIG ###
 	make -C $LFS_DIR
+
+	### DIFFLOG CONVERT ###
+	echo
+	echo "Converting scripts for difflog..."
+	echo
+
+	for FILE in $LFS_MNT/jhalfs/lfs-commands/chapter{08,10}/*;
+	do
+    		### GET PACKAGE NAME AND VERSION ##
+    		echo "Converting $FILE..."
+	done
+
+	### RUN BUILD ###
+	make -C $LFS_MNT/jhalfs
+
 
 
 

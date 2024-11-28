@@ -74,6 +74,7 @@ ARCHIVE_DIR = $(INSTPKG_DIR)/archive
 PACKAGE_DIR = $(INSTPKG_DIR)/package
 
 LFS_DIR = $(WORK_DIR)/lfs-jhalfs
+LFS_MNT = /mnt/lfs
 
 export
 
@@ -244,6 +245,11 @@ build-package :
 build-lfs :
 	@$(call bold_message, Running LFS jhalfs...)
 	$(BUILD_SCRIPT) LFS
+
+
+build-bootstrap :
+	@$(call bold_message, Creating BLFS tools bootstrap...)
+	$(BUILD_SCRIPT) BOOTSTRAP
 
 
 watch-timer : 

@@ -349,6 +349,8 @@ function build_scripts
 	sed -i '/The options used here are:/,+5d' $BUILDSCRIPTS_DIR/kf6-frameworks.build
 	sed -i 's/as_root/sudo/' $BUILDSCRIPTS_DIR/kf6-frameworks.build
 
+	# qcoro
+	sed -i '/make test/d' $BUILDSCRIPTS_DIR/qcoro.build
 
 	# build.scripts
 	touch $BUILD_SCRIPTS
