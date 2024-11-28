@@ -14,8 +14,18 @@
 <xsl:output method="xml" />
 <xsl:strip-space elements="*" />
 
-<xsl:param name="package" />
-<xsl:param name="version" />
+<xsl:param name="instpkg" />
+
+<xsl:variable name="installed">
+
+	<xsl:for-each select="document($instpkg)//package/name">
+		<xsl:text>%</xsl:text>
+		<xsl:value-of select="." />
+		<xsl:text>%</xsl:text>
+		<xsl:text>&#xA;</xsl:text>
+	</xsl:for-each>
+
+</xsl:variable>
 
 
 <!--
@@ -23,7 +33,6 @@
 # IDENTITY TRANSFORM
 ####################################################################
 -->
-
 <xsl:template match="@* | node()">
 	
 	<xsl:copy>
@@ -31,7 +40,6 @@
 	</xsl:copy>
 
 </xsl:template>
-
 <!--
 ####################################################################
 # ADD INSTALLED
@@ -41,12 +49,14 @@
 <xsl:template match="//package">
 	
 	<package>
+		<xsl:variable name="id-test" select="concat('%',id,'%')" />
+		<xsl:variable name="match" select="id" />
 		<xsl:choose>
-			<xsl:when test="id=$package">
+			<xsl:when test="contains($installed,$id-test)">
 
 				<xsl:copy-of select="id"/>
 				<xsl:copy-of select="version"/>
-				<installed><xsl:value-of select="$version" /></installed>
+				<installed><xsl:value-of select="document($instpkg)//package[name=$match]/version" /></installed>
 
 			</xsl:when>
 
@@ -55,6 +65,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</package>
+	<xsl:text>&#xA;</xsl:text>
 
 </xsl:template>
 

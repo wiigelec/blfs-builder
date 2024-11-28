@@ -143,21 +143,22 @@ function pkg_list
 	echo
 	echo "Adding installed packages..."
 	echo
-	installed=$(xmllint --xpath "//package/name/text()" $INSTPKG_XML | sort)
-	for ip in $installed 
-	do
+	xsltproc --stringparam instpkg $INSTPKG_XML -o $PKGLIST_XML $ADDINSTALLED_XSL $PKGLIST_XML
+	#installed=$(xmllint --xpath "//package/name/text()" $INSTPKG_XML | sort)
+	#for ip in $installed 
+	#do
 		#echo $ip && continue
 		
 		# get version
 		#echo "xmllint --xpath \"//package[name='$ip']/version/text()\" $INSTPKG_XML"
-		iv=$(xmllint --xpath "//package[name='$ip']/version/text()" $INSTPKG_XML)
+	#	iv=$(xmllint --xpath "//package[name='$ip']/version/text()" $INSTPKG_XML)
 
 		# add to pkglist
-		[[ -z $iv ]] && continue
+	#	[[ -z $iv ]] && continue
 		#echo "$ip-$iv"
-		xsltproc --stringparam package $ip --stringparam version $iv -o $PKGLIST_XML $ADDINSTALLED_XSL $PKGLIST_XML
+	#	xsltproc --stringparam package $ip --stringparam version $iv -o $PKGLIST_XML $ADDINSTALLED_XSL $PKGLIST_XML
 
-	done
+	#done
 
 }
 

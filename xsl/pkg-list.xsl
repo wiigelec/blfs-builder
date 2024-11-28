@@ -118,8 +118,6 @@
         <xsl:if test="not(contains($part-ignore,$id-ignore))">
 	
 	<xsl:text>&#xA;</xsl:text>
-	<xsl:text>&#xA;</xsl:text>
-	<xsl:text>&#xA;</xsl:text>
 	<part>
 		<id><xsl:value-of select="@id" /></id>
 		<name><xsl:value-of select="@xreflabel" /></name>
@@ -137,8 +135,6 @@
 -->
 <xsl:template match="chapter">
 
-	<xsl:text>&#xA;</xsl:text>
-	<xsl:text>&#xA;</xsl:text>
 	<xsl:text>&#xA;</xsl:text>
 	<chapter>
 		<id><xsl:value-of select="@id" /></id>
