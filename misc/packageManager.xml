@@ -22,7 +22,9 @@
   </sect1info>
 
   <sect2 role="installation">
-<screen><userinput remap="install">./sbin/installpkg --terse ../pkgtools-15.0-noarch-42.txz</userinput></screen>
+<screen><userinput remap="install">./sbin/installpkg --terse ../pkgtools-15.0-noarch-42.txz
+line1=$(grep -n "which xz" /usr/sbin/makepkg | sed 's/:.*//')
+sed -i "$line1,$(($line1+3))d" $FILE</userinput></screen>
   </sect2>
 
 </sect1>
@@ -39,7 +41,9 @@
   </sect1info>
 
   <sect2 role="installation">
-<screen><userinput remap="install">./sbin/installpkg --terse ../pkgtools-15.0-noarch-42.txz</userinput></screen>
+<screen><userinput remap="install">./sbin/installpkg --terse ../pkgtools-15.0-noarch-42.txz
+line1=$(grep -n "which xz" /usr/sbin/makepkg | sed 's/:.*//')
+sed -i "$line1,$(($line1+3))d" $FILE</userinput></screen>
   </sect2>
 
 </sect1>
@@ -64,7 +68,9 @@
   </sect1info>
 
   <sect2 role="installation">
-<screen><userinput remap="install">./sbin/installpkg --terse ../pkgtools-15.0-noarch-42.txz</userinput></screen>
+<screen><userinput remap="install">./sbin/installpkg --terse ../pkgtools-15.0-noarch-42.txz
+line1=$(grep -n "which xz" /usr/sbin/makepkg | sed 's/:.*//')
+sed -i "$line1,$(($line1+3))d" $FILE</userinput></screen>
   </sect2>
 
 </sect1>

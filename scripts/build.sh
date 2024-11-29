@@ -142,6 +142,8 @@ function build_lfs
 	line1=$(grep -n "config[ ]*SRC_ARCHIVE" $LFSCONFIG_IN | sed 's/:.*//')
 	lfsmnt=$(echo $LFS_MNT | sed 's/\//\\\//g')
 	sed -i "$((line1+2))s/\$SRC_ARCHIVE/$lfsmnt\/src-archive/" $LFSCONFIG_IN
+	line1=$(grep -n "config[ ]*HOSTNAME" $LFSCONFIG_IN | sed 's/:.*//')
+	sed -i "$((line1+2))s/\*\*EDITME\*\*/lfs-build/" $LFSCONFIG_IN
 
 	### CREATE DIRS ###
 	sudo mkdir -p ${LFS_MNT}$DIFFLOG_DIR
@@ -189,6 +191,9 @@ function build_lfs
 	sed -i 's/PKGDIR=.*/PKGDIR=pkgtools/' $LFSPKGMGT_SH
 	sed -i 's/tar -xf \$PACKAGE/mkdir -p \$PKGDIR/' $LFSPKGMGT_SH
 	sed -i 's/cd \$PKGDIR/cd \$PKGDIR \&\& tar -xf ..\/\$PACKAGE/' $LFSPKGMGT_SH
+	line1=$(grep -n "PACKAGE=" $LFSPKGMGT_SH  | sed 's/:.*//')
+	sed -i "$(($line1+1))a wget https\:\/\/mirrors\.slackware\.com\/slackware\/slackware-15\.0\/slackware\/a\/pkgtools-15\.0-noarch-42\.txz" $LFSPKGMGT_SH
+	
 	echo "#" > $LFS_CH8/881-01-pkgtools
 
 
