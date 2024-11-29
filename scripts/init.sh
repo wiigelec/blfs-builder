@@ -393,6 +393,15 @@ function build_scripts
 	sed -i 's/\${s}\.png \\/\\\${s}\.png \\\\/' $FILE
 	sed -i 's/\${s}x\${s}/\\\${s}x\\\${s}/' $FILE
 
+	# postgresql
+	FILE=$BUILDSCRIPTS_DIR/postgresql.build
+	line1=$(grep -n "install -v -dm700 /srv/pgsql/data &&" $FILE | sed 's/:.*//')
+	line2=$(grep -n "su - postgres -c '/usr/bin/initdb -D /srv/pgsql/data'" $FILE | sed 's/:.*//')
+	sed -i "$line1,${line2}d" $FILE
+	sed -i '/make install-postgresql/d' $FILE
+	line1=$(grep -n "su - postgres -c '/usr/bin/postgres -D /srv/pgsql/data >" $FILE | sed 's/:.*//')
+	line2=$(grep -n "su - postgres -c \"/usr/bin/pg_ctl stop -D /srv/pgsql/data\"" $FILE | sed 's/:.*//')
+	sed -i "$line1,${line2}d" $FILE
 
 	# build.scripts
 	touch $BUILD_SCRIPTS
