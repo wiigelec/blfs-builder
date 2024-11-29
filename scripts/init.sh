@@ -308,6 +308,10 @@ function build_scripts
 	fix_files=$(grep -rl "bash -e" $BUILDSCRIPTS_DIR)
         for a in $fix_files; do sed -i 's/bash -e/set -e/' $a; done
 
+	# as_root
+	fix_files=$(grep -rl "as_root" $BUILDSCRIPTS_DIR)
+        for a in $fix_files; do sed -i 's/as_root/sudo -E/' $a; done
+
 	# xorg env	
 	sed -i 's/<PREFIX>/\/usr/' $BUILDSCRIPTS_DIR/xorg-env.build
 
@@ -348,7 +352,6 @@ function build_scripts
 
 	# kf6-frameworks
 	sed -i '/The options used here are:/,+5d' $BUILDSCRIPTS_DIR/kf6-frameworks.build
-	sed -i 's/as_root/sudo/' $BUILDSCRIPTS_DIR/kf6-frameworks.build
 	sed -i '/exit/d' $BUILDSCRIPTS_DIR/kf6-frameworks.build
 	echo "exit" >> $BUILDSCRIPTS_DIR/kf6-frameworks.build
 
@@ -358,7 +361,6 @@ function build_scripts
 	# plasma-build
 	FILE=$BUILDSCRIPTS_DIR/plasma-build.build
 	sed -i '/The options used here are:/,+5d' $FILE
-	sed -i 's/as_root/sudo/' $FILE
 	sed -i '/exit/d' $FILE
 	echo "exit" >> $FILE
 	linenum=$(grep -n "# Setup xsessions (X11 sessions)" $FILE | sed 's/:.*//')
@@ -418,6 +420,12 @@ function build_scripts
 	line1=$(grep -n "VDISK_SIZE=50G" $FILE | sed 's/:.*//')
 	line2=$(grep -n "echo allow br0 > /etc/qemu/bridge.conf" $FILE | sed 's/:.*//')
 	sed -i "$line1,$(($line2+1))d" $FILE
+
+	# xorg7-legacy
+	FILE=$BUILDSCRIPTS_DIR/xorg7-legacy.build
+	sed -i '/exit/d' $FILE
+	echo "exit" >> $FILE
+
 
 
 	# build.scripts
