@@ -403,6 +403,12 @@ function build_scripts
 	line2=$(grep -n "su - postgres -c \"/usr/bin/pg_ctl stop -D /srv/pgsql/data\"" $FILE | sed 's/:.*//')
 	sed -i "$line1,${line2}d" $FILE
 
+	# libreoffice
+	FILE=$BUILDSCRIPTS_DIR/libreoffice.build
+	sed -i 's/<PREFIX>/\/opt\/libreoffice-\$PKG_VERS/' $FILE
+
+
+
 	# build.scripts
 	touch $BUILD_SCRIPTS
 }
