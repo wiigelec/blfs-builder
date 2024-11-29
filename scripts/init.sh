@@ -369,7 +369,7 @@ function build_scripts
 
 	# nodejs
 	FILE=$BUILDSCRIPTS_DIR/nodejs.build
-	sed -i 's/make install/sudo make install/' $FILE
+	#sed -i 's/make install/sudo make install/' $FILE
 
 	# java
 	FILE=$BUILDSCRIPTS_DIR/java.build
@@ -410,6 +410,14 @@ function build_scripts
 	sed -i 's/\$i/\\\$i/' $FILE
 	sed -i 's/\$(basename \$i)/\\\$(basename \\\$i)/' $FILE
 
+	# qemu
+	FILE=$BUILDSCRIPTS_DIR/qemu.build
+	sed -i 's/usermod -a -G kvm <username>/usermod -a -G kvm \$USER/' $FILE
+	line1=$(grep -n "chmod 4750 /usr/libexec/qemu-bridge-helper" $FILE | sed 's/:.*//')
+	sed -i "${line1}a ln -sv qemu-system-\`uname -m\` \/usr\/bin\/qemu" $FILE
+	line1=$(grep -n "VDISK_SIZE=50G" $FILE | sed 's/:.*//')
+	line2=$(grep -n "echo allow br0 > /etc/qemu/bridge.conf" $FILE | sed 's/:.*//')
+	sed -i "$line1,$(($line2+1))d" $FILE
 
 
 	# build.scripts
