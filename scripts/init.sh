@@ -369,7 +369,7 @@ function build_scripts
 
 	# nodejs
 	FILE=$BUILDSCRIPTS_DIR/nodejs.build
-	sed -i 's/make install \&\&/make install/' $FILE
+	sed -i 's/make install/sudo make install/' $FILE
 
 
 	# build.scripts

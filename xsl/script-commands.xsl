@@ -59,7 +59,7 @@
 
 	<!-- APPLY TEMPLATES -->
 	<xsl:text>&#xA;</xsl:text>
-	<xsl:text>### CONFIG MAKE INSTALL ###</xsl:text>
+	<xsl:text>### CONFIGURE MAKE INSTALL ###</xsl:text>
 	<xsl:text>&#xA;</xsl:text>
 	<xsl:apply-templates select=".//sect1[not(@role='package') and not(@role='kernel')]/screen[not(@role='nodump')][not(@remap)]" mode="script-commands"  />
 	<xsl:apply-templates select=".//sect2[not(@role='package') and not(@role='kernel')]/screen[not(@role='nodump')][not(@remap)]" mode="script-commands"  />
