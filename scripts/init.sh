@@ -382,6 +382,7 @@ function build_scripts
 	sed -i 's/\$dir/\\\$dir/' $FILE
 	sed -i 's/\$jar/\\\$jar/' $FILE
 	sed -i 's/`find/\\`find/' $FILE
+	sed -i 's/null`/null\\`/' $FILE
 	
 
 
