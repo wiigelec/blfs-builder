@@ -381,6 +381,7 @@ function build_scripts
 	sed -i 's/\${AUTO_CLASSPATH_DIR}/\\\${AUTO_CLASSPATH_DIR}/' $FILE
 	sed -i 's/\$dir/\\\$dir/' $FILE
 	sed -i 's/\$jar/\\\$jar/' $FILE
+	sed -i 's/`find/\\`find/' $FILE
 	
 
 
