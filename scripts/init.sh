@@ -426,6 +426,13 @@ function build_scripts
 	sed -i '/exit/d' $FILE
 	echo "exit" >> $FILE
 
+	# tigervnc
+	FILE=$BUILDSCRIPTS_DIR/tigervnc.build
+	sed -i 's/\$XORG_PREFIX/\\\$XORG_PREFIX/' $FILE
+	sed -i 's/\$(whoami)/\\\$(whoami)/' $FILE
+	line1=$(grep -n "systemctl start" $FILE | sed 's/:.*//')
+	line2=$(grep -n "systemctl enable" $FILE | sed 's/:.*//')
+	sed -i "$line1,${line2}d" $FILE
 
 
 	# build.scripts
