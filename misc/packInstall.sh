@@ -25,24 +25,11 @@ case $(uname -m) in
   x86_64) local ARCH=amd64 ;;
   *) local ARCH=i386 ;;
 esac
-local ARCHIVE_NAME=$(dirname ${PKGDIR})/${PACKAGE}-${VERSION}-${ARCH}-swl121.txz
+local ARCHIVE_NAME=$(dirname ${PKGDIR})/${PACKAGE}-${VERSION}-${ARCH}-lfs.txz
 
 pushd $PKG_DEST
 rm -fv ./usr/share/info/dir  # recommended since this directory is already there
                              # on the system
-
-# pkg lookup
-#echo "debug:pkg lookup"
-#echo "debug: grep \"^$PACKAGE  \" /var/lib/swl/pkg-versions-121.jhalfs"
-local swl_pkg=$(grep "^$PACKAGE  " /var/lib/swl/pkg-versions-121.jhalfs)
-if [[ ! -z $swl_pkg ]]; then
-	#echo "debug:swl_pkg ($swl_pkg) found"
-	swl_pkg=${swl_pkg/  /-}
-	swl_pkg=$(dirname ${PKGDIR})/${swl_pkg}-${ARCH}-swl121.txz
-	ARCHIVE_NAME=$swl_pkg
-#else
-#	echo "debug:swl_pkg ($ARCHIVE_NAME) not found"
-fi
 
 # Building the binary package
 #echo "debug:makepkg"
