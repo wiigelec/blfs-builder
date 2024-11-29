@@ -373,6 +373,7 @@ function build_scripts
 
 	# java
 	FILE=$BUILDSCRIPTS_DIR/java.build
+	[[ $(uname -m) == "x86_64" ]] && sed -i 's/\(PKG_URL=.*\)i686\(.*\)/\1x86_64\2/' $FILE
 	sed -i '/public class HelloWorld/,+6d' $FILE
 
 	# ojdk-conf
