@@ -386,6 +386,10 @@ function build_scripts
 	sed -i 's/`find/\\`find/' $FILE
 	sed -i 's/null`/null\\`/' $FILE
 	
+	# openjdk
+	FILE=$BUILDSCRIPTS_DIR/openjdk.build
+	sed -i '/export MAKEFLAGS/d' $FILE
+	sed -i 's/make images/make images JOBS=\$(nproc)/' $FILE
 
 
 	# build.scripts
