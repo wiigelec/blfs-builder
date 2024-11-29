@@ -131,20 +131,21 @@ function timer_manager
 			# NEW PACKAGE
 			# last target
 			if [[ $package == $last_target ]]; then
-				sed -i '/^\.\.\.$/,+2d' $ELAP_TIME
+				sed -i '/^\.\.\.$/,+3d' $ELAP_TIME
 				offset=3
 			fi
-			if [[ $first == "true" ]]; then
+			existing=$(grep $package $ELAP_TIME)
+			if [[ $first == "true" ]] || [[ -z $existing ]]; then
 
-				# insert new line
-				sed -i "$(( $(wc -l < $ELAP_TIME)-$offset ))a $write_line" $ELAP_TIME
-				first=false
+                        	# insert new line
+                               	sed -i "$(( $(wc -l < $ELAP_TIME)-$offset ))a $write_line" $ELAP_TIME
+                               	first=false
 
-			# EXISTING PACKAGE
-			else
-				# replace old line
-				sed -i "$(( $(wc -l < $ELAP_TIME)-$offset ))s/^.*$/$write_line/" $ELAP_TIME
-			fi
+                       	# EXISTING PACKAGE
+                       	else
+                               # replace old line
+                               sed -i "$(( $(wc -l < $ELAP_TIME)-$offset ))s/^.*$/$write_line/" $ELAP_TIME
+                       	fi
 		fi
 
 
