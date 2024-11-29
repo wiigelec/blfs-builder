@@ -334,7 +334,7 @@ function build_scripts
 	# qt6
 	sed -i 's/\$QT6DIR/\\\$QT6DIR/' $BUILDSCRIPTS_DIR/qt6.build
 
-	# qt6
+	# qt5
 	sed -i 's/\$QT5DIR/\\\$QT5DIR/' $BUILDSCRIPTS_DIR/qt5-components.build
 
 	# v4l-utils
@@ -390,6 +390,8 @@ function build_scripts
 	FILE=$BUILDSCRIPTS_DIR/openjdk.build
 	sed -i '/export MAKEFLAGS/d' $FILE
 	sed -i 's/make images/make images JOBS=\$(nproc)/' $FILE
+	sed -i 's/\${s}\.png \\/\\\${s}\.png \\\\/' $FILE
+	sed -i 's/\${s}x\${s}/\\\${s}x\\\${s}/' $FILE
 
 
 	# build.scripts
