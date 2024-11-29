@@ -374,6 +374,13 @@ function build_scripts
 	# java
 	FILE=$BUILDSCRIPTS_DIR/java.build
 	sed -i '/public class HelloWorld/,+6d' $FILE
+
+	# ojdk-conf
+	FILE=$BUILDSCRIPTS_DIR/ojdk-conf.build
+	sed -i 's/\$JAVA_HOME/\\\$JAVA_HOME/' $FILE
+	sed -i 's/\${AUTO_CLASSPATH_DIR}/\\\${AUTO_CLASSPATH_DIR}/' $FILE
+	sed -i 's/\$dir/\\\$dir/' $FILE
+	sed -i 's/\$jar/\\\$jar/' $FILE
 	
 
 
