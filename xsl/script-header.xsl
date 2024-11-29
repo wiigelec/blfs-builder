@@ -50,6 +50,14 @@ PKG_VERS=<xsl:value-of select="document($pkglist)//package[id=$match]/version" /
 if [ -r /etc/profile ]; then source /etc/profile; fi
 export MAKEFLAGS="-j$(nproc)"
 
+unset CFLAGS
+unset CXXFLAGS
+unset LDFLAGS
+unset NINJAJOBS
+unset MAKELEVEL
+unset MAKE_TERMOUT
+unset MAKE_TERMERR
+
 set -e
 
 # CONFIG VARS
