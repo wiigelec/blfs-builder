@@ -406,6 +406,9 @@ function build_scripts
 	# libreoffice
 	FILE=$BUILDSCRIPTS_DIR/libreoffice.build
 	sed -i 's/<PREFIX>/\/opt\/libreoffice-\$PKG_VERS/' $FILE
+	sed -i 's/\$LO_PREFIX/\\\$LO_PREFIX/' $FILE
+	sed -i 's/\$i/\\\$i/' $FILE
+	sed -i 's/\$(basename \$i)/\\\$(basename \\\$i)/' $FILE
 
 
 
