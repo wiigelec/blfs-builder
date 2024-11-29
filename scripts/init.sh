@@ -371,6 +371,11 @@ function build_scripts
 	FILE=$BUILDSCRIPTS_DIR/nodejs.build
 	sed -i 's/make install/sudo make install/' $FILE
 
+	# java
+	FILE=$BUILDSCRIPTS_DIR/java.build
+	sed -i '/public class HelloWorld/,+6d' $FILE
+	
+
 
 	# build.scripts
 	touch $BUILD_SCRIPTS
