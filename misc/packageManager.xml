@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+  "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" >
+
+<article>
+
+<!-- ########################################################### -->
+<sect1 id="package">
+        <para>Download: <ulink url="https://mirrors.slackware.com/slackware/slackware-15.0/slackware/a/pkgtools-15.0-noarch-42.txz"/></para>
+        <para>MD5 sum: <literal>98e377ecb59f237e1a082e2fa49ab9eb</literal></para>
+</sect1>
+
+
+<!-- ########################################################### -->
+<sect1 id="ch-tools-pkgmngt" role="wrap">
+  <?dbhtml filename="pkgtools.html"?>
+
+  <sect1info condition="script">
+    <productname>pkgtools</productname>
+    <productnumber>15.0-noarch-42</productnumber>
+    <address>https://mirrors.slackware.com/slackware/slackware-15.0/slackware/a/pkgtools-15.0-noarch-42.txz</address>
+  </sect1info>
+
+  <sect2 role="installation">
+<screen><userinput remap="install">./sbin/installpkg --terse ../pkgtools-15.0-noarch-42.txz</userinput></screen>
+  </sect2>
+
+</sect1>
+
+
+<!-- ########################################################### -->
+<sect1 id="ch-chroot-pkgmngt" role="wrap">
+  <?dbhtml filename="pkgmngt.html"?>
+
+  <sect1info condition="script">
+    <productname>pkgtools</productname>
+    <productnumber>15.0-noarch-42</productnumber>
+    <address>https://mirrors.slackware.com/slackware/slackware-15.0/slackware/a/pkgtools-15.0-noarch-42.txz</address>
+  </sect1info>
+
+  <sect2 role="installation">
+<screen><userinput remap="install">./sbin/installpkg --terse ../pkgtools-15.0-noarch-42.txz</userinput></screen>
+  </sect2>
+
+</sect1>
+
+
+<!-- ########################################################### -->
+<sect1 id="ch-pkgmngt-creatingdirs">
+</sect1>
+
+<sect1 id="ch-pkgmngt-createfiles">
+</sect1>
+
+
+<!-- ########################################################### -->
+<sect1 id="ch-system-pkgmngt" role="wrap">
+  <?dbhtml filename="pkgtools.html"?>
+
+  <sect1info condition="script">
+    <productname>pkgtools</productname>
+    <productnumber>15.0-noarch-42</productnumber>
+    <address>https://mirrors.slackware.com/slackware/slackware-15.0/slackware/a/pkgtools-15.0-noarch-42.txz</address>
+  </sect1info>
+
+  <sect2 role="installation">
+<screen><userinput remap="install">./sbin/installpkg --terse ../pkgtools-15.0-noarch-42.txz</userinput></screen>
+  </sect2>
+
+</sect1>
+</article>

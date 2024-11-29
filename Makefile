@@ -31,6 +31,8 @@ SCRIPT_DIR = $(TOPDIR)/scripts
 BUILD_DIR = $(TOPDIR)/build
 BUILD_XML = $(BUILD_DIR)/xml
 
+MISC_DIR = $(TOPDIR)/misc
+
 INIT_SCRIPT = $(SCRIPT_DIR)/init.sh
 SELECT_SCRIPT = $(SCRIPT_DIR)/select.sh
 TREE_SCRIPT = $(SCRIPT_DIR)/tree.sh
@@ -74,7 +76,14 @@ ARCHIVE_DIR = $(INSTPKG_DIR)/archive
 PACKAGE_DIR = $(INSTPKG_DIR)/package
 
 LFS_DIR = $(WORK_DIR)/lfs-jhalfs
+LFSCONFIG_IN = $(WORK_DIR)/lfs-jhalfs/Config.in
 LFS_MNT = /mnt/lfs
+LFS_CH8 = $(LFS_MNT)/jhalfs/lfs-commands/chapter08
+LFSPKGMGT_SH = $(LFS_MNT)/jhalfs/lfs-commands/chapter07/711-01-pkgmngt
+
+PKGMGT_XML = $(MISC_DIR)/packageManager.xml
+PKGMGT_SH = $(MISC_DIR)/packInstall.sh
+PKGMGT_DIR = $(LFS_DIR)/pkgmngt
 
 export
 

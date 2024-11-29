@@ -126,8 +126,26 @@ function build_lfs
 	git clone https://git.linuxfromscratch.org/jhalfs $LFS_DIR
 
 	### PACKAGE MANAGEMENT ###
-	echo "#" > $LFS_DIR/pkgmngt/packageManager.xml
-	echo "#" > $LFS_DIR/pkgmngt/packInstall.sh
+	cp $PKGMGT_XML $PKGMGT_DIR 
+	cp $PKGMGT_SH $PKGMGT_DIR 
+
+	### INIT CONFIG.IN ###
+	sed -i 's/\/mnt\/build_dir/\/mnt\/lfs/' $LFSCONFIG_IN
+	line1=$(grep -n "config[ ]*PKGMNGT" $LFSCONFIG_IN | sed 's/:.*//')
+	sed -i "$((line1+3))s/n/y/" $LFSCONFIG_IN
+	line1=$(grep -n "config[ ]*CONFIG_TESTS" $LFSCONFIG_IN | sed 's/:.*//')
+	sed -i "$((line1+2))s/y/n/" $LFSCONFIG_IN
+	line1=$(grep -n "config[ ]*REPORT" $LFSCONFIG_IN | sed 's/:.*//')
+	sed -i "$((line1+2))s/y/n/" $LFSCONFIG_IN
+	line1=$(grep -n "config[ ]*GETPKG" $LFSCONFIG_IN | sed 's/:.*//')
+	sed -i "$((line1+2))s/n/y/" $LFSCONFIG_IN
+	line1=$(grep -n "config[ ]*SRC_ARCHIVE" $LFSCONFIG_IN | sed 's/:.*//')
+	lfsmnt=$(echo $LFS_MNT | sed 's/\//\\\//g')
+	sed -i "$((line1+2))s/\$SRC_ARCHIVE/$lfsmnt\/src-archive/" $LFSCONFIG_IN
+
+	### CREATE DIRS ###
+	sudo mkdir -p ${LFS_MNT}$DIFFLOG_DIR
+	sudo mkdir -p $LFS_MNT/src-archive
 	
 	### MENUCONFIG ###
 	make -C $LFS_DIR
@@ -137,17 +155,45 @@ function build_lfs
 	echo "Converting scripts for difflog..."
 	echo
 
-	for FILE in $LFS_MNT/jhalfs/lfs-commands/chapter{08,10}/*;
+	for FILE in $LFS_CH8/*;
 	do
     		### GET PACKAGE NAME AND VERSION ##
     		echo "Converting $FILE..."
+
+		package=${FILE##*\/}
+    		package=${package#*-}
+
+    		# version
+		version=$(grep VERSION= $FILE | sed 's/.*=//')
+	
+
+    		# diff logs
+    		difflog1="$DIFFLOG_DIR/$package"-"$version".difflog1
+    		difflog2="$DIFFLOG_DIR/$package"-"$version".difflog2
+	
+    		# insert diff log
+    		sed -i "2 i find / -xdev > $difflog1" $FILE
+    		sed -i "2 i touch /sources/timestamp-marker" $FILE
+
+    		declare -i last_line=$(wc -l < $FILE)
+    		last_line=$(wc -l < $FILE)
+    		sed -i "$last_line i find / -xdev > $difflog2" $FILE
+    		last_line=$(wc -l < $FILE)
+    		sed -i "$last_line i find / -xdev -newer /sources/timestamp-marker >> $difflog2" $FILE
+    		last_line=$(wc -l < $FILE)
+    		sed -i "$last_line i rm /sources/timestamp-marker" $FILE
+    		last_line=$(wc -l < $FILE)
 	done
+
+	### FIX PACKAGE MANAGEMENT SCRIPT ###
+	sed -i 's/PKGDIR=.*/PKGDIR=pkgtools/' $LFSPKGMGT_SH
+	sed -i 's/tar -xf \$PACKAGE/mkdir -p \$PKGDIR/' $LFSPKGMGT_SH
+	sed -i 's/cd \$PKGDIR/cd \$PKGDIR \&\& tar -xf ..\/\$PACKAGE/' $LFSPKGMGT_SH
+	echo "#" > $LFS_CH8/881-01-pkgtools
+
 
 	### RUN BUILD ###
 	make -C $LFS_MNT/jhalfs
-
-
-
 
 }
 
